@@ -1,0 +1,32 @@
+<launch>
+  <!-- Override ip_address argument -->
+  <arg name="ip_address" default="192.168.0.1" />
+
+  <!-- Override robot_name argument -->
+  <arg name="robot_name" default="vs060" />
+
+  <!-- Robot description argument -->
+  <arg name="robot_description" value="$(arg robot_name)_description" />
+
+  <include ns="/$(arg robot_name)" file="$(find bcap_service)/launch/bcap_service.launch.xml">
+    <arg name="ip_address" value="$(arg ip_address)" />
+  </include>
+
+  <include ns="/$(arg robot_name)" file="$(find denso_robot_core)/launch/denso_robot_core.launch.xml" />
+
+  <!-- Load the URDF, SRDF and other .yaml configuration files on the param server -->
+  <param name="robot_description" type="str" textfile="$(find denso_robot_descriptions)/$(arg robot_description)/$(arg robot_name).urdf"/>
+
+  <!-- Controller -->
+  <include ns="/$(arg robot_name)" file="$(find denso_robot_descriptions)/$(arg robot_description)/$(arg robot_name).launch.xml" />
+  <node name="denso_robot_control" pkg="denso_robot_control" type="denso_robot_control" output="screen" ns="/$(arg robot_name)"/>
+
+  <rosparam file="$(find denso_robot_descriptions)/$(arg robot_description)/denso_robot_control.yaml" command="load" />
+  <node name="controller_spawner" pkg="controller_manager" type="spawner" respawn="false" output="screen"
+   ns="/$(arg robot_name)" args="joint_state_controller arm_controller" />
+
+  <node name="robot_state_publisher" pkg="robot_state_publisher" 
+        type="robot_state_publisher" respawn="false" output="screen">
+    <remap from="/joint_states" to="/$(arg robot_name)/joint_states" />
+  </node>
+</launch>

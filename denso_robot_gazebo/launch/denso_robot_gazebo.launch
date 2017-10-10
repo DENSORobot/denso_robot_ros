@@ -1,0 +1,29 @@
+<launch>
+  <!-- Override robot_name argument -->
+  <arg name="robot_name" default="vs060" />
+
+  <!-- Robot description argument -->
+  <arg name="robot_description" value="$(arg robot_name)_description" />
+
+  <include file="$(find gazebo_ros)/launch/empty_world.launch">
+    <arg name="world_name" value="$(find denso_robot_gazebo)/worlds/denso_robot.world"/>
+  </include>
+
+  <!-- Load the URDF, SRDF and other .yaml configuration files on the param server -->
+  <param name="robot_description" type="str" textfile="$(find denso_robot_descriptions)/$(arg robot_description)/$(arg robot_name).urdf"/>
+
+  <arg name="gui" default="true"/>
+  <param name="use_gui" value="$(arg gui)"/>
+
+  <node name="spawn_urdf" pkg="gazebo_ros" type="spawn_model" args="-param robot_description -urdf -model $(arg robot_name)" />
+
+  <rosparam file="$(find denso_robot_descriptions)/$(arg robot_description)/denso_robot_control.yaml" command="load" />
+  <node name="controller_spawner" pkg="controller_manager" type="spawner" respawn="false" output="screen"
+   ns="/$(arg robot_name)" args="joint_state_controller arm_controller" />
+
+  <node name="robot_state_publisher" pkg="robot_state_publisher" 
+        type="robot_state_publisher" respawn="false" output="screen">
+    <remap from="/joint_states" to="/$(arg robot_name)/joint_states" />
+  </node>
+
+</launch>

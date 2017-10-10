@@ -1,0 +1,7 @@
+int32    comp
+PoseData pose
+string   option
+---
+int32 HRESULT
+---
+float64[] pose

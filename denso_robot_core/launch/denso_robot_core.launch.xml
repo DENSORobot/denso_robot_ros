@@ -1,0 +1,13 @@
+<launch>
+  <!-- Controller name -->
+  <arg name="controller_name" default="" />
+  <param name="controller_name" value="$(arg controller_name)" />
+
+  <!-- Controller type: RC8:=8 -->
+  <arg name="controller_type" default="8" />
+  <param name="controller_type" value="$(arg controller_type)" />
+
+  <!-- Config file -->
+  <arg name="config_file" default="$(find denso_robot_core)/config/config.xml" />
+  <param name="config_file" value="$(arg config_file)" />
+</launch>

@@ -1,0 +1,7 @@
+Joints[] pose
+int32    pass
+string   option
+---
+int32 HRESULT
+---
+float64[] pose

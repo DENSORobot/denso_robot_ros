@@ -1,0 +1,12 @@
+<launch>
+  <!-- the "sim" argument controls whether we connect to a Simulated or Real robot -->
+  <!--  - if sim=false, a ip_address argument is required -->
+  <arg name="sim" default="true" />
+  <arg name="ip_address" default="192.168.0.1" />
+
+  <include file="$(find denso_robot_bringup)/launch/denso_robot_bringup.launch">
+    <arg name="robot_name" value="vs060"/>
+    <arg name="sim" value="$(arg sim)"/>
+    <arg name="ip_address" value="$(arg ip_address)"/>
+  </include>
+</launch>

@@ -1,0 +1,30 @@
+<package>
+
+  <name>vs060_moveit_config</name>
+  <version>3.0.0</version>
+  <description>
+     An automatically generated package with all the configuration and launch files for using the vs060A1_AV6_NNN_NNN with the MoveIt Motion Planning Framework
+  </description>
+  <author email="assistant@moveit.ros.org">MoveIt Setup Assistant</author>
+  <author email="ueda@jsk.t.u-tokyo.ac.jp">Ryohei Ueda</author>
+  <maintainer email="ueda@jsk.t.u-tokyo.ac.jp">Ryohei Ueda</maintainer>
+  <maintainer email="iisaito@opensource-robotics.tokyo.jp">Isaac Isao Saito</maintainer>
+
+  <license>BSD</license>
+  <url type="website">http://wiki.ros.org/vs060_moveit_config</url>
+  <url type="website">http://moveit.ros.org/</url>
+  <url type="bugtracker">https://github.com/start-jsk/denso/issues</url>
+  <url type="repository">https://github.com/start-jsk/denso</url>
+
+  <buildtool_depend>catkin</buildtool_depend>
+  <build_depend>moveit_commander</build_depend>
+  <build_depend>moveit_ros_planning</build_depend>
+  <build_depend>roscpp</build_depend>
+  <build_depend>roslang</build_depend>
+  <run_depend>moveit_commander</run_depend>
+  <run_depend>moveit_ros_planning</run_depend>
+  <run_depend>roscpp</run_depend>
+  <run_depend>roslang</run_depend>
+  <run_depend>denso_robot_moveit_config</run_depend>
+  
+</package>

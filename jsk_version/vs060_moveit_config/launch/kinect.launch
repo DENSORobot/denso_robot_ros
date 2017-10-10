@@ -1,0 +1,9 @@
+<launch>
+  <include file="$(find openni_launch)/launch/openni.launch" />
+  <!-- z y x -->
+  <!-- 0.48 0.55 0.65 -1.9 0.0 -0.0 /base_link /camera_link 40 -->
+  <!-- yaw, pitch, roll -->
+  <node pkg="tf" type="static_transform_publisher" name="denso_openni_tf_publisher"
+        args="0.48 0.55 0.6 -1.9 0.3 0.1 /base_link /camera_link 40"
+        output="screen" />
+</launch>

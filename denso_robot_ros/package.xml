@@ -1,0 +1,29 @@
+<?xml version="1.0"?>
+<package>
+  <name>denso_robot_ros</name>
+  <version>2.0.0</version>
+  <description>DENSO robot meta package</description>
+
+  <maintainer email="denso_robot_soft@denso-wave.co.jp">DENSO WAVE INCORPORATED</maintainer>
+
+  <license>MIT</license>
+
+  <buildtool_depend>catkin</buildtool_depend>
+  <run_depend>bcap_core</run_depend>
+  <run_depend>bcap_service</run_depend>
+  <run_depend>bcap_service_test</run_depend>
+  <run_depend>denso_robot_core</run_depend>
+  <run_depend>denso_robot_core_test</run_depend>
+  <run_depend>denso_robot_control</run_depend>
+  <run_depend>denso_robot_gazebo</run_depend>
+  <run_depend>denso_robot_descriptions</run_depend>
+  <run_depend>denso_robot_moveit_config</run_depend>
+  <run_depend>denso_robot_bringup</run_depend>
+  <run_depend>denso_launch</run_depend>
+  <run_depend>vs060_gazebo</run_depend>
+  <run_depend>vs060_moveit_config</run_depend>
+
+  <export>
+    <metapackage />
+  </export>
+</package>

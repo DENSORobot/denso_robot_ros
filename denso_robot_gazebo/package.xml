@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<package>
+  <name>denso_robot_gazebo</name>
+  <version>2.0.0</version>
+  <description>DENSO robot simulation package</description>
+
+  <maintainer email="denso_robot_soft@denso-wave.co.jp">DENSO WAVE INCORPORATED</maintainer>
+
+  <license>MIT</license>
+
+  <buildtool_depend>catkin</buildtool_depend>
+  <run_depend>gazebo_ros_pkgs</run_depend>
+  <run_depend>gazebo_ros_control</run_depend>
+  <run_depend>joint_state_controller</run_depend>
+  <run_depend>joint_trajectory_controller</run_depend>
+  <run_depend>joint_trajectory_action</run_depend>
+  
+</package>

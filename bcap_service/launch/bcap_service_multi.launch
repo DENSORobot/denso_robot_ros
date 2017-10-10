@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<launch>
+  <!-- Override ip_address argument -->
+  <arg name="ip_address" default="192.168.0.1" />
+
+  <group ns="bcap1">
+    <include file="$(find bcap_service)/launch/bcap_service.launch.xml">
+      <arg name="ip_address" value="$(arg ip_address)" />
+    </include>
+    <node pkg="bcap_service" type="bcap_service_exec" name="bcap_service" output="screen" />
+  </group>
+  <group ns="bcap2">
+    <include file="$(find bcap_service)/launch/bcap_service.launch.xml">
+      <arg name="ip_address" value="$(arg ip_address)" />
+      <arg name="wait_time" value="1" />
+    </include>
+    <node pkg="bcap_service" type="bcap_service_exec" name="bcap_service" output="screen" />
+  </group>
+</launch>

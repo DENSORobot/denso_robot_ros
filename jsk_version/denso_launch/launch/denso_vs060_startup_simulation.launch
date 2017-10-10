@@ -1,0 +1,5 @@
+<launch>
+  <include file="$(find denso_robot_gazebo)/launch/denso_robot_gazebo.launch">
+    <arg name="robot_name" value="vs060" />
+  </include>
+</launch>

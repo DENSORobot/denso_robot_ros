@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<launch>
+  <!-- Override ip_address argument -->
+  <arg name="ip_address" default="192.168.0.1" />
+
+  <!-- Override config_file argument -->
+  <arg name="config_file" default="$(find denso_robot_core)/config/config.xml" />
+
+  <include file="$(find bcap_service)/launch/bcap_service.launch.xml">
+    <arg name="ip_address" value="$(arg ip_address)" />
+  </include>
+
+  <include file="$(find denso_robot_core)/launch/denso_robot_core.launch.xml">
+    <arg name="config_file" value="$(arg config_file)" />
+  </include>
+
+  <node pkg="denso_robot_core" type="denso_robot_core_exec" name="denso_robot_core" output="screen" />
+</launch>

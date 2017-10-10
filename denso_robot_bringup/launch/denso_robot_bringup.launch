@@ -1,0 +1,44 @@
+<launch>
+  <!-- Override robot_name argument -->
+  <arg name="robot_name" default="vs060" />
+ 
+  <!-- the "sim" argument controls whether we connect to a Simulated or Real robot -->
+  <!--  - if sim=false, a ip_address argument is required -->
+  <arg name="sim" default="true" />
+  <arg name="ip_address" default="192.168.0.1" />
+ 
+  <!-- load the robot_description parameter before launching ROS-I nodes -->
+  <include file="$(find denso_robot_moveit_config)/launch/planning_context.launch" >
+    <arg name="load_robot_description" value="true" />
+    <arg name="robot_name" value="$(arg robot_name)" />
+  </include>
+
+  <!-- run the "real robot" interface nodes -->
+  <!--   - this typically includes: robot_state, motion_interface, and joint_trajectory_action nodes -->
+  <!--   - replace these calls with appropriate robot-specific calls or launch files -->
+  <group if="$(arg sim)">
+    <include file="$(find denso_robot_gazebo)/launch/denso_robot_gazebo.launch">
+      <arg name="robot_name" value="$(arg robot_name)" />
+    </include>
+  </group>  
+
+  <group unless="$(arg sim)">
+    <include file="$(find denso_robot_control)/launch/denso_robot_control.launch">
+      <arg name="robot_name" value="$(arg robot_name)" />
+      <arg name="ip_address" value="$(arg ip_address)" />
+    </include>
+  </group>  
+
+
+  <include file="$(find denso_robot_moveit_config)/launch/move_group.launch">
+    <arg name="publish_monitored_planning_scene" value="true" />
+    <arg name="robot_name" value="$(arg robot_name)" />
+  </include>
+
+  <include file="$(find denso_robot_moveit_config)/launch/moveit_rviz.launch">
+    <arg name="config" value="true"/>
+  </include>
+  
+  <include file="$(find denso_robot_moveit_config)/launch/default_warehouse_db.launch" />
+
+</launch>

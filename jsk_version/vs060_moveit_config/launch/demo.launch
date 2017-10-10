@@ -1,0 +1,40 @@
+<launch>
+  <arg name="use_kinect" default="false" />
+  <arg name="use_rviz" default="true" />
+  <arg name="mode" default="real" />
+  <arg name="include_startup_launch" default="true" />
+
+  <include file="$(find denso_robot_moveit_config)/launch/planning_context.launch">
+    <arg name="load_robot_description" value="true"/>
+    <arg name="robot_name" value="vs060" />
+  </include>
+
+  <!-- realtime_loop publish joint state publisher
+  <node name="joint_state_publisher" pkg="joint_state_publisher" type="joint_state_publisher">
+    <param name="/use_gui" value="false"/>
+  </node>
+  -->
+
+  <!--
+  <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" respawn="true" output="screen" />
+  -->
+
+  <include file="$(find denso_robot_moveit_config)/launch/move_group.launch">
+    <arg name="allow_trajectory_execution" value="true"/>
+    <arg name="robot_name" value="vs060" />
+  </include>
+
+  <include file="$(find denso_robot_moveit_config)/launch/moveit_rviz.launch" if="$(arg use_rviz)">
+    <arg name="config" value="true"/>
+  </include>
+
+  <!-- <include file="$(find denso_robot_moveit_config)/launch/default_warehouse_db.launch" /> -->
+  <group if="$(arg use_kinect)">
+    <include file="$(find vs060_moveit_config)/launch/kinect.launch" />
+    <include file="$(find vs060_moveit_config)/launch/robot_self_filter.launch" />
+  </group>
+
+  <group if="$(arg include_startup_launch)">
+    <include file="$(find denso_launch)/launch/denso_vs060_startup_$(arg mode).launch" />
+  </group>
+</launch>
