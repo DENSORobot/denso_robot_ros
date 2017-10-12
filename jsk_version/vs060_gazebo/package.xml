@@ -1,6 +1,6 @@
 <package>
   <name>vs060_gazebo</name>
-  <version>3.0.0</version>
+  <version>3.0.1</version>
   <description>Gazebo simulation package for Denso vs060 arm.</description>
   
   <author>Mahsa Parsapour</author>

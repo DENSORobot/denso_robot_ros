@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <package>
   <name>denso_robot_control</name>
-  <version>3.0.0</version>
+  <version>3.0.1</version>
   <description>DENSO robot control package</description>
 
   <maintainer email="denso_robot_soft@denso-wave.co.jp">DENSO WAVE INCORPORATED</maintainer>
