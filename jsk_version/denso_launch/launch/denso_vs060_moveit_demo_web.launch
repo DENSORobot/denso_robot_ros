@@ -1,6 +1,0 @@
-<launch>
-  <include file="$(find open_industrial_web_interface)/launch/demo.launch">
-  </include>
-  <include file="$(find denso_launch)/launch/denso_vs060_moveit_demo.launch">
-  </include>
-</launch>
