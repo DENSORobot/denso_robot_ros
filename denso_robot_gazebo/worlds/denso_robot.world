@@ -7,6 +7,5 @@
  <include>
  <uri>model://sun</uri>
  </include>
- <include>
  </world>
 </sdf>
