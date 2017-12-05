@@ -13,6 +13,5 @@
   <run_depend>gazebo_ros_control</run_depend>
   <run_depend>joint_state_controller</run_depend>
   <run_depend>joint_trajectory_controller</run_depend>
-  <run_depend>joint_trajectory_action</run_depend>
   
 </package>
