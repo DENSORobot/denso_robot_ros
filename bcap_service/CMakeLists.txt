@@ -57,14 +57,12 @@ add_dependencies(bcap_service_exec
 
 target_link_libraries(bcap_service
   ${catkin_LIBRARIES}
-  bcap_client
-  rac_string
+  ${bcap_core_LIBRARIES}
 )
 
 target_link_libraries(bcap_service_exec
   ${catkin_LIBRARIES}
-  bcap_client
-  rac_string
+  ${bcap_core_LIBRARIES}
 )
 
 #############

@@ -41,7 +41,7 @@ add_executable(denso_robot_control
 
 target_link_libraries(denso_robot_control
   ${catkin_LIBRARIES}
-  denso_robot_core
+  ${denso_robot_core_LIBRARIES}
 )
 
 #############

@@ -85,12 +85,12 @@ add_dependencies(denso_robot_core_exec
 
 target_link_libraries(denso_robot_core
   ${catkin_LIBRARIES}
-  bcap_service
+  ${bcap_service_LIBRARIES}
 )
 
 target_link_libraries(denso_robot_core_exec
   ${catkin_LIBRARIES}
-  bcap_service
+  ${bcap_service_LIBRARIES}
 )
 
 #############
