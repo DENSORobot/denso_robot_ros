@@ -12,13 +12,13 @@
   <run_depend>bcap_core</run_depend>
   <run_depend>bcap_service</run_depend>
   <run_depend>bcap_service_test</run_depend>
+  <run_depend>denso_robot_bringup</run_depend>
+  <run_depend>denso_robot_control</run_depend>
   <run_depend>denso_robot_core</run_depend>
   <run_depend>denso_robot_core_test</run_depend>
-  <run_depend>denso_robot_control</run_depend>
-  <run_depend>denso_robot_gazebo</run_depend>
   <run_depend>denso_robot_descriptions</run_depend>
+  <run_depend>denso_robot_gazebo</run_depend>
   <run_depend>denso_robot_moveit_config</run_depend>
-  <run_depend>denso_robot_bringup</run_depend>
 
   <export>
     <metapackage />

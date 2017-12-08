@@ -18,4 +18,4 @@ file(GLOB prgs RELATIVE ${PROJECT_SOURCE_DIR} "scripts/*.py")
 foreach(prg ${prgs})
    catkin_install_python(PROGRAMS ${prg}
       DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION})
-endforeach(prg)
+endforeach()

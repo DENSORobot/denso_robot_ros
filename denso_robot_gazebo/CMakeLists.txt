@@ -13,4 +13,4 @@ catkin_package()
 foreach(dir launch worlds)
    install(DIRECTORY ${dir}
       DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION})
-endforeach(dir)
+endforeach()

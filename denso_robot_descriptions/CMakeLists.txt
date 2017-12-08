@@ -14,4 +14,4 @@ file(GLOB descs RELATIVE ${PROJECT_SOURCE_DIR} "*_description")
 foreach(dir ${descs})
    install(DIRECTORY ${dir}
       DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION})
-endforeach(dir)
+endforeach()
