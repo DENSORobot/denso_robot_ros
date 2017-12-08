@@ -2,15 +2,15 @@ cmake_minimum_required(VERSION 2.8.3)
 project(denso_robot_core_test)
 
 find_package(catkin REQUIRED COMPONENTS
-  roscpp
-  std_msgs
   actionlib
   bcap_core
   denso_robot_core
+  roscpp
+  std_msgs
 )
 
 catkin_package(
-  CATKIN_DEPENDS roscpp std_msgs actionlib
+  CATKIN_DEPENDS actionlib roscpp std_msgs
 )
 
 ###########

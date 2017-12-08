@@ -2,10 +2,10 @@ cmake_minimum_required(VERSION 2.8.3)
 project(bcap_service)
 
 find_package(catkin REQUIRED COMPONENTS
+  bcap_core
+  message_generation
   roscpp
   std_msgs
-  message_generation
-  bcap_core
 )
 
 add_message_files(
@@ -26,7 +26,7 @@ generate_messages(
 catkin_package(
   INCLUDE_DIRS include
   LIBRARIES bcap_service
-  CATKIN_DEPENDS roscpp std_msgs message_runtime
+  CATKIN_DEPENDS message_runtime roscpp std_msgs
   DEPENDS bcap_core
 )
 

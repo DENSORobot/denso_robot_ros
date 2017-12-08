@@ -2,22 +2,22 @@ cmake_minimum_required(VERSION 2.8.3)
 project(denso_robot_control)
 
 find_package(catkin REQUIRED COMPONENTS
-  roscpp
-  std_msgs
-  hardware_interface
-  joint_limits_interface
-  transmission_interface
-  controller_manager
   bcap_core
   bcap_service
+  controller_manager
   denso_robot_core
+  hardware_interface
+  joint_limits_interface
+  roscpp
+  std_msgs
+  transmission_interface
 )
 
 catkin_package(
-  CATKIN_DEPENDS roscpp std_msgs
-    hardware_interface joint_limits_interface
-    transmission_interface controller_manager
-    bcap_service denso_robot_core
+  CATKIN_DEPENDS bcap_service controller_manager
+    denso_robot_core hardware_interface
+    joint_limits_interface roscpp std_msgs
+    transmission_interface
   DEPENDS bcap_core
 )
 

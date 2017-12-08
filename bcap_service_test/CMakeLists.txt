@@ -2,8 +2,8 @@ cmake_minimum_required(VERSION 2.8.3)
 project(bcap_service_test)
 
 find_package(catkin REQUIRED COMPONENTS
-  roscpp
   bcap_service
+  roscpp
 )
 
 catkin_package(
