@@ -1,3 +1,0 @@
-[submodule "bcap_core"]
-	path = bcap_core
-	url = https://github.com/DENSORobot/denso_robot_common
