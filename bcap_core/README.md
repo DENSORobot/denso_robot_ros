@@ -1,0 +1,1 @@
+# denso_robot_common
