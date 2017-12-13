@@ -14,11 +14,10 @@ find_package(catkin REQUIRED COMPONENTS
 )
 
 catkin_package(
-  CATKIN_DEPENDS bcap_service controller_manager
+  CATKIN_DEPENDS bcap_core bcap_service controller_manager
     denso_robot_core hardware_interface
     joint_limits_interface roscpp std_msgs
     transmission_interface
-  DEPENDS bcap_core
 )
 
 ###########
@@ -30,16 +29,12 @@ include_directories(
   ${catkin_INCLUDE_DIRS}
 )
 
-link_directories(
-  ${catkin_LIB_DIRS}
-)
-
-add_executable(denso_robot_control
-  src/denso_robot_control.cpp
+add_executable(${PROJECT_NAME}
+  src/${PROJECT_NAME}.cpp
   src/denso_robot_hw.cpp
 )
 
-target_link_libraries(denso_robot_control
+target_link_libraries(${PROJECT_NAME}
   ${catkin_LIBRARIES}
   ${denso_robot_core_LIBRARIES}
 )
@@ -48,7 +43,7 @@ target_link_libraries(denso_robot_control
 ## Install ##
 #############
 
-install(TARGETS denso_robot_control
+install(TARGETS ${PROJECT_NAME}
   ARCHIVE DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
   LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
   RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}

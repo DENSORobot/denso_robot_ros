@@ -33,13 +33,12 @@ generate_messages(
 )
 
 catkin_package(
-  INCLUDE_DIRS include
-  LIBRARIES denso_robot_core
+  INCLUDE_DIRS include/${PROJECT_NAME}
+  LIBRARIES ${PROJECT_NAME}
   CATKIN_DEPENDS actionlib
-    actionlib_msgs bcap_service
+    actionlib_msgs bcap_core bcap_service
     message_runtime roscpp
     std_msgs
-  DEPENDS bcap_core
 )
 
 ###########
@@ -51,46 +50,42 @@ include_directories(
   ${catkin_INCLUDE_DIRS}
 )
 
-link_directories(
-  ${catkin_LIB_DIRS}
-)
-
-add_library(denso_robot_core
+add_library(${PROJECT_NAME}
   src/denso_base.cpp
   src/denso_controller.cpp
   src/denso_controller_rc8.cpp
   src/denso_robot.cpp
-  src/denso_robot_core.cpp
+  src/${PROJECT_NAME}.cpp
   src/denso_robot_rc8.cpp
   src/denso_task.cpp
   src/denso_variable.cpp
   src/tinyxml2.cpp
 )
 
-add_dependencies(denso_robot_core
+add_dependencies(${PROJECT_NAME}
   ${PROJECT_NAME}_generate_messages_cpp)
 
-add_executable(denso_robot_core_exec
+add_executable(${PROJECT_NAME}_exec
   src/denso_base.cpp
   src/denso_controller.cpp
   src/denso_controller_rc8.cpp
   src/denso_robot.cpp
-  src/denso_robot_core.cpp
+  src/${PROJECT_NAME}.cpp
   src/denso_robot_rc8.cpp
   src/denso_task.cpp
   src/denso_variable.cpp
   src/tinyxml2.cpp
 )
 
-add_dependencies(denso_robot_core_exec
+add_dependencies(${PROJECT_NAME}_exec
   ${PROJECT_NAME}_generate_messages_cpp)
 
-target_link_libraries(denso_robot_core
+target_link_libraries(${PROJECT_NAME}
   ${catkin_LIBRARIES}
   ${bcap_service_LIBRARIES}
 )
 
-target_link_libraries(denso_robot_core_exec
+target_link_libraries(${PROJECT_NAME}_exec
   ${catkin_LIBRARIES}
   ${bcap_service_LIBRARIES}
 )
@@ -99,7 +94,7 @@ target_link_libraries(denso_robot_core_exec
 ## Install ##
 #############
 
-install(TARGETS denso_robot_core denso_robot_core_exec
+install(TARGETS ${PROJECT_NAME} ${PROJECT_NAME}_exec
   ARCHIVE DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
   LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
   RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}

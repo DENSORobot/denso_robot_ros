@@ -21,10 +21,10 @@ include_directories(
   ${catkin_INCLUDE_DIRS}
 )
 
-add_executable(denso_robot_core_test
-  src/denso_robot_core_test.cpp)
+add_executable(${PROJECT_NAME}
+  src/${PROJECT_NAME}.cpp)
 
-target_link_libraries(denso_robot_core_test
+target_link_libraries(${PROJECT_NAME}
   ${catkin_LIBRARIES}
 )
 
@@ -32,7 +32,7 @@ target_link_libraries(denso_robot_core_test
 ## Install ##
 #############
 
-install(TARGETS denso_robot_core_test
+install(TARGETS ${PROJECT_NAME}
   ARCHIVE DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
   LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
   RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
