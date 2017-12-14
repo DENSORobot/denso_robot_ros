@@ -50,8 +50,8 @@ public:
 
   enum {
     SENDFMT_NONE   = 0,
-    SENDFMT_MINIIO = 0x0020,
-    SENDFMT_HANDIO = 0x0100,
+    SENDFMT_HANDIO = 0x0020,
+    SENDFMT_MINIIO = 0x0100,
     SENDFMT_USERIO = 0x0200,
   };
 
@@ -62,11 +62,17 @@ public:
     RECVFMT_POSE_T  = 0x0003,
     RECVFMT_POSE_PJ = 0x0004,
     RECVFMT_POSE_TJ = 0x0005,
+    RECVFMT_POSE    = 0x000F,
     RECVFMT_TIME    = 0x0010,
     RECVFMT_HANDIO  = 0x0020,
     RECVFMT_CURRENT = 0x0040,
     RECVFMT_MINIIO  = 0x0100,
     RECVFMT_USERIO  = 0x0200,
+  };
+
+  enum {
+    TSFMT_MILLISEC = 0,
+    TSFMT_MICROSEC = 1,
   };
 
 public:
@@ -92,6 +98,23 @@ public:
 
   HRESULT ExecSlaveMove(const std::vector<double>& pose, std::vector<double>& joint);
 
+  int get_SendFormat() const;
+  void put_SendFormat(int format);
+  int get_RecvFormat() const;
+  void put_RecvFormat(int format);
+  int get_TimeFormat() const;
+  void put_TimeFormat(int format);
+
+  int get_MiniIO() const;
+  void put_MiniIO(int value);
+  int get_HandIO() const;
+  void put_HandIO(int value);
+  void put_SendUserIO(const UserIO& value);
+  void put_RecvUserIO(const UserIO& value);
+  void get_RecvUserIO(UserIO& value) const;
+  void get_Current(std::vector<double> &current) const;
+  int get_Timestamp() const;
+  
 private:
   HRESULT ChangeMode(int mode);
   HRESULT ExecSlaveMode(const std::string& name, int32_t format, int32_t option = 0);

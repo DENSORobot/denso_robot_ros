@@ -43,6 +43,7 @@ using namespace std_msgs;
 #include "denso_robot_core/Joints.h"
 #include "denso_robot_core/ExJoints.h"
 #include "denso_robot_core/PoseData.h"
+#include "denso_robot_core/UserIO.h"
 
 // Action
 #include <actionlib/server/simple_action_server.h>

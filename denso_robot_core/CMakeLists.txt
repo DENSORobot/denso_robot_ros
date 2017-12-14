@@ -16,6 +16,7 @@ add_message_files(
   ExJoints.msg
   Joints.msg
   PoseData.msg
+  UserIO.msg
 )
 
 add_action_files(

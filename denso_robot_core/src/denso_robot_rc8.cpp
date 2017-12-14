@@ -70,7 +70,7 @@ DensoRobotRC8::DensoRobotRC8(DensoBase* parent,
     m_send_userio_offset(0), m_send_userio_size(0),
     m_recv_userio_offset(0), m_recv_userio_size(0)
 {
-  m_tsfmt = 0;
+  m_tsfmt = TSFMT_MILLISEC;
 
   m_sendfmt = SENDFMT_MINIIO | SENDFMT_HANDIO;
 
@@ -1254,4 +1254,132 @@ void DensoRobotRC8::Action_Feedback()
   }
 }
 
+int DensoRobotRC8::get_SendFormat() const
+{
+  return m_sendfmt;
+}
+
+void DensoRobotRC8::put_SendFormat(int format)
+{
+  switch(format) {
+    case SENDFMT_NONE:
+    case SENDFMT_HANDIO:
+    case SENDFMT_MINIIO:
+    case SENDFMT_HANDIO | SENDFMT_MINIIO:
+    case SENDFMT_USERIO:
+    case SENDFMT_USERIO | SENDFMT_HANDIO:
+      m_sendfmt = format;
+      break;
+    default:
+      break;
+  }
+}
+  
+int DensoRobotRC8::get_RecvFormat() const
+{
+  return m_recvfmt;
+}
+  
+void DensoRobotRC8::put_RecvFormat(int format)
+{
+  int pose = format & RECVFMT_POSE;
+  if((RECVFMT_NONE <= pose)
+     && (pose <= RECVFMT_POSE_TJ))
+  {
+    switch(format & ~RECVFMT_POSE) {
+      case RECVFMT_NONE:
+      case RECVFMT_TIME:
+      case RECVFMT_HANDIO:
+      case RECVFMT_CURRENT:
+      case RECVFMT_MINIIO:
+      case RECVFMT_USERIO:
+      case RECVFMT_TIME | RECVFMT_HANDIO:
+      case RECVFMT_TIME | RECVFMT_MINIIO:
+      case RECVFMT_HANDIO | RECVFMT_MINIIO:
+      case RECVFMT_TIME | RECVFMT_HANDIO | RECVFMT_MINIIO:
+      case RECVFMT_TIME | RECVFMT_USERIO:
+      case RECVFMT_HANDIO | RECVFMT_USERIO:
+      case RECVFMT_TIME | RECVFMT_HANDIO | RECVFMT_USERIO:
+      case RECVFMT_CURRENT | RECVFMT_MINIIO:
+      case RECVFMT_TIME | RECVFMT_CURRENT | RECVFMT_MINIIO:
+      case RECVFMT_CURRENT | RECVFMT_HANDIO:
+      case RECVFMT_TIME | RECVFMT_CURRENT | RECVFMT_HANDIO:
+      case RECVFMT_CURRENT | RECVFMT_HANDIO | RECVFMT_MINIIO:
+      case RECVFMT_TIME | RECVFMT_CURRENT | RECVFMT_HANDIO | RECVFMT_MINIIO:
+      case RECVFMT_CURRENT | RECVFMT_USERIO:
+      case RECVFMT_TIME | RECVFMT_CURRENT | RECVFMT_USERIO:
+      case RECVFMT_CURRENT | RECVFMT_MINIIO | RECVFMT_USERIO:
+      case RECVFMT_TIME | RECVFMT_CURRENT | RECVFMT_HANDIO | RECVFMT_USERIO:
+        m_recvfmt = format;
+        break;
+      default:
+        break;
+    }
+  }
+}
+
+int DensoRobotRC8::get_TimeFormat() const
+{
+  return m_tsfmt;
+}
+
+void DensoRobotRC8::put_TimeFormat(int format)
+{
+  if((format == TSFMT_MILLISEC)
+     || (format == TSFMT_MICROSEC))
+  {
+    m_tsfmt = format;
+  }
+}
+
+int DensoRobotRC8::get_MiniIO() const
+{
+  return m_recv_miniio;
+}
+
+void DensoRobotRC8::put_MiniIO(int value)
+{
+  m_send_miniio = value;
+}
+
+int DensoRobotRC8::get_HandIO() const
+{
+  return m_recv_handio;
+}
+
+void DensoRobotRC8::put_HandIO(int value)
+{
+  m_send_handio = value;
+}
+
+void DensoRobotRC8::put_SendUserIO(const UserIO& value)
+{
+  m_send_userio_offset = value.offset;
+  m_send_userio_size = value.size;
+  m_send_userio = value.value;
+}
+
+void DensoRobotRC8::put_RecvUserIO(const UserIO& value)
+{
+  m_recv_userio_offset = value.offset;
+  m_recv_userio_size = value.size;
+}
+
+void DensoRobotRC8::get_RecvUserIO(UserIO& value) const
+{
+  value.offset = m_recv_userio_offset;
+  value.size = m_recv_userio_size;
+  value.value = m_recv_userio;
+}
+
+void DensoRobotRC8::get_Current(std::vector<double> &current) const
+{
+  current = m_current;
+}
+
+int DensoRobotRC8::get_Timestamp() const
+{
+  return m_timestamp;
+}
+  
 }
