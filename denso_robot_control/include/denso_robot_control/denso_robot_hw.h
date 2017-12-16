@@ -41,6 +41,7 @@ using namespace std_msgs;
 #include "denso_robot_core/denso_controller.h"
 #include "denso_robot_core/denso_robot_rc8.h"
 #include "denso_robot_core/denso_variable.h"
+#include "denso_robot_core/UserIO.h"
 using namespace denso_robot_core;
 
 #define JOINT_MAX (8)
@@ -91,8 +92,20 @@ namespace denso_robot_control
 
     std::string m_robName;
     int m_robJoints;
+    int m_sendfmt;
+    int m_recvfmt;
 
     ros::Subscriber m_subChangeMode;
+    ros::Subscriber m_subMiniIO;
+    ros::Subscriber m_subHandIO;
+    ros::Subscriber m_subSendUserIO;
+    ros::Subscriber m_subRecvUserIO;
+
+    ros::Publisher  m_pubCurMode;
+    ros::Publisher  m_pubMiniIO;
+    ros::Publisher  m_pubHandIO;
+    ros::Publisher  m_pubRecvUserIO;
+    ros::Publisher  m_pubCurrent;
   };
 
 }

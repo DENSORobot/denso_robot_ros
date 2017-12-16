@@ -1271,6 +1271,7 @@ void DensoRobotRC8::put_SendFormat(int format)
       m_sendfmt = format;
       break;
     default:
+      ROS_WARN("Failed to put_SendFormat.\n");
       break;
   }
 }
@@ -1313,8 +1314,13 @@ void DensoRobotRC8::put_RecvFormat(int format)
         m_recvfmt = format;
         break;
       default:
+        ROS_WARN("Failed to put_RecvFormat.\n");
         break;
     }
+  }
+  else
+  {
+    ROS_WARN("Failed to put_RecvFormat.\n");
   }
 }
 
@@ -1329,6 +1335,10 @@ void DensoRobotRC8::put_TimeFormat(int format)
      || (format == TSFMT_MICROSEC))
   {
     m_tsfmt = format;
+  }
+  else
+  {
+    ROS_WARN("Failed to put_TimeFormat.\n");
   }
 }
 

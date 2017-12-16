@@ -50,6 +50,11 @@ namespace denso_robot_control
 
     m_robName   = "";
     m_robJoints = 0;
+    m_sendfmt   = DensoRobotRC8::SENDFMT_MINIIO
+      | DensoRobotRC8::SENDFMT_HANDIO;
+    m_recvfmt   = DensoRobotRC8::RECVFMT_POSE_PJ
+      | DensoRobotRC8::RECVFMT_MINIIO
+      | DensoRobotRC8::RECVFMT_HANDIO;
   }
 
   DensoRobotHW::~DensoRobotHW()
@@ -92,6 +97,14 @@ namespace denso_robot_control
     if (!nh.getParam("arm_group", armGroup)) {
       ROS_INFO("Use arm group 0");
       armGroup = 0;
+    }
+
+    int format = 0;
+    if(nh.getParam("send_format", format)) {
+      m_sendfmt = format;
+    }
+    if(nh.getParam("recv_format", format)) {
+      m_recvfmt = format;
     }
 
     registerInterface(&m_JntStInterface);
@@ -152,6 +165,12 @@ namespace denso_robot_control
       ROS_ERROR("Failed to motor on. (%X)", hr);
       return hr;
     }
+
+    m_rob->put_SendFormat(m_sendfmt);
+    m_sendfmt = m_rob->get_SendFormat();
+
+    m_rob->put_RecvFormat(m_sendfmt);
+    m_recvfmt = m_rob->get_RecvFormat();
 
     hr = m_eng->ChangeMode(DensoRobotRC8::SLVMODE_SYNC_WAIT
         | DensoRobotRC8::SLVMODE_POSE_J);
