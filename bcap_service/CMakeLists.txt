@@ -24,7 +24,7 @@ generate_messages(
 )
 
 catkin_package(
-  INCLUDE_DIRS include/${PROJECT_NAME}
+  INCLUDE_DIRS include
   LIBRARIES ${PROJECT_NAME}
   CATKIN_DEPENDS bcap_core message_runtime roscpp std_msgs
 )
@@ -34,7 +34,7 @@ catkin_package(
 ###########
 
 include_directories(
-  include/${PROJECT_NAME}
+  include
   ${catkin_INCLUDE_DIRS}
 )
 

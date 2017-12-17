@@ -34,7 +34,7 @@ generate_messages(
 )
 
 catkin_package(
-  INCLUDE_DIRS include/${PROJECT_NAME}
+  INCLUDE_DIRS include
   LIBRARIES ${PROJECT_NAME}
   CATKIN_DEPENDS actionlib
     actionlib_msgs bcap_core bcap_service
@@ -47,7 +47,7 @@ catkin_package(
 ###########
 
 include_directories(
-  include/${PROJECT_NAME}
+  include
   ${catkin_INCLUDE_DIRS}
 )
 

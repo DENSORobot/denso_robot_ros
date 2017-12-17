@@ -1,10 +1,10 @@
-cmake_minimum_required(VERSION 2.8.3)
+cmake_minimum_required(VERSION 2.8.11)
 project(bcap_core)
 
 find_package(catkin REQUIRED)
 
 catkin_package(
-  INCLUDE_DIRS include/${PROJECT_NAME}
+  INCLUDE_DIRS include
   LIBRARIES bcap_client bcap_server tpcomm rac_string
 )
 
@@ -15,7 +15,7 @@ catkin_package(
 # Options
 option  (${PROJECT_NAME}_USE_LINUX_API      "Use Linux API"   ON)
 option  (${PROJECT_NAME}_DN_USE_VARIANT_API "Use VARIANT API" ON)
-option  (${PROJECT_NAME}_DN_USE_BSTR_API    "Use BSTR API" ON)
+option  (${PROJECT_NAME}_DN_USE_BSTR_API    "Use BSTR API"    ON)
 
 message (STATUS "_USE_LINUX_API=${${PROJECT_NAME}_USE_LINUX_API}")
 message (STATUS "_DN_USE_VARIANT_API=${${PROJECT_NAME}_DN_USE_VARIANT_API}")
@@ -39,7 +39,7 @@ else(${${PROJECT_NAME}_DN_USE_BSTR_API})
 endif(${${PROJECT_NAME}_DN_USE_BSTR_API})
 
 include_directories(
-  include/${PROJECT_NAME}
+  include
 )
 
 add_library(bcap_client
@@ -55,7 +55,7 @@ add_library(bcap_client
 )
 
 target_include_directories(bcap_client PUBLIC
-  include/${PROJECT_NAME}/bCAPClient
+  include/bCAPClient
 )
 
 target_link_libraries(bcap_client
@@ -75,7 +75,7 @@ add_library(bcap_server
 )
 
 target_include_directories(bcap_server PUBLIC
-  include/${PROJECT_NAME}/bCAPServer
+  include/bCAPServer
 )
 
 target_link_libraries(bcap_server
@@ -88,7 +88,7 @@ add_library(rac_string
 )
 
 target_include_directories(rac_string PUBLIC
-  include/${PROJECT_NAME}/RACString
+  include/RACString
 )
 
 add_library(tpcomm
@@ -103,7 +103,7 @@ add_library(tpcomm
 )
 
 target_include_directories(tpcomm PUBLIC
-  include/${PROJECT_NAME}/TPComm
+  include/TPComm
 )
 
 target_link_libraries(tpcomm
