@@ -163,6 +163,17 @@ namespace denso_robot_control
       return hr;
     }
 
+    {
+      // Clear Error
+      VARIANT_Ptr vntVal(new VARIANT());
+      vntVal->vt = VT_I4; vntVal->lVal = 0L;
+      hr = m_varErr->ExecPutValue(vntVal);
+      if(FAILED(hr)) {
+        ROS_ERROR("Failed to clear error. (%X)", hr);
+        return hr;
+      }
+    }
+
     hr = m_rob->AddVariable("@SERVO_ON");
     if(SUCCEEDED(hr)) {
       DensoVariable_Ptr pVar;
