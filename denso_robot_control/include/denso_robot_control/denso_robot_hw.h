@@ -45,6 +45,8 @@ using namespace std_msgs;
 #include "denso_robot_core/UserIO.h"
 using namespace denso_robot_core;
 
+#include <boost/thread.hpp>
+
 #define JOINT_MAX (8)
 
 namespace denso_robot_control
@@ -112,6 +114,8 @@ namespace denso_robot_control
     ros::Publisher  m_pubHandIO;
     ros::Publisher  m_pubRecvUserIO;
     ros::Publisher  m_pubCurrent;
+
+    boost::mutex m_mtxMode;
   };
 
 }

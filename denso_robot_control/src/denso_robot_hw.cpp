@@ -267,6 +267,8 @@ namespace denso_robot_control
 
   void DensoRobotHW::Callback_ChangeMode(const Int32::ConstPtr& msg)
   {
+    boost::mutex::scoped_lock lockMode(m_mtxMode);
+
     ROS_INFO("Change to mode %d.", msg->data);
     HRESULT hr = ChangeModeWithClearError(msg->data);
     if(FAILED(hr)) {
@@ -297,6 +299,8 @@ namespace denso_robot_control
 
   void DensoRobotHW::read(ros::Time time, ros::Duration period)
   {
+    boost::mutex::scoped_lock lockMode(m_mtxMode);
+    
     if(m_eng->get_Mode() == DensoRobotRC8::SLVMODE_NONE) {
       HRESULT hr = m_rob->ExecCurJnt(m_joint);
       if(FAILED(hr)) {
@@ -322,6 +326,8 @@ namespace denso_robot_control
 
   void DensoRobotHW::write(ros::Time time, ros::Duration period)
   {
+    boost::mutex::scoped_lock lockMode(m_mtxMode);
+    
     if(m_eng->get_Mode() != DensoRobotRC8::SLVMODE_NONE) {
       std::vector<double> pose;
       pose.resize(JOINT_MAX);

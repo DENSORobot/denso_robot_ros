@@ -8,11 +8,22 @@
   <!-- Robot description argument -->
   <arg name="robot_description" value="$(arg robot_name)_description" />
 
+  <!-- Send format -->
+  <arg name="send_format" default="288" />
+
+  <!-- Recieve format -->
+  <arg name="recv_format" default="292" />
+
   <include ns="/$(arg robot_name)" file="$(find bcap_service)/launch/bcap_service.launch.xml">
     <arg name="ip_address" value="$(arg ip_address)" />
   </include>
 
   <include ns="/$(arg robot_name)" file="$(find denso_robot_core)/launch/denso_robot_core.launch.xml" />
+
+  <include ns="/$(arg robot_name)" file="$(find denso_robot_control)/launch/denso_robot_control.launch.xml">
+    <arg name="send_format" value="$(arg send_format)" />
+    <arg name="recv_format" value="$(arg recv_format)" />
+  </include>
 
   <!-- Load the URDF, SRDF and other .yaml configuration files on the param server -->
   <param name="robot_description" type="str" textfile="$(find denso_robot_descriptions)/$(arg robot_description)/$(arg robot_name).urdf"/>

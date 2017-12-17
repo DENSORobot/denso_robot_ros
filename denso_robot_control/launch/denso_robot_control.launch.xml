@@ -1,0 +1,9 @@
+<launch>
+  <!-- Send format -->
+  <arg name="send_format" default="288" />
+  <param name="send_format" value="$(arg send_format)" />
+
+  <!-- Recieve format -->
+  <arg name="recv_format" default="292" />
+  <param name="recv_format" value="$(arg recv_format)" />
+</launch>
