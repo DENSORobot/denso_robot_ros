@@ -29,6 +29,7 @@
 
 // Message (std_msgs)
 #include <std_msgs/Int32.h>
+#include <std_msgs/Float64MultiArray.h>
 using namespace std_msgs;
 
 #include <hardware_interface/joint_command_interface.h>
@@ -74,6 +75,11 @@ namespace denso_robot_control
     void Callback_ChangeMode(const Int32::ConstPtr& msg);
 
     HRESULT CheckRobotType();
+
+    void Callback_MiniIO(const Int32::ConstPtr& msg);
+    void Callback_HandIO(const Int32::ConstPtr& msg);
+    void Callback_SendUserIO(const UserIO::ConstPtr& msg);
+    void Callback_RecvUserIO(const UserIO::ConstPtr& msg);    
 
   private:
     hardware_interface::JointStateInterface m_JntStInterface;

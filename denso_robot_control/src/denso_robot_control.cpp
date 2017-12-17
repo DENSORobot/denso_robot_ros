@@ -24,7 +24,7 @@
 
 #include <ros/ros.h>
 #include <controller_manager/controller_manager.h>
-#include "denso_robot_hw.h"
+#include "denso_robot_control/denso_robot_hw.h"
 
 int main(int argc, char *argv[])
 {

@@ -23,7 +23,7 @@
  */
 
 #include <sstream>
-#include "denso_robot_hw.h"
+#include "denso_robot_control/denso_robot_hw.h"
 
 #define RAD2DEG(x) ((x) * 180.0 / M_PI)
 #define DEG2RAD(x) ((x) / 180.0 * M_PI)
@@ -67,11 +67,11 @@ namespace denso_robot_control
     ros::NodeHandle nh;
 
     if (!nh.getParam("robot_name", m_robName)) {
-      ROS_WARN("Failed to get robot_name parameter");
+      ROS_WARN("Failed to get robot_name parameter.");
     }
 
     if (!nh.getParam("robot_joints", m_robJoints)) {
-      ROS_WARN("Failed to get robot_joints parameter");
+      ROS_WARN("Failed to get robot_joints parameter.");
     }
 
     for (int i = 0; i < m_robJoints; i++) {
@@ -79,8 +79,8 @@ namespace denso_robot_control
       ss << "joint_" << i+1;
 
       if (!nh.getParam(ss.str(), m_type[i])) {
-        ROS_WARN("Failed to get joint_%d parameter", i+1);
-        ROS_WARN("It was assumed revolute type");
+        ROS_WARN("Failed to get joint_%d parameter.", i+1);
+        ROS_WARN("It was assumed revolute type.");
         m_type[i] = 1;
       }
 
@@ -95,7 +95,7 @@ namespace denso_robot_control
 
     int armGroup = 0;
     if (!nh.getParam("arm_group", armGroup)) {
-      ROS_INFO("Use arm group 0");
+      ROS_INFO("Use arm group 0.");
       armGroup = 0;
     }
 
@@ -103,8 +103,21 @@ namespace denso_robot_control
     if(nh.getParam("send_format", format)) {
       m_sendfmt = format;
     }
+
+    format = 0;
     if(nh.getParam("recv_format", format)) {
       m_recvfmt = format;
+    }
+    switch(m_recvfmt & DensoRobotRC8::RECVFMT_POSE) {
+      case DensoRobotRC8::RECVFMT_POSE_J:
+      case DensoRobotRC8::RECVFMT_POSE_PJ:
+      case DensoRobotRC8::RECVFMT_POSE_TJ:
+        break;
+      default:
+	ROS_WARN("Recieve format has to contain joint.");
+	m_recvfmt = ((m_recvfmt & ~DensoRobotRC8::RECVFMT_POSE)
+	  | DensoRobotRC8::RECVFMT_POSE_J);
+        break;
     }
 
     registerInterface(&m_JntStInterface);
@@ -169,18 +182,19 @@ namespace denso_robot_control
     m_rob->put_SendFormat(m_sendfmt);
     m_sendfmt = m_rob->get_SendFormat();
 
-    m_rob->put_RecvFormat(m_sendfmt);
+    m_rob->put_RecvFormat(m_recvfmt);
     m_recvfmt = m_rob->get_RecvFormat();
 
-    hr = m_eng->ChangeMode(DensoRobotRC8::SLVMODE_SYNC_WAIT
-        | DensoRobotRC8::SLVMODE_POSE_J);
+    m_subChangeMode = nh.subscribe<Int32>(
+        "ChangeMode", 1, &DensoRobotHW::Callback_ChangeMode, this);
+    m_pubCurMode = nh.advertise<Int32>("CurMode", 1);
+    
+    hr = ChangeModeWithClearError(DensoRobotRC8::SLVMODE_SYNC_WAIT
+	| DensoRobotRC8::SLVMODE_POSE_J);
     if(FAILED(hr)) {
       ROS_ERROR("Failed to change to slave mode. (%X)", hr);
       return hr;
     }
-
-    m_subChangeMode = nh.subscribe<Int32>(
-        "ChangeMode", 1, &DensoRobotHW::Callback_ChangeMode, this);
 
     return S_OK;
   }
@@ -192,14 +206,68 @@ namespace denso_robot_control
       // Clear Error
       VARIANT_Ptr vntVal(new VARIANT());
       vntVal->vt = VT_I4; vntVal->lVal = 0L;
-      hr = m_varErr->ExecPutValue(vntVal);
+      m_varErr->ExecPutValue(vntVal);
     }
+
+    Int32 msg;
+    msg.data = m_eng->get_Mode();
+    m_pubCurMode.publish(msg);
+
+    if(msg.data == DensoRobotRC8::SLVMODE_NONE) {
+      m_subMiniIO.shutdown();
+      m_subHandIO.shutdown();
+      m_subSendUserIO.shutdown();
+      m_subRecvUserIO.shutdown();
+      m_pubMiniIO.shutdown();
+      m_pubHandIO.shutdown();
+      m_pubRecvUserIO.shutdown();
+      m_pubCurrent.shutdown();
+    }
+    else
+    {
+      ros::NodeHandle nh;
+    
+      if(m_sendfmt & DensoRobotRC8::SENDFMT_HANDIO)
+      {
+	m_subHandIO = nh.subscribe<Int32>(
+	  "Write_HandIO", 1, &DensoRobotHW::Callback_HandIO, this);
+      }
+      if(m_sendfmt & DensoRobotRC8::SENDFMT_MINIIO)
+      {
+	m_subMiniIO = nh.subscribe<Int32>(
+	  "Write_MiniIO", 1, &DensoRobotHW::Callback_MiniIO, this);
+      }
+      if(m_sendfmt & DensoRobotRC8::SENDFMT_USERIO)
+      {
+	m_subSendUserIO = nh.subscribe<UserIO>(
+	  "Write_SendUserIO", 1, &DensoRobotHW::Callback_SendUserIO, this);
+      }
+      if(m_recvfmt & DensoRobotRC8::RECVFMT_HANDIO)
+      {
+	m_pubHandIO = nh.advertise<Int32>("Read_HandIO", 1);
+      }
+      if(m_recvfmt & DensoRobotRC8::RECVFMT_CURRENT)
+      {
+	m_pubCurrent = nh.advertise<Float64MultiArray>("Read_Current", 1);
+      }
+      if(m_recvfmt & DensoRobotRC8::RECVFMT_MINIIO)
+      {
+	m_pubMiniIO = nh.advertise<Int32>("Read_MiniIO", 1);
+      }
+      if(m_recvfmt & DensoRobotRC8::RECVFMT_USERIO)
+      {
+	m_subRecvUserIO = nh.subscribe<UserIO>(
+	  "Write_RecvUserIO", 1, &DensoRobotHW::Callback_RecvUserIO, this);
+	m_pubRecvUserIO = nh.advertise<UserIO>("Read_RecvUserIO", 1);
+      }
+    }
+    
     return hr;
   }
 
   void DensoRobotHW::Callback_ChangeMode(const Int32::ConstPtr& msg)
   {
-    ROS_INFO("Change to mode %d", msg->data);
+    ROS_INFO("Change to mode %d.", msg->data);
     HRESULT hr = ChangeModeWithClearError(msg->data);
     if(FAILED(hr)) {
       ROS_ERROR("Failed to change mode. (%X)", hr);
@@ -274,7 +342,33 @@ namespace denso_robot_control
       }
 
       HRESULT hr = m_rob->ExecSlaveMove(pose, m_joint);
-      if(FAILED(hr) && (hr != E_BUF_FULL)) {
+      if(SUCCEEDED(hr)) {
+        if(m_recvfmt & DensoRobotRC8::RECVFMT_HANDIO)
+        {
+	  Int32 msg;
+	  msg.data = m_rob->get_HandIO();
+	  m_pubHandIO.publish(msg);
+        }
+        if(m_recvfmt & DensoRobotRC8::RECVFMT_CURRENT)
+        {
+	  Float64MultiArray msg;
+	  m_rob->get_Current(msg.data);
+	  m_pubCurrent.publish(msg);
+        }
+        if(m_recvfmt & DensoRobotRC8::RECVFMT_MINIIO)
+        {
+	  Int32 msg;
+	  msg.data = m_rob->get_MiniIO();
+	  m_pubMiniIO.publish(msg);
+        }
+        if(m_recvfmt & DensoRobotRC8::RECVFMT_USERIO)
+        {
+	  UserIO msg;
+	  m_rob->get_RecvUserIO(msg);
+	  m_pubRecvUserIO.publish(msg);
+        }	
+      }
+      else if(FAILED(hr) && (hr != E_BUF_FULL)) {
         ROS_ERROR("Failed to write. (%X)", hr);
 
         VARIANT_Ptr vntVal(new VARIANT());
@@ -285,6 +379,26 @@ namespace denso_robot_control
         }
       }
     }
+  }
+
+  void DensoRobotHW::Callback_MiniIO(const Int32::ConstPtr& msg)
+  {
+    m_rob->put_MiniIO(msg->data);
+  }
+
+  void DensoRobotHW::Callback_HandIO(const Int32::ConstPtr& msg)
+  {
+    m_rob->put_HandIO(msg->data);
+  }
+  
+  void DensoRobotHW::Callback_SendUserIO(const UserIO::ConstPtr& msg)
+  {
+    m_rob->put_SendUserIO(*msg.get());
+  }
+
+  void DensoRobotHW::Callback_RecvUserIO(const UserIO::ConstPtr& msg)
+  {
+    m_rob->put_RecvUserIO(*msg.get());
   }
 
 }
