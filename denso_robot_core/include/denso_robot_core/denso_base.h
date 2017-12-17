@@ -55,7 +55,7 @@ using namespace actionlib;
 #include "denso_robot_core/DriveStringAction.h"
 #include "denso_robot_core/DriveValueAction.h"
 
-#include "tinyxml2.h"
+#include "denso_robot_core/tinyxml2.h"
 using namespace tinyxml2;
 
 #define MESSAGE_QUEUE (1)

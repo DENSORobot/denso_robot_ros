@@ -25,10 +25,10 @@
 #ifndef _DENSO_CONTROLLER_H_
 #define _DENSO_CONTROLLER_H_
 
-#include "denso_base.h"
-#include "denso_robot.h"
-#include "denso_task.h"
-#include "denso_variable.h"
+#include "denso_robot_core/denso_base.h"
+#include "denso_robot_core/denso_robot.h"
+#include "denso_robot_core/denso_task.h"
+#include "denso_robot_core/denso_variable.h"
 
 #define XML_CTRL_NAME "Controller"
 

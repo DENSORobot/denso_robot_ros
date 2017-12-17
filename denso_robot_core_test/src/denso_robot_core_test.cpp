@@ -273,7 +273,7 @@ void MoveString(const std::string& name, float timeout)
 
   mvStrRes = acMvStr.getResult();
 
-  ROS_INFO("State: %s, Result: %X\n", gs.toString().c_str(), mvStrRes->HRESULT);
+  ROS_INFO("State: %s, Result: %X", gs.toString().c_str(), mvStrRes->HRESULT);
 }
 
 void Callback_MoveValueFeedback(const MoveValueActionFeedbackConstPtr& msg)
@@ -344,7 +344,7 @@ void MoveValue(const std::string& name, float timeout)
 
   mvValRes = acMvVal.getResult();
 
-  ROS_INFO("State: %s, Result: %X\n", gs.toString().c_str(), mvValRes->HRESULT);
+  ROS_INFO("State: %s, Result: %X", gs.toString().c_str(), mvValRes->HRESULT);
 }
 
 void Callback_DriveStringFeedback(const DriveStringActionFeedbackConstPtr& msg)
@@ -388,7 +388,7 @@ void DriveString(const std::string& name, float timeout)
 
   drvStrRes = acDrvVal.getResult();
 
-  ROS_INFO("State: %s, Result: %X\n", gs.toString().c_str(), drvStrRes->HRESULT);
+  ROS_INFO("State: %s, Result: %X", gs.toString().c_str(), drvStrRes->HRESULT);
 }
 
 void Callback_DriveValueFeedback(const DriveValueActionFeedbackConstPtr& msg)
@@ -445,7 +445,7 @@ void DriveValue(const std::string& name, float timeout)
 
   drvValRes = acDrvVal.getResult();
 
-  ROS_INFO("State: %s, Result: %X\n", gs.toString().c_str(), drvValRes->HRESULT);
+  ROS_INFO("State: %s, Result: %X", gs.toString().c_str(), drvValRes->HRESULT);
 }
 
 int main(int argc, char** argv)

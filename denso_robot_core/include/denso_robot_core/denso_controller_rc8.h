@@ -25,8 +25,8 @@
 #ifndef _DENSO_CONTROLLER_RC8_H_
 #define _DENSO_CONTROLLER_RC8_H_
 
-#include "denso_controller.h"
-#include "denso_robot_rc8.h"
+#include "denso_robot_core/denso_controller.h"
+#include "denso_robot_core/denso_robot_rc8.h"
 
 namespace denso_robot_core {
 

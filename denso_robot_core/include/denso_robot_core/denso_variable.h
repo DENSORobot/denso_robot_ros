@@ -25,7 +25,7 @@
 #ifndef _DENSO_VARIABLE_H_
 #define _DENSO_VARIABLE_H_
 
-#include "denso_base.h"
+#include "denso_robot_core/denso_base.h"
 
 #define XML_VARIABLE_NAME "Variable"
 

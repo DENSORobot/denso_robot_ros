@@ -22,7 +22,7 @@
  * THE SOFTWARE.
  */
 
-#include "denso_robot_rc8.h"
+#include "denso_robot_core/denso_robot_rc8.h"
 
 #define BCAP_ROBOT_EXECUTE_ARGS (3)
 #define BCAP_ROBOT_HALT_ARGS    (2)
@@ -1271,7 +1271,7 @@ void DensoRobotRC8::put_SendFormat(int format)
       m_sendfmt = format;
       break;
     default:
-      ROS_WARN("Failed to put_SendFormat.\n");
+      ROS_WARN("Failed to put_SendFormat.");
       break;
   }
 }
@@ -1314,13 +1314,13 @@ void DensoRobotRC8::put_RecvFormat(int format)
         m_recvfmt = format;
         break;
       default:
-        ROS_WARN("Failed to put_RecvFormat.\n");
+        ROS_WARN("Failed to put_RecvFormat.");
         break;
     }
   }
   else
   {
-    ROS_WARN("Failed to put_RecvFormat.\n");
+    ROS_WARN("Failed to put_RecvFormat.");
   }
 }
 
@@ -1338,7 +1338,7 @@ void DensoRobotRC8::put_TimeFormat(int format)
   }
   else
   {
-    ROS_WARN("Failed to put_TimeFormat.\n");
+    ROS_WARN("Failed to put_TimeFormat.");
   }
 }
 

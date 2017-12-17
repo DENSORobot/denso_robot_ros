@@ -23,8 +23,8 @@
  */
 
 #include <stdlib.h>
-#include "denso_base.h"
-#include "denso_variable.h"
+#include "denso_robot_core/denso_base.h"
+#include "denso_robot_core/denso_variable.h"
 
 #define BCAP_GET_OBJECT_ARGS      (3)
 #define BCAP_GET_OBJECTNAMES_ARGS (2)

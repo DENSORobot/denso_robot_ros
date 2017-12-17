@@ -24,7 +24,7 @@
 
 #include <stdlib.h>
 #include <sstream>
-#include "bcap_service.h"
+#include "bcap_service/bcap_service.h"
 #include "bcap_core/bcap_funcid.h"
 #include "bcap_core/bCAPClient/bcap_client.h"
 #include "bcap_core/RACString/rac_string.h"
@@ -42,7 +42,7 @@ int main(int argc, char** argv)
 
   hr = bcapsrv.Connect();
   if(FAILED(hr)) {
-    ROS_ERROR("Failed to connect. (%X)\n", hr);
+    ROS_ERROR("Failed to connect. (%X)", hr);
     return 1;
   } else {
     bcapsrv.StartService(node);

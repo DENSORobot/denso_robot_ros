@@ -22,7 +22,7 @@
  * THE SOFTWARE.
  */
 
-#include "denso_controller_rc8.h"
+#include "denso_robot_core/denso_controller_rc8.h"
 
 #define BCAP_CTRL_CONNECT_ARGS (4)
 

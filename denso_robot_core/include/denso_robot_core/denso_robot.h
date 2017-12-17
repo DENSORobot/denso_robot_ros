@@ -25,8 +25,8 @@
 #ifndef _DENSO_ROBOT_H_
 #define _DENSO_ROBOT_H_
 
-#include "denso_base.h"
-#include "denso_variable.h"
+#include "denso_robot_core/denso_base.h"
+#include "denso_robot_core/denso_variable.h"
 
 #define XML_ROBOT_NAME "Robot"
 

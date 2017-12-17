@@ -26,7 +26,7 @@
 #define _DENSO_ROBOT_RC8_H_
 
 #include <boost/thread.hpp>
-#include "denso_robot.h"
+#include "denso_robot_core/denso_robot.h"
 
 #define S_BUF_FULL (0x0F200501)
 #define E_BUF_FULL (0x83201483)

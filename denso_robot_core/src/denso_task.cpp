@@ -22,7 +22,7 @@
  * THE SOFTWARE.
  */
 
-#include "denso_task.h"
+#include "denso_robot_core/denso_task.h"
 
 namespace denso_robot_core {
 

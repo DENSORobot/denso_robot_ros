@@ -25,7 +25,7 @@
 #ifndef _DENSO_ROBOT_CORE_H_
 #define _DENSO_ROBOT_CORE_H_
 
-#include "denso_controller.h"
+#include "denso_robot_core/denso_controller.h"
 
 namespace denso_robot_core {
 

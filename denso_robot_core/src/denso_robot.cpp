@@ -22,7 +22,7 @@
  * THE SOFTWARE.
  */
 
-#include "denso_robot.h"
+#include "denso_robot_core/denso_robot.h"
 
 #define NAME_ARMGROUP "_armgroup"
 

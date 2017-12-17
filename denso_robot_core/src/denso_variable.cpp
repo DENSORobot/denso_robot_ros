@@ -22,7 +22,7 @@
  * THE SOFTWARE.
  */
 
-#include "denso_variable.h"
+#include "denso_robot_core/denso_variable.h"
 
 #define NAME_READ  "_Read"
 #define NAME_WRITE "_Write"

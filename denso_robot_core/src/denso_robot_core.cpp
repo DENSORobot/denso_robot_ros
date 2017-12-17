@@ -22,8 +22,8 @@
  * THE SOFTWARE.
  */
 
-#include "denso_robot_core.h"
-#include "denso_controller_rc8.h"
+#include "denso_robot_core/denso_robot_core.h"
+#include "denso_robot_core/denso_controller_rc8.h"
 #include <boost/thread.hpp>
 
 int main(int argc, char** argv)
@@ -36,7 +36,7 @@ int main(int argc, char** argv)
 
   hr = engine.Initialize();
   if(FAILED(hr)){
-    ROS_ERROR("Failed to initialize. (%X)\n", hr);
+    ROS_ERROR("Failed to initialize. (%X)", hr);
     return 1;
   } else {
     boost::thread t(boost::bind(&denso_robot_core::DensoRobotCore::Start, &engine));
@@ -130,7 +130,7 @@ HRESULT DensoRobotCore::ChangeMode(int mode, bool service)
 
   m_mode = SUCCEEDED(hr) ? mode : 0;
 
-  if((m_mode == 0) && SUCCEEDED(hr) && service) {
+  if((m_mode == 0) && service) {
     ros::NodeHandle nd;
     m_ctrl->StartService(nd);
   }

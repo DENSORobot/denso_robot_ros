@@ -31,7 +31,7 @@ int main(int argc, char **argv)
 {
   if ((argc < 4) || (argc % 2 != 0))
   {
-    ROS_WARN("Usage: bcap_service_test func_id vt value ...\n");
+    ROS_WARN("Usage: bcap_service_test func_id vt value ...");
     return 1;
   }
 
@@ -54,12 +54,12 @@ int main(int argc, char **argv)
 
   if (client.call(packet))
   {
-    ROS_INFO("HRESULT: %X\n", packet.response.HRESULT);
-    ROS_INFO("vntRet: vt := %d, value := %s\n", packet.response.vntRet.vt, packet.response.vntRet.value.c_str());
+    ROS_INFO("HRESULT: %X", packet.response.HRESULT);
+    ROS_INFO("vntRet: vt := %d, value := %s", packet.response.vntRet.vt, packet.response.vntRet.value.c_str());
   }
   else
   {
-    ROS_ERROR("Failed to call\n");
+    ROS_ERROR("Failed to call.");
     return 1;
   }
 
