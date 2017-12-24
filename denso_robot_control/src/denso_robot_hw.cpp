@@ -22,6 +22,7 @@
  * THE SOFTWARE.
  */
 
+#include <string.h>
 #include <sstream>
 #include "denso_robot_control/denso_robot_hw.h"
 
@@ -299,7 +300,10 @@ namespace denso_robot_control
       hr = pVar->ExecGetValue(vntVal);
       if(SUCCEEDED(hr)) {
         strTypeName = DensoBase::ConvertBSTRToString(vntVal->bstrVal);
-        if(m_robName != strTypeName) {
+        if(strncmp(m_robName.c_str(), strTypeName.c_str(),
+		   (m_robName.length() < strTypeName.length())
+		   ? m_robName.length() : strTypeName.length()))
+	{
           hr = E_FAIL;
         }
       }
