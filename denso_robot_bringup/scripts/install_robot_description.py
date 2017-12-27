@@ -32,15 +32,22 @@ import shutil
 import roslib.packages
 
 __BRINGUP_TEXT = """<launch>
-  <!-- the "sim" argument controls whether we connect to a Simulated or Real robot -->
+  <!-- the \"sim\" argument controls whether we connect to a Simulated or Real robot -->
   <!--  - if sim=false, a ip_address argument is required -->
-  <arg name="sim" default="true" />
-  <arg name="ip_address" default="192.168.0.1" />
+  <arg name=\"sim\" default=\"true\" />
+  <arg name=\"ip_address\" default=\"192.168.0.1\" />
 
-  <include file=\"$(find denso_robot_bringup)/launch/denso_robot_bringup.launch">
+  <!-- If you want to change send and recieve format of denso_robot_control, -->
+  <!-- you can specify the send_format and recv_format parameters -->
+  <arg name=\"send_format\" default=\"288\" />
+  <arg name=\"recv_format\" default=\"292\" />
+
+  <include file=\"$(find denso_robot_bringup)/launch/denso_robot_bringup.launch\">
     <arg name=\"robot_name\" value=\"{rob_name}\"/>
     <arg name=\"sim\" value=\"$(arg sim)\"/>
     <arg name=\"ip_address\" value=\"$(arg ip_address)\"/>
+    <arg name=\"send_format\" value=\"$(arg send_format)\" />
+    <arg name=\"recv_format\" value=\"$(arg recv_format)\" />
   </include>
 </launch>"""
 
