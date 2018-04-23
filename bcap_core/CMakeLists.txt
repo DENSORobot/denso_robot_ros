@@ -56,11 +56,11 @@ endif(WIN32)
 # Use visual studio
 if(MSVC)
   # Set VS version
-  if("${CMAKE_GENERATOR}" MATCHES [[Visual Studio ([0-9]?[0-9])]])
+  if("${CMAKE_GENERATOR}" MATCHES "Visual Studio ([0-9]?[0-9])")
     set(_VS_VER "v${CMAKE_MATCH_1}/" CACHE INTERNAL "Visual Studio Ver")
-  else("${CMAKE_GENERATOR}" MATCHES [[Visual Studio ([0-9]?[0-9])]])
+  else("${CMAKE_GENERATOR}" MATCHES "Visual Studio ([0-9]?[0-9])")
     set(_VS_VER "" CACHE INTERNAL "")
-  endif("${CMAKE_GENERATOR}" MATCHES [[Visual Studio ([0-9]?[0-9])]])
+  endif("${CMAKE_GENERATOR}" MATCHES "Visual Studio ([0-9]?[0-9])")
 else(MSVC) # Not use visual studio
   option  (_USE_LINUX_API      "Use Linux API"   ON)
   message (STATUS "_USE_LINUX_API=${_USE_LINUX_API}")
@@ -98,13 +98,13 @@ include_directories(
 )
 
 # Include stdint.h
-if(MSVC AND "${_VS_VER}" MATCHES [[v([0-9]?[0-9])]])
+if(MSVC AND "${_VS_VER}" MATCHES "v([0-9]?[0-9])")
   if("${CMAKE_MATCH_1}" LESS 10)
     include_directories(
       include/stdint
     )
   endif("${CMAKE_MATCH_1}" LESS 10)
-endif(MSVC AND "${_VS_VER}" MATCHES [[v([0-9]?[0-9])]])
+endif(MSVC AND "${_VS_VER}" MATCHES "v([0-9]?[0-9])")
 
 
 # bcap_client library
