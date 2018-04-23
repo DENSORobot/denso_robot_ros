@@ -39,14 +39,14 @@ else(WIN32) # Linux
   # Search catkin
   find_package(catkin QUIET)
   if(catkin_FOUND)
-    option  (_USE_catkin "Use catkin for installation" ON)
-    if(_USE_catkin)
+    option  (_USE_CATKIN "Use catkin for installation" ON)
+    if(_USE_CATKIN)
     catkin_package(
       INCLUDE_DIRS include
       LIBRARIES bcap_client bcap_server tpcomm rac_string
     )
-    message (STATUS "_USE_catkin=${_USE_catkin}")
-    endif(_USE_catkin)
+    message (STATUS "_USE_CATKIN=${_USE_CATKIN}")
+    endif(_USE_CATKIN)
   else(catkin_FOUND)
     message(STATUS "catkin was not found. Build without catkin.")
   endif(catkin_FOUND)
@@ -189,22 +189,22 @@ endif(_USE_LINUX_API)
 ## Install ##
 #############
 
-if(_USE_catkin)
+if(_USE_CATKIN)
   # libraries
   install(TARGETS bcap_client bcap_server rac_string tpcomm
-    ARCHIVE DESTINATION ${catkin_PACKAGE_LIB_DESTINATION}
-    LIBRARY DESTINATION ${catkin_PACKAGE_LIB_DESTINATION}
-    RUNTIME DESTINATION ${catkin_PACKAGE_BIN_DESTINATION}
+    ARCHIVE DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
+    LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
+    RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
   )
 
   # headers
   install(DIRECTORY include/
-    DESTINATION ${catkin_PACKAGE_INCLUDE_DESTINATION}
+    DESTINATION ${CATKIN_PACKAGE_INCLUDE_DESTINATION}
     FILES_MATCHING PATTERN "*.h"
     PATTERN "${PROJECT_NAME}" EXCLUDE
     PATTERN ".svn" EXCLUDE
   )
-else(_USE_catkin)
+else(_USE_CATKIN)
   # libraries
   if(WIN32 AND NOT BUILD_SHARED_LIBS)
     set_target_properties(bcap_client bcap_server tpcomm rac_string
@@ -227,4 +227,4 @@ else(_USE_catkin)
     PATTERN ".svn" EXCLUDE
   )
 
-endif(_USE_catkin)
+endif(_USE_CATKIN)
