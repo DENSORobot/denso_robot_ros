@@ -346,7 +346,7 @@ namespace denso_robot_control
     if(m_eng->get_Mode() != DensoRobotRC8::SLVMODE_NONE) {
       std::vector<double> pose;
       pose.resize(JOINT_MAX);
-
+      int bits = 0x0000;
       for(int i = 0; i < m_robJoints; i++) {
         switch(m_type[i]){
           case 0: // prismatic
@@ -360,8 +360,10 @@ namespace denso_robot_control
             pose[i] = 0.0;
             break;
         }
-      }
 
+        bits |= (1 << i);
+      }
+      pose.push_back(0x400000 | bits);
       HRESULT hr = m_rob->ExecSlaveMove(pose, m_joint);
       if(SUCCEEDED(hr)) {
         if(m_recvfmt & DensoRobotRC8::RECVFMT_HANDIO)
