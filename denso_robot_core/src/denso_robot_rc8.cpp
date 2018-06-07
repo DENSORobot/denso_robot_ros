@@ -663,9 +663,9 @@ HRESULT DensoRobotRC8::CreateSendParameter(
       return E_FAIL;
   }
 
-  if(joints < pose.size()) {
-    return E_FAIL;
-  }
+  //if(joints < pose.size()) {
+  //  return E_FAIL;
+  //}
 
   // Check send format
   bool send_hio, send_mio, send_uio, recv_uio;
@@ -689,6 +689,8 @@ HRESULT DensoRobotRC8::CreateSendParameter(
   double *pdbl;
   uint8_t *pbool;
 
+  // Number of joints + option
+  joints += 1;
   if(num == 1) {
     // Pose only
     send->vt = (VT_ARRAY | VT_R8);
