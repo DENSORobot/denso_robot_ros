@@ -16,7 +16,7 @@
   
   <!-- Load the robot specific controller manager; this sets the moveit_controller_manager ROS parameter -->
   <arg name="moveit_controller_manager" default="denso_robot" />
-  <include file="$(find denso_robot_moveit_config)/launch/$(arg moveit_controller_manager)_moveit_controller_manager.launch.xml">
+  <include file="$(find vs060_moveit_config)/launch/$(arg moveit_controller_manager)_moveit_controller_manager.launch.xml">
     <arg name="robot_name" value="$(arg robot_name)" />
   </include>
   

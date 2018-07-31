@@ -6,11 +6,11 @@
   <!-- using the ROS-Industrial interface. -->
  
   <!-- Non-standard joint names:
-       - Create a file denso_robot_moveit_config/config/joint_names.yaml
+       - Create a file vs060_moveit_config/config/joint_names.yaml
            controller_joint_names: [joint_1, joint_2, ... joint_N] 
        - Update with joint names for your robot (in order expected by rbt controller)
        - and uncomment the following line: -->
-  <!--<rosparam command="load" file="$(find denso_robot_moveit_config)/config/joint_names.yaml"/>-->
+  <!--<rosparam command="load" file="$(find vs060_moveit_config)/config/joint_names.yaml"/>-->
  
   <!-- the "sim" argument controls whether we connect to a Simulated or Real robot -->
   <!-- the "robot_name" argument selects robot type -->
@@ -20,7 +20,7 @@
   <arg name="ip_address" default="192.168.0.1" />
  
   <!-- load the robot_description parameter before launching ROS-I nodes -->
-  <include file="$(find denso_robot_moveit_config)/launch/planning_context.launch" >
+  <include file="$(find vs060_moveit_config)/launch/planning_context.launch" >
     <arg name="load_robot_description" value="true" />
     <arg name="robot_name" value="$(arg robot_name)" />
   </include>
@@ -41,15 +41,15 @@
     </include>
   </group>  
 
-  <include file="$(find denso_robot_moveit_config)/launch/move_group.launch">
+  <include file="$(find vs060_moveit_config)/launch/move_group.launch">
     <arg name="publish_monitored_planning_scene" value="true" />
     <arg name="robot_name" value="$(arg robot_name)" />
   </include>
 
-  <include file="$(find denso_robot_moveit_config)/launch/moveit_rviz.launch">
+  <include file="$(find vs060_moveit_config)/launch/moveit_rviz.launch">
     <arg name="config" value="true"/>
   </include>
   
-  <include file="$(find denso_robot_moveit_config)/launch/default_warehouse_db.launch" if="$(arg db)" />
+  <include file="$(find vs060_moveit_config)/launch/default_warehouse_db.launch" if="$(arg db)" />
 
 </launch>

@@ -2,7 +2,7 @@
 
   <arg name="robot_name" default="vs060" />
 
-  <include file="$(find denso_robot_moveit_config)/launch/planning_context.launch">
+  <include file="$(find vs060_moveit_config)/launch/planning_context.launch">
     <arg name="robot_name" value="$(arg robot_name)" />
   </include>
 
@@ -23,19 +23,19 @@
   <arg name="publish_monitored_planning_scene" default="true"/>
 
   <!-- Planning Functionality -->
-  <include ns="move_group" file="$(find denso_robot_moveit_config)/launch/planning_pipeline.launch.xml">
+  <include ns="move_group" file="$(find vs060_moveit_config)/launch/planning_pipeline.launch.xml">
     <arg name="pipeline" value="ompl" />
   </include>
 
   <!-- Trajectory Execution Functionality -->
-  <include ns="move_group" file="$(find denso_robot_moveit_config)/launch/trajectory_execution.launch.xml" if="$(arg allow_trajectory_execution)">
+  <include ns="move_group" file="$(find vs060_moveit_config)/launch/trajectory_execution.launch.xml" if="$(arg allow_trajectory_execution)">
     <arg name="moveit_manage_controllers" value="true" />
     <arg name="moveit_controller_manager" value="denso_robot" />
     <arg name="robot_name" value="$(arg robot_name)" />
   </include>
 
   <!-- Sensors Functionality -->
-  <include ns="move_group" file="$(find denso_robot_moveit_config)/launch/sensor_manager.launch.xml" if="$(arg allow_trajectory_execution)">
+  <include ns="move_group" file="$(find vs060_moveit_config)/launch/sensor_manager.launch.xml" if="$(arg allow_trajectory_execution)">
     <arg name="moveit_sensor_manager" value="denso_robot" /> 
   </include>
 

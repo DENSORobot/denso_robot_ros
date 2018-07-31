@@ -15,6 +15,6 @@
   <param name="use_controller_manager" value="$(arg use_controller_manager)" />
   
   <!-- The rest of the params are specific to this plugin -->
-  <rosparam file="$(find denso_robot_moveit_config)/config/$(arg robot_config)/controllers.yaml"/>
+  <rosparam file="$(find vs060_moveit_config)/config/$(arg robot_config)/controllers.yaml"/>
 
 </launch>
