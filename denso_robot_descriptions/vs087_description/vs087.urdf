@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <robot name="vs087">
-	<gazebo>
-		<plugin name="gazebo_ros_control" filename="libgazebo_ros_control.so">
+  	<gazebo>
+		<plugin filename="libgazebo_ros_control.so" name="gazebo_ros_control">
 			<robotNamespace>/vs087</robotNamespace>
 		</plugin>
 	</gazebo>
@@ -88,7 +88,8 @@
 	<joint name="joint_2" type="revolute">
 		<parent link="J1"/>
 		<child link="J2"/>
-		<origin rpy="0.000000 -0.34906585 0.000000" xyz="0.030000 0.000000 0.197500"/>
+		<!-- <origin rpy="0.000000 -0.34906585 0.000000" xyz="0.030000 0.000000 0.197500"/> -->
+		<origin rpy="0.000000 0.000000 0.000000" xyz="0.030000 0.000000 0.197500"/>
 		<axis xyz="-0.000000 1.000000 -0.000000"/>
 		<limit effort="1" lower="-1.745329" upper="2.356194" velocity="1"/>
 		<dynamics damping="0" friction="0"/>
@@ -125,7 +126,8 @@
 	<joint name="joint_3" type="revolute">
 		<parent link="J2"/>
 		<child link="J3"/>
-		<origin rpy="0.000000 1.919862175 0.000000" xyz="0.000000 0.000000 0.445000"/>
+		<!-- <origin rpy="0.000000 1.919862175 0.000000" xyz="0.000000 0.000000 0.445000"/> -->
+		<origin rpy="0.000000 0.000000 0.000000" xyz="0.000000 0.000000 0.445000"/>
 		<axis xyz="-0.000000 1.000000 -0.000000"/>
 		<limit effort="1" lower="-2.373648" upper="2.670354" velocity="1"/>
 		<dynamics damping="0" friction="0"/>

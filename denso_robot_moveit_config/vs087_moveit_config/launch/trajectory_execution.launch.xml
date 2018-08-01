@@ -1,6 +1,9 @@
 <launch>
 
-  <!-- This file makes it easy to include the settings for trajectory execution  -->  
+  <!-- This file makes it easy to include the settings for trajectory execution  -->
+
+  <!-- The argument for specifying robot type -->
+  <arg name="robot_name" default="vs087" />
 
   <!-- Flag indicating whether MoveIt! is allowed to load/unload  or switch controllers -->
   <arg name="moveit_manage_controllers" default="true"/>
@@ -14,7 +17,9 @@
   <param name="trajectory_execution/allowed_start_tolerance" value="0.01"/> <!-- default 0.01 -->
   
   <!-- Load the robot specific controller manager; this sets the moveit_controller_manager ROS parameter -->
-  <arg name="moveit_controller_manager" default="vs087" />
-  <include file="$(find vs087_moveit_config)/launch/$(arg moveit_controller_manager)_moveit_controller_manager.launch.xml" />
-  
+  <arg name="moveit_controller_manager" default="denso_robot" />
+  <include file="$(find vs087_moveit_config)/launch/$(arg moveit_controller_manager)_moveit_controller_manager.launch.xml">
+    <arg name="robot_name" value="$(arg robot_name)" />
+  </include>
+ 
 </launch>
