@@ -23,5 +23,5 @@ roslaunch denso_robot_bringup vs087_bringup.launch sim:=true
 ### Real robot
 
 ```
-roslaunch denso_robot_bringup vs060_bringup.launch sim:=false ip_address:=xxx.xxx.xxx.xxx
+roslaunch denso_robot_bringup vs087_bringup.launch sim:=false ip_address:=xxx.xxx.xxx.xxx
 ```
