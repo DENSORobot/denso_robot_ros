@@ -51,7 +51,7 @@ if __name__ == "__main__":
     # Get package directory
     try:
         descs_pkg = roslib.packages.get_pkg_dir("denso_robot_descriptions")
-        conf_pkg  = roslib.packages.get_pkg_dir("denso_robot_moveit_config")
+        conf_pkg  = roslib.packages.get_pkg_dir(rob_name+"_moveit_config")
     except roslib.packages.InvalidROSPkgException as e:
         print(e)
         sys.exit()
@@ -66,7 +66,9 @@ if __name__ == "__main__":
         print(rob_name + ".urdf is not exists")
         sys.exit()
 
-    path_conf = conf_pkg + "/config/" + rob_name + "_config"
+    # path_conf = conf_pkg + "/config/" + rob_name + "_config"
+    path_conf = conf_pkg + "/config"
+
     if not os.path.isdir(path_conf):
         print(rob_name + "_config is not exists")
         sys.exit()

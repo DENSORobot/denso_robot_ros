@@ -1,7 +1,7 @@
 <launch>
 
   <!-- The argument for specifying robot type -->
-  <arg name="robot_name" default="vs060" />
+  <arg name="robot_name" default="vs087" />
 
   <!-- The robot config argument -->
   <arg name="robot_config" value="$(arg robot_name)_config" />
@@ -15,6 +15,6 @@
   <param name="use_controller_manager" value="$(arg use_controller_manager)" />
   
   <!-- The rest of the params are specific to this plugin -->
-  <rosparam file="$(find denso_robot_moveit_config)/config/$(arg robot_config)/controllers.yaml"/>
+  <rosparam file="$(find vs087_moveit_config)/config/controllers.yaml"/>
 
 </launch>

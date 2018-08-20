@@ -6,22 +6,22 @@
   <arg name="robot_description" default="robot_description"/>
 
   <!-- The name of robot which is loaded from URDF -->
-  <arg name="robot_name" default="vs060"/>
+  <arg name="robot_name" default="vs087"/>
 
   <!-- Load universal robot description format (URDF) -->
-  <param if="$(arg load_robot_description)" name="$(arg robot_description)" textfile="$(find denso_robot_descriptions)/$(arg robot_name)_description/$(arg robot_name).urdf"/>
+  <param if="$(arg load_robot_description)" name="$(arg robot_description)" textfile="$(find denso_robot_descriptions)/vs087_description/vs087.urdf"/>
 
   <!-- The semantic description that corresponds to the URDF -->
-  <param name="$(arg robot_description)_semantic" textfile="$(find denso_robot_moveit_config)/config/$(arg robot_name)_config/$(arg robot_name).srdf" />
+  <param name="$(arg robot_description)_semantic" textfile="$(find vs087_moveit_config)/config/vs087.srdf" />
   
   <!-- Load updated joint limits (override information from URDF) -->
   <group ns="$(arg robot_description)_planning">
-    <rosparam command="load" file="$(find denso_robot_moveit_config)/config/$(arg robot_name)_config/joint_limits.yaml"/>
+    <rosparam command="load" file="$(find vs087_moveit_config)/config/joint_limits.yaml"/>
   </group>
 
   <!-- Load default settings for kinematics; these settings are overridden by settings in a node's namespace -->
   <group ns="$(arg robot_description)_kinematics">
-    <rosparam command="load" file="$(find denso_robot_moveit_config)/config/kinematics.yaml"/>
+    <rosparam command="load" file="$(find vs087_moveit_config)/config/kinematics.yaml"/>
   </group>
   
 </launch>

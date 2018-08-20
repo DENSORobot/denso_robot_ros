@@ -13,9 +13,8 @@
   <arg name="recv_format" default="292" />
  
   <!-- load the robot_description parameter before launching ROS-I nodes -->
-  <include file="$(find denso_robot_moveit_config)/launch/planning_context.launch" >
+  <include file="$(eval find(arg('robot_name')+'_moveit_config')+'/launch/planning_context.launch')" >
     <arg name="load_robot_description" value="true" />
-    <arg name="robot_name" value="$(arg robot_name)" />
   </include>
 
   <!-- run the "real robot" interface nodes -->
@@ -37,15 +36,15 @@
   </group>  
 
 
-  <include file="$(find denso_robot_moveit_config)/launch/move_group.launch">
+  <include file="$(eval find(arg('robot_name')+'_moveit_config')+'/launch/move_group.launch')">
     <arg name="publish_monitored_planning_scene" value="true" />
     <arg name="robot_name" value="$(arg robot_name)" />
   </include>
 
-  <include file="$(find denso_robot_moveit_config)/launch/moveit_rviz.launch">
+  <include file="$(eval find(arg('robot_name')+'_moveit_config')+'/launch/moveit_rviz.launch')">
     <arg name="config" value="true"/>
   </include>
   
-  <include file="$(find denso_robot_moveit_config)/launch/default_warehouse_db.launch" />
+  <include file="$(eval find(arg('robot_name')+'_moveit_config')+'/launch/default_warehouse_db.launch')" />
 
 </launch>
