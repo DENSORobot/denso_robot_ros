@@ -41,7 +41,7 @@
     <arg name="fake_execution" value="true"/>
     <arg name="info" value="true"/>
     <arg name="debug" value="$(arg debug)"/>
-    <arg name="planner" value="stomp"/>
+    <arg name="planner" value="ompl"/>
   </include>
 
   <!-- Run Rviz and load the default config to see the state of the move_group node -->
