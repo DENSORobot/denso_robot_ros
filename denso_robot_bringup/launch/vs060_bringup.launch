@@ -10,7 +10,7 @@
   <arg name="recv_format" default="292" />
 
   <!-- Define the motion planner we want to use (ompl or stomp) -->
-  <arg name="planner" default="stomp" />
+  <arg name="planner" default="ompl" />
 
   <include file="$(find denso_robot_bringup)/launch/denso_robot_bringup.launch">
     <arg name="robot_name" value="vs060"/>
