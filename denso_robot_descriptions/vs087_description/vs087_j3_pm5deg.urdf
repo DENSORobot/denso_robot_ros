@@ -128,7 +128,7 @@
 		
 		<origin rpy="0.000000 0.000000 0.000000" xyz="0.000000 0.000000 0.445000" />
 		<axis xyz="-0.000000 1.000000 -0.000000" />
-		<limit effort="1" lower="-2.32129" upper="2.61799" velocity="3.45575191894877" />
+		<limit effort="1" lower="-2.28638" upper="2.58309" velocity="3.45575191894877" />
 		<dynamics damping="0" friction="0" />
 	</joint>
 	<transmission name="trans_3">
