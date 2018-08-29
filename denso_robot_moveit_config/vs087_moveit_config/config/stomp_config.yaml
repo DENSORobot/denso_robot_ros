@@ -1,7 +1,7 @@
 stomp/manipulator:
   group_name: arm
   optimization:
-    num_timesteps: 100
+    num_timesteps: 120
     num_iterations: 50
     num_iterations_after_valid: 0    
     num_rollouts: 10
