@@ -16,7 +16,7 @@ $ catkin build
 $ roslaunch denso_robot_bringup vs060_bringup.launch sim:=true
 ```
 
-* Use STOMP for the planner
+* Using STOMP or CHOMP for the planner (for CHOMP,  `planner:=chomp`)
 
 ```
 $ roslaunch denso_robot_bringup vs060_bringup.launch sim:=true planner:=stomp
@@ -31,7 +31,7 @@ $ roslaunch denso_robot_bringup vs060_bringup.launch sim:=true planner:=stomp
 $ roslaunch vs087_moveit_config demo.launch
 ```
 
-* Use STOMP for the planner
+* Using STOMP or CHOMP for the planner (for CHOMP,  `planner:=chomp`)
 
 ```
 $ roslaunch vs087_moveit_config demo.launch planner:=stomp
@@ -44,7 +44,7 @@ $ roslaunch vs087_moveit_config demo.launch planner:=stomp
 $ roslaunch denso_robot_bringup vs087_bringup.launch sim:=true
 ```
 
-* Use STOMP for the planner
+* Using STOMP or CHOMP for the planner (for CHOMP,  `planner:=chomp`)
 
 ```
 $ roslaunch denso_robot_bringup vs087_bringup.launch sim:=true planner:=stomp
@@ -56,13 +56,13 @@ $ roslaunch denso_robot_bringup vs087_bringup.launch sim:=true planner:=stomp
 $ roslaunch denso_robot_bringup vs087_bringup.launch sim:=false ip_address:=xxx.xxx.xxx.xxx
 ```
 
-* Use STOMP for the planner
+* Using STOMP or CHOMP for the planner (for CHOMP,  `planner:=chomp`)
 
 ```
 $ roslaunch denso_robot_bringup vs087_bringup.launch sim:=false ip_address:=xxx.xxx.xxx.xxx planner:=stomp
 ```
 
-# STOMP planner integration
+# STOMP and CHOMP planner integration
 
 ```
 $ cd your_ws/src
