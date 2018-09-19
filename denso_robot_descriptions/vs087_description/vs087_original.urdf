@@ -58,10 +58,10 @@
 	<transmission name="trans_1">
 		<type>transmission_interface/SimpleTransmission</type>
 		<joint name="joint_1">
-			<hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>
+			<hardwareInterface>PositionJointInterface</hardwareInterface>
 		</joint>
 		<actuator name="motor_1">
-			<hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>
+			<hardwareInterface>PositionJointInterface</hardwareInterface>
 			<mechanicalReduction>1</mechanicalReduction>
 		</actuator>
 	</transmission>
@@ -96,10 +96,10 @@
 	<transmission name="trans_2">
 		<type>transmission_interface/SimpleTransmission</type>
 		<joint name="joint_2">
-			<hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>
+			<hardwareInterface>PositionJointInterface</hardwareInterface>
 		</joint>
 		<actuator name="motor_2">
-			<hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>
+			<hardwareInterface>PositionJointInterface</hardwareInterface>
 			<mechanicalReduction>1</mechanicalReduction>
 		</actuator>
 	</transmission>
@@ -128,16 +128,16 @@
 		
 		<origin rpy="0.000000 0.000000 0.000000" xyz="0.000000 0.000000 0.445000" />
 		<axis xyz="-0.000000 1.000000 -0.000000" />
-		<limit effort="1" lower="-2.32129" upper="2.61799" velocity="3.45575191894877" />
+		<limit effort="1" lower="-2.373648" upper="2.670354" velocity="3.45575191894877" />
 		<dynamics damping="0" friction="0" />
 	</joint>
 	<transmission name="trans_3">
 		<type>transmission_interface/SimpleTransmission</type>
 		<joint name="joint_3">
-			<hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>
+			<hardwareInterface>PositionJointInterface</hardwareInterface>
 		</joint>
 		<actuator name="motor_3">
-			<hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>
+			<hardwareInterface>PositionJointInterface</hardwareInterface>
 			<mechanicalReduction>1</mechanicalReduction>
 		</actuator>
 	</transmission>
@@ -171,10 +171,10 @@
 	<transmission name="trans_4">
 		<type>transmission_interface/SimpleTransmission</type>
 		<joint name="joint_4">
-			<hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>
+			<hardwareInterface>PositionJointInterface</hardwareInterface>
 		</joint>
 		<actuator name="motor_4">
-			<hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>
+			<hardwareInterface>PositionJointInterface</hardwareInterface>
 			<mechanicalReduction>1</mechanicalReduction>
 		</actuator>
 	</transmission>
@@ -208,10 +208,10 @@
 	<transmission name="trans_5">
 		<type>transmission_interface/SimpleTransmission</type>
 		<joint name="joint_5">
-			<hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>
+			<hardwareInterface>PositionJointInterface</hardwareInterface>
 		</joint>
 		<actuator name="motor_5">
-			<hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>
+			<hardwareInterface>PositionJointInterface</hardwareInterface>
 			<mechanicalReduction>1</mechanicalReduction>
 		</actuator>
 	</transmission>
@@ -245,10 +245,10 @@
 	<transmission name="trans_6">
 		<type>transmission_interface/SimpleTransmission</type>
 		<joint name="joint_6">
-			<hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>
+			<hardwareInterface>PositionJointInterface</hardwareInterface>
 		</joint>
 		<actuator name="motor_6">
-			<hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>
+			<hardwareInterface>PositionJointInterface</hardwareInterface>
 			<mechanicalReduction>1</mechanicalReduction>
 		</actuator>
 	</transmission>

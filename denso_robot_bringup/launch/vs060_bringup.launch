@@ -9,11 +9,15 @@
   <arg name="send_format" default="288" />
   <arg name="recv_format" default="292" />
 
+  <!-- Define the motion planner we want to use (ompl or stomp) -->
+  <arg name="planner" default="ompl" />
+
   <include file="$(find denso_robot_bringup)/launch/denso_robot_bringup.launch">
     <arg name="robot_name" value="vs060"/>
     <arg name="sim" value="$(arg sim)"/>
     <arg name="ip_address" value="$(arg ip_address)"/>
     <arg name="send_format" value="$(arg send_format)" />
     <arg name="recv_format" value="$(arg recv_format)" />
+    <arg name="planner" value="$(arg planner)" />
   </include>
 </launch>

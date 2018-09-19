@@ -35,10 +35,13 @@
     </include>
   </group>  
 
+  <arg name="planner" default="ompl" />
+
 
   <include file="$(eval find(arg('robot_name')+'_moveit_config')+'/launch/move_group.launch')">
     <arg name="publish_monitored_planning_scene" value="true" />
     <arg name="robot_name" value="$(arg robot_name)" />
+    <arg name="planner" value="$(arg planner)" />
   </include>
 
   <include file="$(eval find(arg('robot_name')+'_moveit_config')+'/launch/moveit_rviz.launch')">
