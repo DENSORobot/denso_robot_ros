@@ -10,9 +10,8 @@
 
   <!-- Load universal robot description format (URDF) -->
   <!-- <param if="$(arg load_robot_description)" name="$(arg robot_description)" textfile="$(find denso_robot_descriptions)/vs087_description/vs087.urdf"/> -->
-
-  <arg name="model" value="$(find denso_robot_descriptions)/vs087_description/vs087_with_2_kinects.urdf.xacro"/>
-  <!-- <param name="robot_description" command="$(find xacro)/xacro.py '$(arg model)'"/> -->
+  <!-- <arg name="model" value="$(find denso_robot_descriptions)/vs087_description/vs087_with_2_kinects.urdf.xacro"/> -->
+  <arg name="model" value="$(find denso_robot_descriptions)/vs087_description/vs087.urdf.xacro"/>
   <param name="robot_description" command="$(find xacro)/xacro --inorder $(arg model)"/>
 
   <!-- The semantic description that corresponds to the URDF -->
