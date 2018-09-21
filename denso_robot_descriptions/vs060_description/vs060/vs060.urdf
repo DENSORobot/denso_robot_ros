@@ -13,13 +13,13 @@
 		<visual>
 			<origin rpy="0 0 0" xyz="0 0 0" />
 			<geometry>
-				<mesh filename="package://denso_robot_descriptions/vs060_description/base_link.dae" scale="1 1 1" />
+				<mesh filename="package://denso_robot_descriptions/vs060_description/vs060/meshes/base_link.dae" scale="1 1 1" />
 			</geometry>
 		</visual>
 		<collision>
 			<origin rpy="0 0 0" xyz="0 0 0" />
 			<geometry>
-				<mesh filename="package://denso_robot_descriptions/vs060_description/base_link.dae" scale="1 1 1" />
+				<mesh filename="package://denso_robot_descriptions/vs060_description/vs060/meshes/base_link.dae" scale="1 1 1" />
 			</geometry>
 		</collision>
 		<inertial>
@@ -32,13 +32,13 @@
 		<visual>
 			<origin rpy="0 0 0" xyz="0 0 0" />
 			<geometry>
-				<mesh filename="package://denso_robot_descriptions/vs060_description/J1.dae" scale="1 1 1" />
+				<mesh filename="package://denso_robot_descriptions/vs060_description/vs060/meshes/J1.dae" scale="1 1 1" />
 			</geometry>
 		</visual>
 		<collision>
 			<origin rpy="0 0 0" xyz="0 0 0" />
 			<geometry>
-				<mesh filename="package://denso_robot_descriptions/vs060_description/J1.dae" scale="1 1 1" />
+				<mesh filename="package://denso_robot_descriptions/vs060_description/vs060/meshes/J1.dae" scale="1 1 1" />
 			</geometry>
 		</collision>
 		<inertial>
@@ -69,13 +69,13 @@
 		<visual>
 			<origin rpy="0 0 0" xyz="0 0 0" />
 			<geometry>
-				<mesh filename="package://denso_robot_descriptions/vs060_description/J2.dae" scale="1 1 1" />
+				<mesh filename="package://denso_robot_descriptions/vs060_description/vs060/meshes/J2.dae" scale="1 1 1" />
 			</geometry>
 		</visual>
 		<collision>
 			<origin rpy="0 0 0" xyz="0 0 0" />
 			<geometry>
-				<mesh filename="package://denso_robot_descriptions/vs060_description/J2.dae" scale="1 1 1" />
+				<mesh filename="package://denso_robot_descriptions/vs060_description/vs060/meshes/J2.dae" scale="1 1 1" />
 			</geometry>
 		</collision>
 		<inertial>
@@ -106,13 +106,13 @@
 		<visual>
 			<origin rpy="0 0 0" xyz="0 0 0" />
 			<geometry>
-				<mesh filename="package://denso_robot_descriptions/vs060_description/J3.dae" scale="1 1 1" />
+				<mesh filename="package://denso_robot_descriptions/vs060_description/vs060/meshes/J3.dae" scale="1 1 1" />
 			</geometry>
 		</visual>
 		<collision>
 			<origin rpy="0 0 0" xyz="0 0 0" />
 			<geometry>
-				<mesh filename="package://denso_robot_descriptions/vs060_description/J3.dae" scale="1 1 1" />
+				<mesh filename="package://denso_robot_descriptions/vs060_description/vs060/meshes/J3.dae" scale="1 1 1" />
 			</geometry>
 		</collision>
 		<inertial>
@@ -143,13 +143,13 @@
 		<visual>
 			<origin rpy="0 0 0" xyz="0 0 0" />
 			<geometry>
-				<mesh filename="package://denso_robot_descriptions/vs060_description/J4.dae" scale="1 1 1" />
+				<mesh filename="package://denso_robot_descriptions/vs060_description/vs060/meshes/J4.dae" scale="1 1 1" />
 			</geometry>
 		</visual>
 		<collision>
 			<origin rpy="0 0 0" xyz="0 0 0" />
 			<geometry>
-				<mesh filename="package://denso_robot_descriptions/vs060_description/J4.dae" scale="1 1 1" />
+				<mesh filename="package://denso_robot_descriptions/vs060_description/vs060/meshes/J4.dae" scale="1 1 1" />
 			</geometry>
 		</collision>
 		<inertial>
@@ -180,13 +180,13 @@
 		<visual>
 			<origin rpy="0 0 0" xyz="0 0 0" />
 			<geometry>
-				<mesh filename="package://denso_robot_descriptions/vs060_description/J5.dae" scale="1 1 1" />
+				<mesh filename="package://denso_robot_descriptions/vs060_description/vs060/meshes/J5.dae" scale="1 1 1" />
 			</geometry>
 		</visual>
 		<collision>
 			<origin rpy="0 0 0" xyz="0 0 0" />
 			<geometry>
-				<mesh filename="package://denso_robot_descriptions/vs060_description/J5.dae" scale="1 1 1" />
+				<mesh filename="package://denso_robot_descriptions/vs060_description/vs060/meshes/J5.dae" scale="1 1 1" />
 			</geometry>
 		</collision>
 		<inertial>
@@ -217,13 +217,13 @@
 		<visual>
 			<origin rpy="0 0 0" xyz="0 0 0" />
 			<geometry>
-				<mesh filename="package://denso_robot_descriptions/vs060_description/J6.dae" scale="1 1 1" />
+				<mesh filename="package://denso_robot_descriptions/vs060_description/vs060/meshes/J6.dae" scale="1 1 1" />
 			</geometry>
 		</visual>
 		<collision>
 			<origin rpy="0 0 0" xyz="0 0 0" />
 			<geometry>
-				<mesh filename="package://denso_robot_descriptions/vs060_description/J6.dae" scale="1 1 1" />
+				<mesh filename="package://denso_robot_descriptions/vs060_description/vs060/meshes/J6.dae" scale="1 1 1" />
 			</geometry>
 		</collision>
 		<inertial>
