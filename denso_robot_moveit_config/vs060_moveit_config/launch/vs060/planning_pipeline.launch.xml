@@ -1,0 +1,11 @@
+<launch>
+
+  <!-- This file makes it easy to include different planning pipelines; 
+       It is assumed that all planning pipelines are named XXX_planning_pipeline.launch  -->  
+
+  <arg name="pipeline" default="ompl" />
+  <arg name="robot_options" default="vs060" />
+
+  <include file="$(find vs060_moveit_config)/launch/$(arg robot_options)/$(arg pipeline)_planning_pipeline.launch.xml" />
+
+</launch>
