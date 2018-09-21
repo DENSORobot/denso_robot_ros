@@ -1,0 +1,12 @@
+<launch>
+
+  <arg name="robot_name" default="vs087" />
+  <arg name="robot_options" default="vs087" />
+
+  <!-- Set the param that trajectory_execution_manager needs to find the controller plugin -->
+  <param name="moveit_controller_manager" value="moveit_fake_controller_manager/MoveItFakeControllerManager"/>
+
+  <!-- The rest of the params are specific to this plugin -->
+  <rosparam file="$(find vs087_moveit_config)/config/$(arg robot_options)/fake_controllers.yaml"/>
+
+</launch>

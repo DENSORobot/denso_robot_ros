@@ -1,0 +1,17 @@
+<launch>
+
+  <arg name="robot_options" default="vs087" />
+
+  <!-- CHOMP Plugin for MoveIt! -->
+  <arg name="planning_plugin" value="chomp_interface/CHOMPPlanner" />
+
+  <arg name="start_state_max_bounds_error" value="0.1" />
+
+  <param name="planning_plugin" value="$(arg planning_plugin)" />
+  <param name="start_state_max_bounds_error" value="$(arg start_state_max_bounds_error)" />
+
+  <param name="collision_detector" value="Hybrid" />
+
+  <rosparam command="load" file="$(find vs087_moveit_config)/config/$(arg robot_options)/chomp_planning.yaml" />
+
+</launch>
