@@ -1,4 +1,5 @@
 <launch>
+  
   <!-- By default, we do not start a database (it can be large) -->
   <arg name="db" default="false" />
 
@@ -17,10 +18,11 @@
   <!--  - if sim=false, a ip_address argument is required -->
   <arg name="sim" default="true" />
   <arg name="robot_name" default="vs060" />
+  <arg name="robot_options" default="vs060" />
   <arg name="ip_address" default="192.168.0.1" />
  
   <!-- load the robot_description parameter before launching ROS-I nodes -->
-  <include file="$(find vs060_moveit_config)/launch/planning_context.launch" >
+  <include file="$(find vs060_moveit_config)/launch/$(arg robot_options)/planning_context.launch" >
     <arg name="load_robot_description" value="true" />
     <arg name="robot_name" value="$(arg robot_name)" />
   </include>
@@ -29,8 +31,9 @@
   <!--   - this typically includes: robot_state, motion_interface, and joint_trajectory_action nodes -->
   <!--   - replace these calls with appropriate robot-specific calls or launch files -->
   <group if="$(arg sim)">
-    <include file="$(find denso_robot_gazebo)/launch/denso_robot_gazebo.launch">
+    <include file="$(find denso_robot_gazebo)/$(arg robot_name)_gazebo/$(arg robot_options)_gazebo.launch">
       <arg name="robot_name" value="$(arg robot_name)" />
+      <arg name="robot_options" value="$(arg robot_options)" />
     </include>
   </group>  
 
@@ -41,15 +44,15 @@
     </include>
   </group>  
 
-  <include file="$(find vs060_moveit_config)/launch/move_group.launch">
+  <include file="$(find vs060_moveit_config)/launch/$(arg robot_options)/move_group.launch">
     <arg name="publish_monitored_planning_scene" value="true" />
     <arg name="robot_name" value="$(arg robot_name)" />
   </include>
 
-  <include file="$(find vs060_moveit_config)/launch/moveit_rviz.launch">
+  <include file="$(find vs060_moveit_config)/launch/$(arg robot_options)/moveit_rviz.launch">
     <arg name="config" value="true"/>
   </include>
   
-  <include file="$(find vs060_moveit_config)/launch/default_warehouse_db.launch" if="$(arg db)" />
+  <include file="$(find vs060_moveit_config)/launch$/(arg robot_options)/default_warehouse_db.launch" if="$(arg db)" />
 
 </launch>

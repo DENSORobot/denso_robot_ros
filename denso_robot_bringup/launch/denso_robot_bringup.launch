@@ -23,14 +23,16 @@
   <!--   - this typically includes: robot_state, motion_interface, and joint_trajectory_action nodes -->
   <!--   - replace these calls with appropriate robot-specific calls or launch files -->
   <group if="$(arg sim)">
-    <include file="$(find denso_robot_gazebo)/launch/denso_robot_gazebo.launch">
+    <include file="$(find denso_robot_gazebo)/launch/$(arg robot_name)_gazebo/$(arg robot_options)_gazebo.launch">
       <arg name="robot_name" value="$(arg robot_name)" />
+      <arg name="robot_options" value="$(arg robot_options)" />
     </include>
   </group>  
 
   <group unless="$(arg sim)">
     <include file="$(find denso_robot_control)/launch/denso_robot_control.launch">
       <arg name="robot_name" value="$(arg robot_name)" />
+      <arg name="robot_options" value="$(arg robot_options)" />
       <arg name="ip_address" value="$(arg ip_address)" />
       <arg name="send_format" value="$(arg send_format)" />
       <arg name="recv_format" value="$(arg recv_format)" />
@@ -38,7 +40,6 @@
   </group>  
 
   <arg name="planner" default="ompl" />
-
 
   <include file="$(eval find(arg('robot_name')+'_moveit_config')+'/launch/'+arg('robot_options')+'/move_group.launch')">
     <arg name="publish_monitored_planning_scene" value="true" />

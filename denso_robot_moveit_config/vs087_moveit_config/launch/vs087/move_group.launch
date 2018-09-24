@@ -3,7 +3,10 @@
   <arg name="robot_name" default="vs087" />
   <arg name="robot_options" default="vs087" />
 
-  <include file="$(find vs087_moveit_config)/launch/$(arg robot_options)/planning_context.launch" />
+  <include file="$(find vs087_moveit_config)/launch/$(arg robot_options)/planning_context.launch">
+    <arg name="robot_name" value="$(arg robot_name)" />
+    <arg name="robot_options" value="$(arg robot_options)" />
+  </include>
 
   <!-- GDB Debug Option -->
   <arg name="debug" default="false" />
