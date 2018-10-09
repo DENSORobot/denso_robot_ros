@@ -10,7 +10,6 @@
   <arg name="robot_options" default="vs087"/>
 
   <!-- Load universal robot description format (URDF) -->
-  <!-- <arg name="model" value="$(find denso_robot_descriptions)/vs087_description/vs087_with_2_kinects.urdf.xacro"/> -->
   <arg name="model" value="$(find denso_robot_descriptions)/vs087_description/$(arg robot_options)/vs087.urdf"/>
   <param name="robot_description" command="$(find xacro)/xacro --inorder $(arg model)"/>
 
