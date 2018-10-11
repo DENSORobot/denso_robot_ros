@@ -4,7 +4,7 @@
 $ cd your_ws/src
 $ git clone https://github.com/Nishida-Lab/denso_robot_ros.git
 $ cd ..
-$ rosdep install -i --from-paths src
+$ rosdep install -iry --from-paths src
 $ catkin build
 ```
 
@@ -69,7 +69,7 @@ $ cd your_ws/src
 $ git clone https://github.com/ros-planning/moveit.git
 $ git clone https://github.com/ros-industrial/industrial_moveit.git
 $ cd ..
-$ rosdep install -i --from-paths src
+$ rosdep install -iry --from-paths src
 $ cd src/industrial_moveit
 $ rm -rf industrial_collision_detection/ constrained_ik/ industrial_moveit_benchmarking/
 $ catkin build
