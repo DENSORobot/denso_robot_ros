@@ -1,0 +1,17 @@
+<launch>
+
+  <arg name="robot_options" default="vs060" />
+  
+  <!-- The path to the database must be specified -->
+  <arg name="moveit_warehouse_database_path" />
+
+  <!-- Load warehouse parameters -->  
+  <include file="$(find vs060_moveit_config)/launch/$(arg robot_options)/warehouse_settings.launch.xml" />
+
+  <!-- Run the DB server -->
+  <node name="$(anon mongo_wrapper_ros)" cwd="ROS_HOME" type="mongo_wrapper_ros.py" pkg="warehouse_ros">
+    <param name="overwrite" value="false"/>
+    <param name="database_path" value="$(arg moveit_warehouse_database_path)" />
+  </node>
+
+</launch>
