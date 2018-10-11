@@ -11,7 +11,7 @@
   <!-- If you want to change send and recieve format of denso_robot_control, -->
   <!-- you can specify the send_format and recv_format parameters -->
   <arg name="send_format" default="288" />
-  <arg name="recv_format" default="292" />
+  <arg name="recv_format" default="290" />
  
   <!-- load the robot_description parameter before launching ROS-I nodes -->
   <include file="$(eval find(arg('robot_name')+'_moveit_config')+'/launch/'+arg('robot_options')+'/planning_context.launch')" >
