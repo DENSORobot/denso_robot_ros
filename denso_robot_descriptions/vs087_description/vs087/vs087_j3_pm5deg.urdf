@@ -1,0 +1,255 @@
+<robot name="vs087">
+  	<gazebo>
+		<plugin filename="libgazebo_ros_control.so" name="gazebo_ros_control">
+			<robotNamespace>/vs087</robotNamespace>
+		</plugin>
+	</gazebo>
+	<link name="world" />
+	<joint name="joint_w" type="fixed">
+		<parent link="world" />
+		<child link="base_link" />
+	</joint>
+	<link name="base_link">
+		<visual>
+			<origin rpy="0 0 0" xyz="0 0 0" />
+			<geometry>
+				<mesh filename="package://denso_robot_descriptions/vs087_description/vs087/meshes/base_link.dae" scale="1 1 1" />
+			</geometry>
+		</visual>
+		<collision>
+			<origin rpy="0 0 0" xyz="0 0 0" />
+			<geometry>
+				<mesh filename="package://denso_robot_descriptions/vs087_description/vs087/meshes/base_link.dae" scale="1 1 1" />
+			</geometry>
+		</collision>
+		<inertial>
+			<mass value="1" />
+			<origin rpy="0.000000 0.000000 0.000000" xyz="0.000000 0.000000 0.000000" />
+			<inertia ixx="1" ixy="0" ixz="0" iyy="1" iyz="0" izz="1" />
+		</inertial>
+	</link>
+	<link name="J1">
+		<visual>
+			<origin rpy="0 0 0" xyz="0 0 0" />
+			<geometry>
+				<mesh filename="package://denso_robot_descriptions/vs087_description/vs087/meshes/J1.dae" scale="1 1 1" />
+			</geometry>
+		</visual>
+		<collision>
+			<origin rpy="0 0 0" xyz="0 0 0" />
+			<geometry>
+				<mesh filename="package://denso_robot_descriptions/vs087_description/vs087/meshes/J1.dae" scale="1 1 1" />
+			</geometry>
+		</collision>
+		<inertial>
+			<mass value="1" />
+			<origin rpy="0.000000 0.000000 0.000000" xyz="0.000000 0.000000 0.000000" />
+			<inertia ixx="1" ixy="0" ixz="0" iyy="1" iyz="0" izz="1" />
+		</inertial>
+	</link>
+	<joint name="joint_1" type="revolute">
+		<parent link="base_link" />
+		<child link="J1" />
+		<origin rpy="0.000000 0.000000 0.000000" xyz="0.000000 0.000000 0.197500" />
+		<axis xyz="-0.000000 -0.000000 1.000000" />
+		<limit effort="1" lower="-2.96706" upper="2.96706" velocity="3.14159265358979" />
+		<dynamics damping="0" friction="0" />
+	</joint>
+	<transmission name="trans_1">
+		<type>transmission_interface/SimpleTransmission</type>
+		<joint name="joint_1">
+			<hardwareInterface>PositionJointInterface</hardwareInterface>
+		</joint>
+		<actuator name="motor_1">
+			<hardwareInterface>PositionJointInterface</hardwareInterface>
+			<mechanicalReduction>1</mechanicalReduction>
+		</actuator>
+	</transmission>
+	<link name="J2">
+		<visual>
+			<origin rpy="0 0 0" xyz="0 0 0" />
+			<geometry>
+				<mesh filename="package://denso_robot_descriptions/vs087_description/vs087/meshes/J2.dae" scale="1 1 1" />
+			</geometry>
+		</visual>
+		<collision>
+			<origin rpy="0 0 0" xyz="0 0 0" />
+			<geometry>
+				<mesh filename="package://denso_robot_descriptions/vs087_description/vs087/meshes/J2.dae" scale="1 1 1" />
+			</geometry>
+		</collision>
+		<inertial>
+			<mass value="1" />
+			<origin rpy="0.000000 0.000000 0.000000" xyz="0.000000 0.000000 0.000000" />
+			<inertia ixx="1" ixy="0" ixz="0" iyy="1" iyz="0" izz="1" />
+		</inertial>
+	</link>
+	<joint name="joint_2" type="revolute">
+		<parent link="J1" />
+		<child link="J2" />
+		
+		<origin rpy="0.000000 0.000000 0.000000" xyz="0.030000 0.000000 0.197500" />
+		<axis xyz="-0.000000 1.000000 -0.000000" />
+		<limit effort="1" lower="-1.745329" upper="2.356194" velocity="2.87979326579064" />
+		<dynamics damping="0" friction="0" />
+	</joint>
+	<transmission name="trans_2">
+		<type>transmission_interface/SimpleTransmission</type>
+		<joint name="joint_2">
+			<hardwareInterface>PositionJointInterface</hardwareInterface>
+		</joint>
+		<actuator name="motor_2">
+			<hardwareInterface>PositionJointInterface</hardwareInterface>
+			<mechanicalReduction>1</mechanicalReduction>
+		</actuator>
+	</transmission>
+	<link name="J3">
+		<visual>
+			<origin rpy="0 0 0" xyz="0 0 0" />
+			<geometry>
+				<mesh filename="package://denso_robot_descriptions/vs087_description/vs087/meshes/J3.dae" scale="1 1 1" />
+			</geometry>
+		</visual>
+		<collision>
+			<origin rpy="0 0 0" xyz="0 0 0" />
+			<geometry>
+				<mesh filename="package://denso_robot_descriptions/vs087_description/vs087/meshes/J3.dae" scale="1 1 1" />
+			</geometry>
+		</collision>
+		<inertial>
+			<mass value="1" />
+			<origin rpy="0.000000 0.000000 0.000000" xyz="0.000000 0.000000 0.000000" />
+			<inertia ixx="1" ixy="0" ixz="0" iyy="1" iyz="0" izz="1" />
+		</inertial>
+	</link>
+	<joint name="joint_3" type="revolute">
+		<parent link="J2" />
+		<child link="J3" />
+		
+		<origin rpy="0.000000 0.000000 0.000000" xyz="0.000000 0.000000 0.445000" />
+		<axis xyz="-0.000000 1.000000 -0.000000" />
+		<limit effort="1" lower="-2.28638" upper="2.58309" velocity="3.45575191894877" />
+		<dynamics damping="0" friction="0" />
+	</joint>
+	<transmission name="trans_3">
+		<type>transmission_interface/SimpleTransmission</type>
+		<joint name="joint_3">
+			<hardwareInterface>PositionJointInterface</hardwareInterface>
+		</joint>
+		<actuator name="motor_3">
+			<hardwareInterface>PositionJointInterface</hardwareInterface>
+			<mechanicalReduction>1</mechanicalReduction>
+		</actuator>
+	</transmission>
+	<link name="J4">
+		<visual>
+			<origin rpy="0 0 0" xyz="0 0 0" />
+			<geometry>
+				<mesh filename="package://denso_robot_descriptions/vs087_description/vs087/meshes/J4.dae" scale="1 1 1" />
+			</geometry>
+		</visual>
+		<collision>
+			<origin rpy="0 0 0" xyz="0 0 0" />
+			<geometry>
+				<mesh filename="package://denso_robot_descriptions/vs087_description/vs087/meshes/J4.dae" scale="1 1 1" />
+			</geometry>
+		</collision>
+		<inertial>
+			<mass value="1" />
+			<origin rpy="0.000000 0.000000 0.000000" xyz="0.000000 0.000000 0.000000" />
+			<inertia ixx="1" ixy="0" ixz="0" iyy="1" iyz="0" izz="1" />
+		</inertial>
+	</link>
+	<joint name="joint_4" type="revolute">
+		<parent link="J3" />
+		<child link="J4" />
+		<origin rpy="0.000000 0.000000 0.000000" xyz="-0.020000 0.000000 0.287000" />
+		<axis xyz="-0.000000 -0.000000 1.000000" />
+		<limit effort="1" lower="-4.712389" upper="4.712389" velocity="4.31968989868597" />
+		<dynamics damping="0" friction="0" />
+	</joint>
+	<transmission name="trans_4">
+		<type>transmission_interface/SimpleTransmission</type>
+		<joint name="joint_4">
+			<hardwareInterface>PositionJointInterface</hardwareInterface>
+		</joint>
+		<actuator name="motor_4">
+			<hardwareInterface>PositionJointInterface</hardwareInterface>
+			<mechanicalReduction>1</mechanicalReduction>
+		</actuator>
+	</transmission>
+	<link name="J5">
+		<visual>
+			<origin rpy="0 0 0" xyz="0 0 0" />
+			<geometry>
+				<mesh filename="package://denso_robot_descriptions/vs087_description/vs087/meshes/J5.dae" scale="1 1 1" />
+			</geometry>
+		</visual>
+		<collision>
+			<origin rpy="0 0 0" xyz="0 0 0" />
+			<geometry>
+				<mesh filename="package://denso_robot_descriptions/vs087_description/vs087/meshes/J5.dae" scale="1 1 1" />
+			</geometry>
+		</collision>
+		<inertial>
+			<mass value="1" />
+			<origin rpy="0.000000 0.000000 0.000000" xyz="0.000000 0.000000 0.000000" />
+			<inertia ixx="1" ixy="0" ixz="0" iyy="1" iyz="0" izz="1" />
+		</inertial>
+	</link>
+	<joint name="joint_5" type="revolute">
+		<parent link="J4" />
+		<child link="J5" />
+		<origin rpy="0.000000 0.000000 0.000000" xyz="0.000000 0.000000 0.143000" />
+		<axis xyz="-0.000000 1.000000 -0.000000" />
+		<limit effort="1" lower="-2.094395" upper="2.094395" velocity="4.31968989868597" />
+		<dynamics damping="0" friction="0" />
+	</joint>
+	<transmission name="trans_5">
+		<type>transmission_interface/SimpleTransmission</type>
+		<joint name="joint_5">
+			<hardwareInterface>PositionJointInterface</hardwareInterface>
+		</joint>
+		<actuator name="motor_5">
+			<hardwareInterface>PositionJointInterface</hardwareInterface>
+			<mechanicalReduction>1</mechanicalReduction>
+		</actuator>
+	</transmission>
+	<link name="J6">
+		<visual>
+			<origin rpy="0 0 0" xyz="0 0 0" />
+			<geometry>
+				<mesh filename="package://denso_robot_descriptions/vs087_description/vs087/meshes/J6.dae" scale="1 1 1" />
+			</geometry>
+		</visual>
+		<collision>
+			<origin rpy="0 0 0" xyz="0 0 0" />
+			<geometry>
+				<mesh filename="package://denso_robot_descriptions/vs087_description/vs087/meshes/J6.dae" scale="1 1 1" />
+			</geometry>
+		</collision>
+		<inertial>
+			<mass value="1" />
+			<origin rpy="0.000000 0.000000 0.000000" xyz="0.000000 0.000000 0.000000" />
+			<inertia ixx="1" ixy="0" ixz="0" iyy="1" iyz="0" izz="1" />
+		</inertial>
+	</link>
+	<joint name="joint_6" type="revolute">
+		<parent link="J5" />
+		<child link="J6" />
+		<origin rpy="0.000000 0.000000 0.000000" xyz="0.000000 0.000000 0.080000" />
+		<axis xyz="-0.000000 -0.000000 1.000000" />
+		<limit effort="1" lower="-6.283185" upper="6.283185" velocity="6.91150383789755" />
+		<dynamics damping="0" friction="0" />
+	</joint>
+	<transmission name="trans_6">
+		<type>transmission_interface/SimpleTransmission</type>
+		<joint name="joint_6">
+			<hardwareInterface>PositionJointInterface</hardwareInterface>
+		</joint>
+		<actuator name="motor_6">
+			<hardwareInterface>PositionJointInterface</hardwareInterface>
+			<mechanicalReduction>1</mechanicalReduction>
+		</actuator>
+	</transmission>
+</robot>

@@ -11,7 +11,7 @@
   </include>
 
   <!-- Load the URDF, SRDF and other .yaml configuration files on the param server -->
-  <param name="robot_description" type="str" textfile="$(find denso_robot_descriptions)/$(arg robot_description)/$(arg robot_name)/$(arg robot_name).urdf"/>
+  <param name="robot_description" type="str" textfile="$(find denso_robot_descriptions)/$(arg robot_description)/$(arg robot_options)/$(arg robot_name).urdf"/>
 
   <arg name="gui" default="true"/>
   <param name="use_gui" value="$(arg gui)"/>
