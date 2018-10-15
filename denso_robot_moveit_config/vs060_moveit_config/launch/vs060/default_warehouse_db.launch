@@ -1,0 +1,16 @@
+<launch>
+
+  <arg name="robot_options" default="vs060" />
+
+  <arg name="reset" default="false"/>
+
+  <!-- Launch the warehouse with a default database location -->  
+  <include file="$(find vs060_moveit_config)/launch/$(arg robot_options)/warehouse.launch">
+    <arg name="robot_options" value="$(arg robot_options)" />
+    <arg name="moveit_warehouse_database_path" value="$(find vs060_moveit_config)/default_warehouse_mongo_db" />
+  </include>
+
+  <!-- If we want to reset the database, run this node -->
+  <node if="$(arg reset)" name="$(anon moveit_default_db_reset)" type="moveit_init_demo_warehouse" pkg="moveit_ros_warehouse" respawn="false" output="screen" />
+
+</launch>

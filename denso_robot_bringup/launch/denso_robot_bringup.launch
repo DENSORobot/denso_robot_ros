@@ -1,6 +1,7 @@
 <launch>
   <!-- Override robot_name argument -->
   <arg name="robot_name" default="vs060" />
+  <arg name="robot_options" default="vs060" />
  
   <!-- the "sim" argument controls whether we connect to a Simulated or Real robot -->
   <!--  - if sim=false, a ip_address argument is required -->
@@ -10,41 +11,50 @@
   <!-- If you want to change send and recieve format of denso_robot_control, -->
   <!-- you can specify the send_format and recv_format parameters -->
   <arg name="send_format" default="288" />
-  <arg name="recv_format" default="292" />
+  <arg name="recv_format" default="290" />
  
   <!-- load the robot_description parameter before launching ROS-I nodes -->
-  <include file="$(eval find(arg('robot_name')+'_moveit_config')+'/launch/planning_context.launch')" >
+  <include file="$(eval find(arg('robot_name')+'_moveit_config')+'/launch/'+arg('robot_options')+'/planning_context.launch')" >
     <arg name="load_robot_description" value="true" />
+    <arg name="robot_options" value="$(arg robot_options)"/>
   </include>
 
   <!-- run the "real robot" interface nodes -->
   <!--   - this typically includes: robot_state, motion_interface, and joint_trajectory_action nodes -->
   <!--   - replace these calls with appropriate robot-specific calls or launch files -->
   <group if="$(arg sim)">
-    <include file="$(find denso_robot_gazebo)/launch/denso_robot_gazebo.launch">
+    <include file="$(find denso_robot_gazebo)/launch/$(arg robot_name)_gazebo/$(arg robot_options)_gazebo.launch">
       <arg name="robot_name" value="$(arg robot_name)" />
+      <arg name="robot_options" value="$(arg robot_options)" />
     </include>
   </group>  
 
   <group unless="$(arg sim)">
     <include file="$(find denso_robot_control)/launch/denso_robot_control.launch">
       <arg name="robot_name" value="$(arg robot_name)" />
+      <arg name="robot_options" value="$(arg robot_options)" />
       <arg name="ip_address" value="$(arg ip_address)" />
       <arg name="send_format" value="$(arg send_format)" />
       <arg name="recv_format" value="$(arg recv_format)" />
     </include>
   </group>  
 
+  <arg name="planner" default="ompl" />
 
-  <include file="$(eval find(arg('robot_name')+'_moveit_config')+'/launch/move_group.launch')">
+  <include file="$(eval find(arg('robot_name')+'_moveit_config')+'/launch/'+arg('robot_options')+'/move_group.launch')">
     <arg name="publish_monitored_planning_scene" value="true" />
     <arg name="robot_name" value="$(arg robot_name)" />
+    <arg name="robot_options" value="$(arg robot_options)"/>
+    <arg name="planner" value="$(arg planner)" />
   </include>
 
-  <include file="$(eval find(arg('robot_name')+'_moveit_config')+'/launch/moveit_rviz.launch')">
+  <include file="$(eval find(arg('robot_name')+'_moveit_config')+'/launch/'+arg('robot_options')+'/moveit_rviz.launch')">
     <arg name="config" value="true"/>
+    <arg name="robot_options" value="$(arg robot_options)"/>
   </include>
   
-  <include file="$(eval find(arg('robot_name')+'_moveit_config')+'/launch/default_warehouse_db.launch')" />
+  <include file="$(eval find(arg('robot_name')+'_moveit_config')+'/launch/'+arg('robot_options')+'/default_warehouse_db.launch')">
+    <arg name="robot_options" value="$(arg robot_options)"/>
+  </include>
 
 </launch>
