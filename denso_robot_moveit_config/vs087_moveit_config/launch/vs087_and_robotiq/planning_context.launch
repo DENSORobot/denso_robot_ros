@@ -1,0 +1,32 @@
+<launch>
+  <!-- By default we do not overwrite the URDF. Change the following to true to change the default behavior -->
+  <arg name="load_robot_description" default="false"/>
+
+  <!-- The name of the parameter under which the URDF is loaded -->
+  <arg name="robot_description" default="robot_description"/>
+
+  <!-- The name of robot which is loaded from URDF -->
+  <arg name="robot_name" default="vs087"/>
+  <arg name="robot_options" default="vs087_and_robotiq"/>
+ 
+  <!-- Load universal robot description format (URDF) -->
+  <arg name="model" value="$(find denso_robot_descriptions)/vs087_description/$(arg robot_options)/$(arg robot_options).urdf.xacro"/>
+  <param name="robot_description" command="$(find xacro)/xacro --inorder $(arg model)"/>
+
+  <!-- The semantic description that corresponds to the URDF -->
+  <!-- <param name="$(arg robot_description)_semantic" textfile="$(find vs087_moveit_config)/config/vs087/vs087.srdf" /> -->
+  <param name="$(arg robot_description)_semantic" textfile="$(find vs087_moveit_config)/config/$(arg robot_options)/vs087.srdf" />
+
+  <!-- Load updated joint limits (override information from URDF) -->
+  <group ns="$(arg robot_description)_planning">
+    <!--   <rosparam command="load" file="$(find vs087_moveit_config)/config/vs087/joint_limits.yaml"/> -->
+    <rosparam command="load" file="$(find vs087_moveit_config)/config/$(arg robot_options)/joint_limits.yaml"/>
+  </group>
+
+  <!-- Load default settings for kinematics; these settings are overridden by settings in a node's namespace -->
+  <group ns="$(arg robot_description)_kinematics">
+    <!--   <rosparam command="load" file="$(find vs087_moveit_config)/config/vs087/kinematics.yaml"/> -->
+    <rosparam command="load" file="$(find vs087_moveit_config)/config/$(arg robot_options)/kinematics.yaml"/>
+  </group>
+
+</launch>
