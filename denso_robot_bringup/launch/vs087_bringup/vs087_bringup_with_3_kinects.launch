@@ -3,12 +3,12 @@
   her we connect to a Simulated or Real robot -->
   <!--  - if sim=false, a ip_address argument is required -->
   <arg name="sim" default="true" />
-  <arg name="ip_address" default="192.168.0.1" />
+  <arg name="ip_address" default="192.168.2.22" />
 
   <!-- If you want to change send and recieve format of denso_robot_control, -->
   <!-- you can specify the send_format and recv_format parameters -->
   <arg name="send_format" default="288" />
-  <arg name="recv_format" default="292" />
+  <arg name="recv_format" default="290" />
 
   <!-- Choose robot options -->
   <arg name="robot_options" default="vs087_with_3_kinects" />
