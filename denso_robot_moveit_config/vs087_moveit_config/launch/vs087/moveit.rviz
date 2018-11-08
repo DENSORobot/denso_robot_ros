@@ -5,8 +5,6 @@ Panels:
     Property Tree Widget:
       Expanded:
         - /MotionPlanning1
-        - /TF1
-        - /TF1/Frames1
       Splitter Ratio: 0.742560029
     Tree Height: 421
   - Class: rviz/Help
@@ -373,25 +371,25 @@ Visualization Manager:
   Views:
     Current:
       Class: rviz/XYOrbit
-      Distance: 2.82759428
+      Distance: 2.03650713
       Enable Stereo Rendering:
         Stereo Eye Separation: 0.0599999987
         Stereo Focal Distance: 1
         Swap Stereo Eyes: false
         Value: false
       Focal Point:
-        X: 0.819697738
-        Y: 0.421494424
-        Z: 5.81145855e-07
+        X: 0.189193726
+        Y: -0.104603291
+        Z: 4.02331921e-07
       Focal Shape Fixed Size: true
       Focal Shape Size: 0.0500000007
       Invert Z Axis: false
       Name: Current View
       Near Clip Distance: 0.00999999978
-      Pitch: 0.245202497
+      Pitch: 0.42520237
       Target Frame: world
       Value: XYOrbit (rviz)
-      Yaw: 4.95857668
+      Yaw: 1.00038838
     Saved: ~
 Window Geometry:
   Displays:
