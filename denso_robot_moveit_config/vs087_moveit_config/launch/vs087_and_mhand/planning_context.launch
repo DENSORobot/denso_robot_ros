@@ -7,7 +7,7 @@
 
   <!-- The name of robot which is loaded from URDF -->
   <arg name="robot_name" default="vs087"/>
-  <arg name="robot_options" default="vs087_with_2_kinects"/>
+  <arg name="robot_options" default="vs087_and_mhand"/>
  
   <!-- Load universal robot description format (URDF) -->
   <arg name="model" value="$(find denso_robot_descriptions)/vs087_description/$(arg robot_options)/$(arg robot_options).urdf.xacro"/>
@@ -15,7 +15,7 @@
 
   <!-- The semantic description that corresponds to the URDF -->
   <!-- <param name="$(arg robot_description)_semantic" textfile="$(find vs087_moveit_config)/config/vs087/vs087.srdf" /> -->
-  <param name="$(arg robot_description)_semantic" textfile="$(find vs087_moveit_config)/config/$(arg robot_options)/vs087.srdf" />
+  <param name="$(arg robot_description)_semantic" textfile="$(find vs087_moveit_config)/config/$(arg robot_options)/vs087_and_mhand.srdf" />
 
   <!-- Load updated joint limits (override information from URDF) -->
   <group ns="$(arg robot_description)_planning">

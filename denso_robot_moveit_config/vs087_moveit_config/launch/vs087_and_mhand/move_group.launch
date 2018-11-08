@@ -1,7 +1,7 @@
 <launch>
 
   <arg name="robot_name" default="vs087" />
-  <arg name="robot_options" default="vs087" />
+  <arg name="robot_options" default="vs087_and_mhand" />
 
   <include file="$(find vs087_moveit_config)/launch/$(arg robot_options)/planning_context.launch">
     <arg name="robot_name" value="$(arg robot_name)" />
@@ -28,6 +28,7 @@
   <!-- Planning Functionality -->
   <include ns="move_group" file="$(find vs087_moveit_config)/launch/$(arg robot_options)/planning_pipeline.launch.xml">
     <arg name="pipeline" value="$(arg planner)" />
+    <arg name="robot_options" value="$(arg robot_options)" />
   </include>
 
   <!-- Trajectory Execution Functionality -->

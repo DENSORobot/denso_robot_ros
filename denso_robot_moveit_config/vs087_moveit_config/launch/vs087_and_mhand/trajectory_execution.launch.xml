@@ -4,7 +4,7 @@
 
   <!-- The argument for specifying robot type -->
   <arg name="robot_name" default="vs087" />
-  <arg name="robot_options" default="vs087" />
+  <arg name="robot_options" default="vs087_and_mhand" />
 
   <!-- Flag indicating whether MoveIt! is allowed to load/unload  or switch controllers -->
   <arg name="moveit_manage_controllers" default="true"/>

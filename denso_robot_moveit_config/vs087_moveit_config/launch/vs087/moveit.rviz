@@ -102,24 +102,30 @@ Visualization Manager:
             Show Axes: false
             Show Trail: false
             Value: true
-          kinect_center:
+          hand_link:
+            Alpha: 1
+            Show Axes: false
+            Show Trail: false
+          mhand_body_link:
             Alpha: 1
             Show Axes: false
             Show Trail: false
             Value: true
-          kinect_center_rgb_optical_frame:
-            Alpha: 1
-            Show Axes: false
-            Show Trail: false
-          kinect_left:
+          mhand_finger_A:
             Alpha: 1
             Show Axes: false
             Show Trail: false
             Value: true
-          kinect_left_rgb_optical_frame:
+          mhand_finger_B:
             Alpha: 1
             Show Axes: false
             Show Trail: false
+            Value: true
+          mhand_finger_C:
+            Alpha: 1
+            Show Axes: false
+            Show Trail: false
+            Value: true
           world:
             Alpha: 1
             Show Axes: false
@@ -204,24 +210,30 @@ Visualization Manager:
             Show Axes: false
             Show Trail: false
             Value: true
-          kinect_center:
+          hand_link:
+            Alpha: 1
+            Show Axes: false
+            Show Trail: false
+          mhand_body_link:
             Alpha: 1
             Show Axes: false
             Show Trail: false
             Value: true
-          kinect_center_rgb_optical_frame:
-            Alpha: 1
-            Show Axes: false
-            Show Trail: false
-          kinect_left:
+          mhand_finger_A:
             Alpha: 1
             Show Axes: false
             Show Trail: false
             Value: true
-          kinect_left_rgb_optical_frame:
+          mhand_finger_B:
             Alpha: 1
             Show Axes: false
             Show Trail: false
+            Value: true
+          mhand_finger_C:
+            Alpha: 1
+            Show Axes: false
+            Show Trail: false
+            Value: true
           world:
             Alpha: 1
             Show Axes: false
@@ -309,16 +321,18 @@ Visualization Manager:
           Value: false
         base_link:
           Value: false
-        kinect_center:
-          Value: true
-        kinect_center_rgb_optical_frame:
-          Value: true
-        kinect_left:
-          Value: true
-        kinect_left_rgb_optical_frame:
-          Value: true
+        hand_link:
+          Value: false
+        mhand_body_link:
+          Value: false
+        mhand_finger_A:
+          Value: false
+        mhand_finger_B:
+          Value: false
+        mhand_finger_C:
+          Value: false
         world:
-          Value: true
+          Value: false
       Marker Scale: 1
       Name: TF
       Show Arrows: true
@@ -333,13 +347,14 @@ Visualization Manager:
                   J4:
                     J5:
                       J6:
-                        {}
-          kinect_center:
-            kinect_center_rgb_optical_frame:
-              {}
-          kinect_left:
-            kinect_left_rgb_optical_frame:
-              {}
+                        hand_link:
+                          mhand_body_link:
+                            mhand_finger_A:
+                              {}
+                            mhand_finger_B:
+                              {}
+                            mhand_finger_C:
+                              {}
       Update Interval: 0
       Value: true
   Enabled: true
@@ -373,10 +388,10 @@ Visualization Manager:
       Invert Z Axis: false
       Name: Current View
       Near Clip Distance: 0.00999999978
-      Pitch: 0.385203004
+      Pitch: 0.245202497
       Target Frame: world
       Value: XYOrbit (rviz)
-      Yaw: 0.785394967
+      Yaw: 4.95857668
     Saved: ~
 Window Geometry:
   Displays:
@@ -390,9 +405,9 @@ Window Geometry:
     collapsed: false
   MotionPlanning - Trajectory Slider:
     collapsed: false
-  QMainWindow State: 000000ff00000000fd0000000100000000000002ad000003dafc0200000007fb000000100044006900730070006c00610079007301000000280000023a000000d700fffffffb0000000800480065006c00700000000342000000bb0000007300fffffffb0000000a0056006900650077007300000003b0000000b0000000ad00fffffffb0000000c00430061006d00650072006100000002ff000001610000000000000000fb0000001e004d006f00740069006f006e00200050006c0061006e006e0069006e00670100000374000001890000000000000000fb00000044004d006f00740069006f006e0050006c0061006e006e0069006e00670020002d0020005400720061006a006500630074006f0072007900200053006c00690064006500720000000000ffffffff0000004a00fffffffb0000001c004d006f00740069006f006e0050006c0061006e006e0069006e006701000002680000019a0000018300ffffff0000048c000003da00000001000000020000000100000002fc0000000100000002000000010000000a0054006f006f006c00730100000000ffffffff0000000000000000
+  QMainWindow State: 000000ff00000000fd0000000100000000000002ad000003dafc0200000007fb000000100044006900730070006c00610079007301000000280000023a000000d700fffffffb0000000800480065006c00700000000342000000bb0000007300fffffffb0000000a0056006900650077007300000003b0000000b0000000ad00fffffffb0000000c00430061006d00650072006100000002ff000001610000000000000000fb0000001e004d006f00740069006f006e00200050006c0061006e006e0069006e00670100000374000001890000000000000000fb00000044004d006f00740069006f006e0050006c0061006e006e0069006e00670020002d0020005400720061006a006500630074006f0072007900200053006c00690064006500720000000000ffffffff0000004a00fffffffb0000001c004d006f00740069006f006e0050006c0061006e006e0069006e006701000002680000019a0000018300ffffff00000492000003da00000001000000020000000100000002fc0000000100000002000000010000000a0054006f006f006c00730100000000ffffffff0000000000000000
   Views:
     collapsed: false
-  Width: 1855
-  X: 65
-  Y: 24
+  Width: 1861
+  X: 1139
+  Y: 294
