@@ -1,0 +1,295 @@
+<?xml version="1.0"?>
+<robot name="vs087" xmlns:xacro="http://ros.org/wiki/xacro">
+  <!-- File Include -->
+  <!-- <xacro:include filename="$(find kinect_bringup)/urdf/sensor/kinect.urdf.xacro"/> -->
+  <!-- <xacro:include filename="$(find kinect_bringup)/urdf/sensor/kinect.gazebo.xacro"/> -->
+
+  <xacro:include filename="$(find denso_robot_descriptions)/vs087_description/vs087/vs087.urdf.xacro"/>
+  <xacro:include filename="$(find robotiq_3f_gripper_visualization)/cfg/robotiq-3f-gripper_articulated.xacro"/>
+
+  <transmission name="trans_7_0">
+    <type>transmission_interface/SimpleTransmission</type>
+    <joint name="palm_finger_1_joint">
+      <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+    </joint>
+    <actuator name="motor_7_0">
+      <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+      <mechanicalReduction>1</mechanicalReduction>
+    </actuator>
+  </transmission>
+  <transmission name="trans_7_1">
+    <type>transmission_interface/SimpleTransmission</type>
+    <joint name="finger_1_joint_1">
+      <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+    </joint>
+    <actuator name="motor_7_1">
+      <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+      <mechanicalReduction>1</mechanicalReduction>
+    </actuator>
+  </transmission>
+  <transmission name="trans_7_2">
+    <type>transmission_interface/SimpleTransmission</type>
+    <joint name="finger_1_joint_2">
+      <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+    </joint>
+    <actuator name="motor_7_2">
+      <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+      <mechanicalReduction>1</mechanicalReduction>
+    </actuator>
+  </transmission>
+  <transmission name="trans_7_3">
+    <type>transmission_interface/SimpleTransmission</type>
+    <joint name="finger_1_joint_3">
+      <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+    </joint>
+    <actuator name="motor_7_3">
+      <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+      <mechanicalReduction>1</mechanicalReduction>
+    </actuator>
+  </transmission>
+  <transmission name="trans_8_0">
+    <type>transmission_interface/SimpleTransmission</type>
+    <joint name="palm_finger_2_joint">
+      <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+    </joint>
+    <actuator name="motor_8_0">
+      <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+      <mechanicalReduction>1</mechanicalReduction>
+    </actuator>
+  </transmission>
+  <transmission name="trans_8_1">
+    <type>transmission_interface/SimpleTransmission</type>
+    <joint name="finger_2_joint_1">
+      <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+    </joint>
+    <actuator name="motor_8_1">
+      <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+      <mechanicalReduction>1</mechanicalReduction>
+    </actuator>
+  </transmission>
+  <transmission name="trans_8_2">
+    <type>transmission_interface/SimpleTransmission</type>
+    <joint name="finger_2_joint_2">
+      <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+    </joint>
+    <actuator name="motor_8_2">
+      <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+      <mechanicalReduction>1</mechanicalReduction>
+    </actuator>
+  </transmission>
+  <transmission name="trans_8_3">
+    <type>transmission_interface/SimpleTransmission</type>
+    <joint name="finger_2_joint_3">
+      <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+    </joint>
+    <actuator name="motor_8_3">
+      <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+      <mechanicalReduction>1</mechanicalReduction>
+    </actuator>
+  </transmission>
+  <transmission name="trans_9_1">
+    <type>transmission_interface/SimpleTransmission</type>
+    <joint name="finger_middle_joint_1">
+      <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+    </joint>
+    <actuator name="motor_9_1">
+      <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+      <mechanicalReduction>1</mechanicalReduction>
+    </actuator>
+  </transmission>
+  <transmission name="trans_9_2">
+    <type>transmission_interface/SimpleTransmission</type>
+    <joint name="finger_middle_joint_2">
+      <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+    </joint>
+    <actuator name="motor_9_2">
+      <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+      <mechanicalReduction>1</mechanicalReduction>
+    </actuator>
+  </transmission>
+  <transmission name="trans_9_3">
+    <type>transmission_interface/SimpleTransmission</type>
+    <joint name="finger_middle_joint_3">
+      <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+    </joint>
+    <actuator name="motor_9_3">
+      <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+      <mechanicalReduction>1</mechanicalReduction>
+    </actuator>
+  </transmission>
+
+  <!-- <!-\- Link0 -\-> -->
+  <!-- <gazebo reference="base_link"> -->
+  <!--   <mu1>2</mu1> -->
+  <!--   <mu2>2</mu2> -->
+  <!-- </gazebo> -->
+
+  <!-- <!-\- Link1 -\-> -->
+  <!-- <gazebo reference="J1"> -->
+  <!--   <mu1>0.2</mu1> -->
+  <!--   <mu2>0.2</mu2> -->
+  <!-- </gazebo> -->
+
+  <!-- <!-\- Link2 -\-> -->
+  <!-- <gazebo reference="J2"> -->
+  <!--   <mu1>0.2</mu1> -->
+  <!--   <mu2>0.2</mu2> -->
+  <!-- </gazebo> -->
+
+  <!-- <!-\- Link3 -\-> -->
+  <!-- <gazebo reference="J3"> -->
+  <!--   <mu1>0.2</mu1> -->
+  <!--   <mu2>0.2</mu2> -->
+  <!-- </gazebo> -->
+
+
+  <!-- <!-\- Link4 -\-> -->
+  <!-- <gazebo reference="J4"> -->
+  <!--   <mu1>0.2</mu1> -->
+  <!--   <mu2>0.2</mu2> -->
+  <!-- </gazebo> -->
+
+  <!-- <!-\- Link5 -\-> -->
+  <!-- <gazebo reference="J5"> -->
+  <!--   <mu1>0.2</mu1> -->
+  <!--   <mu2>0.2</mu2> -->
+  <!-- </gazebo> -->
+
+  <!-- <!-\- Link6 -\-> -->
+  <!-- <gazebo reference="J6"> -->
+  <!--   <mu1>0.2</mu1> -->
+  <!--   <mu2>0.2</mu2> -->
+  <!-- </gazebo> -->
+
+  <gazebo reference="palm">
+    <material>Gazebo/Grey</material>
+    <mu1>0.2</mu1>
+    <mu2>0.2</mu2>
+  </gazebo>
+  <gazebo reference="finger_1_link_0">
+    <material>Gazebo/Grey</material>
+    <kp>1000000.0</kp>
+    <kd>1.0</kd>
+    <mu1>30.0</mu1>
+    <mu2>30.0</mu2>
+  </gazebo>
+  <gazebo reference="finger_1_link_1">
+    <material>Gazebo/Grey</material>
+    <kp>1000000.0</kp>
+    <kd>1.0</kd>
+    <mu1>30.0</mu1>
+    <mu2>30.0</mu2>
+  </gazebo>
+  <gazebo reference="finger_1_link_2">
+    <material>Gazebo/Grey</material>
+    <kp>1000000.0</kp>
+    <kd>1.0</kd>
+    <mu1>30.0</mu1>
+    <mu2>30.0</mu2>
+  </gazebo>
+  <gazebo reference="finger_1_link_3">
+    <material>Gazebo/Grey</material>
+    <kp>1000000.0</kp>
+    <kd>1.0</kd>
+    <mu1>30.0</mu1>
+    <mu2>30.0</mu2>
+  </gazebo>
+  <gazebo reference="finger_2_link_0">
+    <material>Gazebo/Grey</material>
+    <kp>1000000.0</kp>
+    <kd>1.0</kd>
+    <mu1>30.0</mu1>
+    <mu2>30.0</mu2>
+  </gazebo>
+  <gazebo reference="finger_2_link_1">
+    <material>Gazebo/Grey</material>
+    <kp>1000000.0</kp>
+    <kd>1.0</kd>
+    <mu1>30.0</mu1>
+    <mu2>30.0</mu2>
+  </gazebo>
+  <gazebo reference="finger_2_link_2">
+    <material>Gazebo/Grey</material>
+    <kp>1000000.0</kp>
+    <kd>1.0</kd>
+    <mu1>30.0</mu1>
+    <mu2>30.0</mu2>
+  </gazebo>
+  <gazebo reference="finger_2_link_3">
+    <material>Gazebo/Grey</material>
+    <kp>1000000.0</kp>
+    <kd>1.0</kd>
+    <mu1>30.0</mu1>
+    <mu2>30.0</mu2>
+  </gazebo>
+  <gazebo reference="finger_middle_link_0">
+    <material>Gazebo/Grey</material>
+    <kp>1000000.0</kp>
+    <kd>1.0</kd>
+    <mu1>30.0</mu1>
+    <mu2>30.0</mu2>
+  </gazebo>
+  <gazebo reference="finger_middle_link_1">
+    <material>Gazebo/Grey</material>
+    <kp>1000000.0</kp>
+    <kd>1.0</kd>
+    <mu1>30.0</mu1>
+    <mu2>30.0</mu2>
+  </gazebo>
+  <gazebo reference="finger_middle_link_2">
+    <material>Gazebo/Grey</material>
+    <kp>1000000.0</kp>
+    <kd>1.0</kd>
+    <mu1>30.0</mu1>
+    <mu2>30.0</mu2>
+  </gazebo>
+  <gazebo reference="finger_middle_link_3">
+    <material>Gazebo/Grey</material>
+    <kp>1000000.0</kp>
+    <kd>1.0</kd>
+    <mu1>30.0</mu1>
+    <mu2>30.0</mu2>
+  </gazebo>
+
+
+  <joint name="gripper_joint" type="fixed">
+    <!-- <origin xyz="0 0 0.038" rpy="${pi/2} 0 ${pi}"/> -->
+    <origin xyz="0 0 0.038" rpy="${pi/2} 0 0"/>
+  <parent link="J6"/>
+  <child link="palm"/>
+  </joint>
+  <!-- <gazebo> -->
+  <!-- <plugin name="gazebo_ros_control" filename="libgazebo_ros_control.so"> -->
+  <!--   <robotNamespace>/vs087</robotNamespace> -->
+  <!--   <robotSimType>gazebo_ros_control/DefaultRobotHWSim</robotSimType> -->
+  <!-- </plugin> -->
+  <!-- </gazebo> -->
+
+  <!-- <gazebo> -->
+  <!--   <plugin name="gazebo_grasp_fix" filename="libgazebo_grasp_fix.so"> -->
+  <!--     <arm> -->
+  <!--       <arm_name>vs087_</arm_name> -->
+  <!--       <palm_link>J6</palm_link> -->
+  <!--       <gripper_link>palm</gripper_link> -->
+  <!--       <gripper_link>finger_1_link_0</gripper_link> -->
+  <!--       <gripper_link>finger_1_link_1</gripper_link> -->
+  <!--       <gripper_link>finger_1_link_2</gripper_link> -->
+  <!--       <gripper_link>finger_1_link_3</gripper_link> -->
+  <!--       <gripper_link>finger_2_link_0</gripper_link> -->
+  <!--       <gripper_link>finger_2_link_1</gripper_link> -->
+  <!--       <gripper_link>finger_2_link_2</gripper_link> -->
+  <!--       <gripper_link>finger_middle_link_0</gripper_link> -->
+  <!--       <gripper_link>finger_middle_link_1</gripper_link> -->
+  <!--       <gripper_link>finger_middle_link_2</gripper_link> -->
+  <!--       <gripper_link>finger_middle_link_3</gripper_link> -->
+  <!--     </arm> -->
+  <!--     <forces_angle_tolerance>100</forces_angle_tolerance> -->
+  <!--     <update_rate>4</update_rate> -->
+  <!--     <grip_count_threshold>4</grip_count_threshold> -->
+  <!--     <max_grip_count>8</max_grip_count> -->
+  <!--     <release_tolerance>0.003</release_tolerance> -->
+  <!--     <disable_collisions_on_attach>false</disable_collisions_on_attach> -->
+  <!--     <contact_topic>__default_topic__</contact_topic> -->
+  <!--   </plugin> -->
+  <!-- </gazebo> -->
+</robot>
