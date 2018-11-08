@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<robot name="vs087" xmlns:xacro="http://ros.org/wiki/xacro">
+  <xacro:include filename="$(find denso_robot_descriptions)/vs087_description/vs087/vs087.urdf.xacro"/>
+  <xacro:include filename="$(find mhand_description)/robots/mhand.urdf.xacro"/>
+
+  <joint name="gripper_joint" type="fixed">
+  <origin xyz="0 0 0" rpy="0 ${pi} ${pi}"/>
+  <parent link="J6"/>
+  <child link="hand_link"/>
+  </joint>
+  <!-- <gazebo> -->
+  <!-- <plugin name="gazebo_ros_control" filename="libgazebo_ros_control.so"> -->
+  <!--   <robotNamespace>/vs087_with_mhand</robotNamespace> -->
+  <!--   <robotSimType>gazebo_ros_control/DefaultRobotHWSim</robotSimType> -->
+  <!-- </plugin> -->
+  <!-- </gazebo> -->
+
+</robot>
