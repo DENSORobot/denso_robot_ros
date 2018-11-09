@@ -4,7 +4,7 @@
   <xacro:include filename="$(find mhand_description)/robots/mhand.urdf.xacro"/>
 
   <joint name="gripper_joint" type="fixed">
-  <origin xyz="0 0 0" rpy="0 ${pi} ${pi}"/>
+    <origin xyz="0 0 0" rpy="0 0 0"/>
   <parent link="J6"/>
   <child link="hand_link"/>
   </joint>
