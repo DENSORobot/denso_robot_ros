@@ -7,7 +7,7 @@
 
   <!-- The name of robot which is loaded from URDF -->
   <arg name="robot_name" default="vs087"/>
-  <arg name="robot_options" default="vs087_and_mhand"/>
+  <arg name="robot_options" default="vs087_and_robotiq"/>
  
   <!-- Load universal robot description format (URDF) -->
   <arg name="model" value="$(find denso_robot_descriptions)/vs087_description/$(arg robot_options)/$(arg robot_options).urdf.xacro"/>
