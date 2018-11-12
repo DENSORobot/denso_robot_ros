@@ -72,9 +72,8 @@
     <!--END EFFECTOR: Purpose: Represent information about an end effector.-->
     <end_effector name="mhand" parent_link="J6" group="gripper" />
     <!--DISABLE COLLISIONS: By default it is assumed that any link of the robot could potentially come into collision with any other link in the robot. This tag disables collision checking between a specified pair of links. -->
-    <!-- DISABLE COLLISIONS of ARM itself -->
     <disable_collisions link1="J1" link2="J2" reason="Adjacent" />
-    <!-- <disable_collisions link1="J1" link2="J3" reason="Never" /> -->
+    <disable_collisions link1="J1" link2="J3" reason="Never" />
     <disable_collisions link1="J1" link2="base_link" reason="Adjacent" />
     <disable_collisions link1="J2" link2="J3" reason="Adjacent" />
     <disable_collisions link1="J2" link2="J4" reason="Never" />
@@ -84,17 +83,16 @@
     <disable_collisions link1="J3" link2="J4" reason="Adjacent" />
     <disable_collisions link1="J3" link2="J5" reason="Never" />
     <disable_collisions link1="J3" link2="J6" reason="Never" />
-    <disable_collisions link1="J4" link2="J5" reason="Adjacent" />
-    <disable_collisions link1="J4" link2="J6" reason="Never" />
-    <disable_collisions link1="J5" link2="J6" reason="Adjacent" />
-    <!-- DISABLE COLLISIONS of ARM and GRIPPER -->
     <disable_collisions link1="J3" link2="mhand_body_link" reason="Never" />
     <disable_collisions link1="J3" link2="mhand_finger_A" reason="Never" />
     <disable_collisions link1="J3" link2="mhand_finger_B" reason="Never" />
     <disable_collisions link1="J3" link2="mhand_finger_C" reason="Never" />
+    <disable_collisions link1="J4" link2="J5" reason="Adjacent" />
+    <disable_collisions link1="J4" link2="J6" reason="Never" />
     <disable_collisions link1="J4" link2="mhand_finger_A" reason="Never" />
     <disable_collisions link1="J4" link2="mhand_finger_B" reason="Never" />
     <disable_collisions link1="J4" link2="mhand_finger_C" reason="Never" />
+    <disable_collisions link1="J5" link2="J6" reason="Adjacent" />
     <disable_collisions link1="J5" link2="mhand_body_link" reason="Never" />
     <disable_collisions link1="J5" link2="mhand_finger_A" reason="Never" />
     <disable_collisions link1="J5" link2="mhand_finger_B" reason="Never" />

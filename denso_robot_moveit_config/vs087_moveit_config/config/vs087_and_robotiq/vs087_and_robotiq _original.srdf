@@ -137,9 +137,8 @@
         <joint name="palm_finger_2_joint" value="0" />
     </group_state>
     <!--DISABLE COLLISIONS: By default it is assumed that any link of the robot could potentially come into collision with any other link in the robot. This tag disables collision checking between a specified pair of links. -->
-    <!-- DISABLE COLLISIONS of ARM itself -->
     <disable_collisions link1="J1" link2="J2" reason="Adjacent" />
-    <!-- <disable_collisions link1="J1" link2="J3" reason="Never" /> -->
+    <disable_collisions link1="J1" link2="J3" reason="Never" />
     <disable_collisions link1="J1" link2="base_link" reason="Adjacent" />
     <disable_collisions link1="J2" link2="J3" reason="Adjacent" />
     <disable_collisions link1="J2" link2="J4" reason="Never" />
@@ -149,10 +148,6 @@
     <disable_collisions link1="J3" link2="J4" reason="Adjacent" />
     <disable_collisions link1="J3" link2="J5" reason="Never" />
     <disable_collisions link1="J3" link2="J6" reason="Never" />
-    <disable_collisions link1="J4" link2="J5" reason="Adjacent" />
-    <disable_collisions link1="J4" link2="J6" reason="Never" />
-    <disable_collisions link1="J5" link2="J6" reason="Adjacent" />
-    <!-- DISABLE COLLISIONS of ARM and GRIPPER -->
     <disable_collisions link1="J3" link2="finger_1_link_0" reason="Never" />
     <disable_collisions link1="J3" link2="finger_1_link_1" reason="Never" />
     <disable_collisions link1="J3" link2="finger_1_link_2" reason="Never" />
@@ -166,6 +161,8 @@
     <disable_collisions link1="J3" link2="finger_middle_link_2" reason="Never" />
     <disable_collisions link1="J3" link2="finger_middle_link_3" reason="Never" />
     <disable_collisions link1="J3" link2="palm" reason="Never" />
+    <disable_collisions link1="J4" link2="J5" reason="Adjacent" />
+    <disable_collisions link1="J4" link2="J6" reason="Never" />
     <disable_collisions link1="J4" link2="finger_1_link_0" reason="Never" />
     <disable_collisions link1="J4" link2="finger_1_link_1" reason="Never" />
     <disable_collisions link1="J4" link2="finger_1_link_2" reason="Never" />
@@ -178,6 +175,7 @@
     <disable_collisions link1="J4" link2="finger_middle_link_1" reason="Never" />
     <disable_collisions link1="J4" link2="finger_middle_link_2" reason="Never" />
     <disable_collisions link1="J4" link2="finger_middle_link_3" reason="Never" />
+    <disable_collisions link1="J5" link2="J6" reason="Adjacent" />
     <disable_collisions link1="J5" link2="finger_1_link_0" reason="Never" />
     <disable_collisions link1="J5" link2="finger_1_link_1" reason="Never" />
     <disable_collisions link1="J5" link2="finger_1_link_2" reason="Never" />
