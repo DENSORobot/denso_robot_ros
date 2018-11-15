@@ -5,6 +5,9 @@
   <arg name="sim" default="true" />
   <arg name="ip_address" default="192.168.2.22" />
 
+  <!-- Load defferent move_group.launch file -->
+  <arg name="move_group_launch_file" default="move_group.launch" />
+
   <!-- If you want to change send and recieve format of denso_robot_control, -->
   <!-- you can specify the send_format and recv_format parameters -->
   <arg name="send_format" default="288" />
@@ -12,17 +15,49 @@
 
   <!-- Choose robot options -->
   <arg name="robot_options" default="vs087_and_mhand" />
-  
+
   <!-- Define the motion planner we want to use (ompl or stomp) -->
   <arg name="planner" default="ompl" />
 
-  <include file="$(find denso_robot_bringup)/launch/denso_robot_bringup.launch">
-    <arg name="robot_name" value="vs087"/>
-    <arg name="robot_options" value="$(arg robot_options)"/>
-    <arg name="sim" value="$(arg sim)"/>
-    <arg name="ip_address" value="$(arg ip_address)"/>
-    <arg name="send_format" value="$(arg send_format)" />
-    <arg name="recv_format" value="$(arg recv_format)" />
-    <arg name="planner" value="$(arg planner)" />
-  </include>
+  <group if="$(arg sim)">
+    <include file="$(find denso_robot_bringup)/launch/denso_robot_bringup.launch">
+      <arg name="robot_name" value="vs087"/>
+      <arg name="sim" value="$(arg sim)"/>
+      <arg name="move_group_launch_file" default="move_group_sim.launch" />
+      <arg name="robot_options" value="$(arg robot_options)"/>
+      <arg name="ip_address" value="$(arg ip_address)"/>
+      <arg name="send_format" value="$(arg send_format)" />
+      <arg name="recv_format" value="$(arg recv_format)" />
+      <arg name="planner" value="$(arg planner)" />
+    </include>
+  </group>
+
+  <group unless="$(arg sim)">
+    <!-- Mhand-Joint Republisher -->
+    <node pkg="mhand_control"  type="mhand_joint_state_republisher"  name="mhand_joint_state_republisher" output="screen">
+      <param name="joint_state_republish_topic_name" value="/vs087_and_mhand/joint_states" />
+      <param name="joint_state_subscribe_topic_name" value="/vs087/joint_states" />
+    </node>
+    <include file="$(find denso_robot_bringup)/launch/denso_robot_bringup.launch">
+      <arg name="robot_name" value="vs087"/>
+      <arg name="move_group_launch_file" value="$(arg move_group_launch_file)"/>
+      <arg name="sim" value="$(arg sim)"/>
+      <arg name="robot_options" value="$(arg robot_options)"/>
+      <arg name="ip_address" value="$(arg ip_address)"/>
+      <arg name="send_format" value="$(arg send_format)" />
+      <arg name="recv_format" value="$(arg recv_format)" />
+      <arg name="planner" value="$(arg planner)" />
+    </include>
+  </group>
+
+  <!-- <include file="$(find denso_robot_bringup)/launch/denso_robot_bringup.launch"> -->
+  <!--   <arg name="robot_name" value="vs087"/> -->
+  <!--   <arg name="move_group_launch_file" value="$(arg move_group_launch_file)"/> -->
+  <!--   <arg name="sim" value="$(arg sim)"/> -->
+  <!--   <arg name="robot_options" value="$(arg robot_options)"/> -->
+  <!--   <arg name="ip_address" value="$(arg ip_address)"/> -->
+  <!--   <arg name="send_format" value="$(arg send_format)" /> -->
+  <!--   <arg name="recv_format" value="$(arg recv_format)" /> -->
+  <!--   <arg name="planner" value="$(arg planner)" /> -->
+  <!-- </include> -->
 </launch>

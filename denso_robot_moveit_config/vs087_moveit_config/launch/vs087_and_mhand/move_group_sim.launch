@@ -32,7 +32,7 @@
   </include>
 
   <!-- Trajectory Execution Functionality -->
-  <include ns="move_group" file="$(find vs087_moveit_config)/launch/$(arg robot_options)/trajectory_execution.launch.xml" if="$(arg allow_trajectory_execution)">
+  <include ns="move_group" file="$(find vs087_moveit_config)/launch/$(arg robot_options)/trajectory_execution_sim.launch.xml" if="$(arg allow_trajectory_execution)">
     <arg name="moveit_manage_controllers" value="true" />
     <arg name="robot_name" value="$(arg robot_name)" />
     <arg name="robot_options" value="$(arg robot_options)" />
@@ -45,11 +45,8 @@
   </include>
 
   <!-- Start the actual move_group node/action server -->
-  <!-- <node name="move_group" launch-prefix="$(arg launch_prefix)" pkg="moveit_ros_move_group" type="move_group" respawn="false" output="screen" -->
-  <!--       args="joint_states:=/$(arg robot_name)/joint_states $(arg command_args)"> -->
   <node name="move_group" launch-prefix="$(arg launch_prefix)" pkg="moveit_ros_move_group" type="move_group" respawn="false" output="screen"
-        args="joint_states:=/vs087_and_mhand/joint_states $(arg command_args)">
-
+        args="joint_states:=/$(arg robot_name)/joint_states $(arg command_args)">
 
     <!-- Set the display variable, in case OpenGL code is used internally -->
     <env name="DISPLAY" value="$(optenv DISPLAY :0)" />
