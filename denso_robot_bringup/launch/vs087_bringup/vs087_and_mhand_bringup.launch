@@ -20,6 +20,7 @@
   <arg name="planner" default="ompl" />
 
   <group if="$(arg sim)">
+    <!-- denso_robot_bringup.launch -->
     <include file="$(find denso_robot_bringup)/launch/denso_robot_bringup.launch">
       <arg name="robot_name" value="vs087"/>
       <arg name="sim" value="$(arg sim)"/>
@@ -33,11 +34,13 @@
   </group>
 
   <group unless="$(arg sim)">
-    <!-- Mhand-Joint Republisher -->
+    <!-- M-Hand driver -->
+    <node pkg="mhand_driver" type="listener.py" name="mhand_driver_listener" output="screen"/>
     <node pkg="mhand_control"  type="mhand_joint_state_republisher"  name="mhand_joint_state_republisher" output="screen">
       <param name="joint_state_republish_topic_name" value="/vs087_and_mhand/joint_states" />
       <param name="joint_state_subscribe_topic_name" value="/vs087/joint_states" />
     </node>
+    <!-- denso_robot_bringup.launch -->
     <include file="$(find denso_robot_bringup)/launch/denso_robot_bringup.launch">
       <arg name="robot_name" value="vs087"/>
       <arg name="move_group_launch_file" value="$(arg move_group_launch_file)"/>
@@ -50,14 +53,4 @@
     </include>
   </group>
 
-  <!-- <include file="$(find denso_robot_bringup)/launch/denso_robot_bringup.launch"> -->
-  <!--   <arg name="robot_name" value="vs087"/> -->
-  <!--   <arg name="move_group_launch_file" value="$(arg move_group_launch_file)"/> -->
-  <!--   <arg name="sim" value="$(arg sim)"/> -->
-  <!--   <arg name="robot_options" value="$(arg robot_options)"/> -->
-  <!--   <arg name="ip_address" value="$(arg ip_address)"/> -->
-  <!--   <arg name="send_format" value="$(arg send_format)" /> -->
-  <!--   <arg name="recv_format" value="$(arg recv_format)" /> -->
-  <!--   <arg name="planner" value="$(arg planner)" /> -->
-  <!-- </include> -->
 </launch>
