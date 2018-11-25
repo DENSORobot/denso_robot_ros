@@ -105,6 +105,33 @@ Visualization Manager:
             Alpha: 1
             Show Axes: false
             Show Trail: false
+          kinect_center_link:
+            Alpha: 1
+            Show Axes: false
+            Show Trail: false
+            Value: true
+          kinect_center_rgb_optical_frame:
+            Alpha: 1
+            Show Axes: false
+            Show Trail: false
+          kinect_left_link:
+            Alpha: 1
+            Show Axes: false
+            Show Trail: false
+            Value: true
+          kinect_left_rgb_optical_frame:
+            Alpha: 1
+            Show Axes: false
+            Show Trail: false
+          kinect_right_link:
+            Alpha: 1
+            Show Axes: false
+            Show Trail: false
+            Value: true
+          kinect_right_rgb_optical_frame:
+            Alpha: 1
+            Show Axes: false
+            Show Trail: false
           mhand_body_link:
             Alpha: 1
             Show Axes: false
@@ -213,6 +240,33 @@ Visualization Manager:
             Alpha: 1
             Show Axes: false
             Show Trail: false
+          kinect_center_link:
+            Alpha: 1
+            Show Axes: false
+            Show Trail: false
+            Value: true
+          kinect_center_rgb_optical_frame:
+            Alpha: 1
+            Show Axes: false
+            Show Trail: false
+          kinect_left_link:
+            Alpha: 1
+            Show Axes: false
+            Show Trail: false
+            Value: true
+          kinect_left_rgb_optical_frame:
+            Alpha: 1
+            Show Axes: false
+            Show Trail: false
+          kinect_right_link:
+            Alpha: 1
+            Show Axes: false
+            Show Trail: false
+            Value: true
+          kinect_right_rgb_optical_frame:
+            Alpha: 1
+            Show Axes: false
+            Show Trail: false
           mhand_body_link:
             Alpha: 1
             Show Axes: false
@@ -253,7 +307,7 @@ Visualization Manager:
       Color: 255; 255; 255
       Color Transformer: RGB8
       Decay Time: 0
-      Enabled: true
+      Enabled: false
       Invert Rainbow: false
       Max Color: 255; 255; 255
       Max Intensity: 4096
@@ -270,7 +324,7 @@ Visualization Manager:
       Unreliable: false
       Use Fixed Frame: true
       Use rainbow: true
-      Value: true
+      Value: false
     - Alpha: 1
       Autocompute Intensity Bounds: true
       Autocompute Value Bounds:
@@ -283,7 +337,7 @@ Visualization Manager:
       Color: 255; 255; 255
       Color Transformer: RGB8
       Decay Time: 0
-      Enabled: true
+      Enabled: false
       Invert Rainbow: false
       Max Color: 255; 255; 255
       Max Intensity: 4096
@@ -300,7 +354,7 @@ Visualization Manager:
       Unreliable: false
       Use Fixed Frame: true
       Use rainbow: true
-      Value: true
+      Value: false
     - Class: rviz/TF
       Enabled: true
       Frame Timeout: 15
@@ -318,22 +372,22 @@ Visualization Manager:
           Value: false
         J6:
           Value: false
-        ar_marker_0:
-          Value: false
-        ar_marker_1:
-          Value: false
-        ar_marker_10:
-          Value: false
-        ar_marker_11:
-          Value: false
-        assembling_target_part:
-          Value: true
         base_link:
           Value: false
-        camera:
-          Value: true
         hand_link:
           Value: false
+        kinect_center_link:
+          Value: true
+        kinect_center_rgb_optical_frame:
+          Value: true
+        kinect_left_link:
+          Value: true
+        kinect_left_rgb_optical_frame:
+          Value: true
+        kinect_right_link:
+          Value: true
+        kinect_right_rgb_optical_frame:
+          Value: true
         mhand_body_link:
           Value: false
         mhand_finger_A:
@@ -342,10 +396,6 @@ Visualization Manager:
           Value: false
         mhand_finger_C:
           Value: false
-        part_0:
-          Value: true
-        parts_pallete:
-          Value: true
         world:
           Value: true
       Marker Scale: 1
@@ -370,18 +420,15 @@ Visualization Manager:
                               {}
                             mhand_finger_C:
                               {}
-          camera:
-            ar_marker_0:
-              part_0:
-                {}
-            ar_marker_1:
+          kinect_center_link:
+            kinect_center_rgb_optical_frame:
               {}
-            ar_marker_10:
-              parts_pallete:
-                {}
-            ar_marker_11:
-              assembling_target_part:
-                {}
+          kinect_left_link:
+            kinect_left_rgb_optical_frame:
+              {}
+          kinect_right_link:
+            kinect_right_rgb_optical_frame:
+              {}
       Update Interval: 0
       Value: true
   Enabled: true
@@ -415,10 +462,10 @@ Visualization Manager:
       Invert Z Axis: false
       Name: Current View
       Near Clip Distance: 0.00999999978
-      Pitch: 0.0497975834
+      Pitch: 0.0747975856
       Target Frame: world
       Value: XYOrbit (rviz)
-      Yaw: 0.0603933819
+      Yaw: 0.645393372
     Saved: ~
 Window Geometry:
   Displays:
@@ -432,9 +479,9 @@ Window Geometry:
     collapsed: false
   MotionPlanning - Trajectory Slider:
     collapsed: false
-  QMainWindow State: 000000ff00000000fd0000000100000000000002ad000003dafc0200000007fb000000100044006900730070006c00610079007301000000280000023a000000d700fffffffb0000000800480065006c00700000000342000000bb0000007300fffffffb0000000a0056006900650077007300000003b0000000b0000000ad00fffffffb0000000c00430061006d00650072006100000002ff000001610000000000000000fb0000001e004d006f00740069006f006e00200050006c0061006e006e0069006e00670100000374000001890000000000000000fb00000044004d006f00740069006f006e0050006c0061006e006e0069006e00670020002d0020005400720061006a006500630074006f0072007900200053006c00690064006500720000000000ffffffff0000004a00fffffffb0000001c004d006f00740069006f006e0050006c0061006e006e0069006e006701000002680000019a0000018300ffffff00000492000003da00000001000000020000000100000002fc0000000100000002000000010000000a0054006f006f006c00730100000000ffffffff0000000000000000
+  QMainWindow State: 000000ff00000000fd0000000100000000000002ad000003dafc0200000007fb000000100044006900730070006c00610079007301000000280000023a000000d700fffffffb0000000800480065006c00700000000342000000bb0000007300fffffffb0000000a0056006900650077007300000003b0000000b0000000ad00fffffffb0000000c00430061006d00650072006100000002ff000001610000000000000000fb0000001e004d006f00740069006f006e00200050006c0061006e006e0069006e00670100000374000001890000000000000000fb00000044004d006f00740069006f006e0050006c0061006e006e0069006e00670020002d0020005400720061006a006500630074006f0072007900200053006c00690064006500720000000000ffffffff0000004a00fffffffb0000001c004d006f00740069006f006e0050006c0061006e006e0069006e006701000002680000019a0000018e00ffffff0000048c000003da00000001000000020000000100000002fc0000000100000002000000010000000a0054006f006f006c00730100000000ffffffff0000000000000000
   Views:
     collapsed: false
-  Width: 1861
-  X: 1139
-  Y: 294
+  Width: 1855
+  X: 1985
+  Y: 24
