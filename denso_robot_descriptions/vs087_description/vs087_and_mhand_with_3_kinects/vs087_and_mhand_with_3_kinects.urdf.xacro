@@ -20,7 +20,7 @@
 
   <!-- Joint -->
   <joint name="joint_kinect_center" type="fixed">
-    <origin xyz="1.265 0.04 0.515" rpy="0 0.3780 -3.123" />
+    <origin xyz="1.2297 0.1072 0.4985" rpy="-0.0047 0.5886 3.098" />>
     <parent link="world"/>
     <child link="kinect_center_link"/>
   </joint>
