@@ -35,7 +35,7 @@
 
   <group unless="$(arg sim)">
     <!-- M-Hand driver -->
-    <node pkg="mhand_driver" type="listener.py" name="mhand_driver_listener" output="screen"/>
+    <include file="$(find mhand_driver)/launch/listener.launch" />
     <node pkg="mhand_control"  type="mhand_joint_state_republisher"  name="mhand_joint_state_republisher" output="screen">
       <param name="joint_state_republish_topic_name" value="/vs087_and_mhand/joint_states" />
       <param name="joint_state_subscribe_topic_name" value="/vs087/joint_states" />
