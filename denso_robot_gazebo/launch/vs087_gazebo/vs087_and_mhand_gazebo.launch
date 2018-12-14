@@ -1,45 +1,30 @@
 <launch>
-  <!-- Override ip_address argument -->
-  <arg name="ip_address" default="192.168.0.1" />
-
   <!-- Override robot_name argument -->
-  <arg name="robot_name" default="vs060" />
-  <arg name="robot_options" default="vs060" />
+  <arg name="robot_name" default="vs087" />
+  <arg name="robot_options" default="vs087" />
 
   <!-- Robot description argument -->
   <arg name="robot_description" value="$(arg robot_name)_description" />
 
-  <!-- Send format -->
-  <arg name="send_format" default="288" />
-
-  <!-- Recieve format -->
-  <arg name="recv_format" default="292" />
-
-  <include ns="/$(arg robot_name)" file="$(find bcap_service)/launch/bcap_service.launch.xml">
-    <arg name="ip_address" value="$(arg ip_address)" />
-  </include>
-
-  <include ns="/$(arg robot_name)" file="$(find denso_robot_core)/launch/denso_robot_core.launch.xml" />
-
-  <include ns="/$(arg robot_name)" file="$(find denso_robot_control)/launch/denso_robot_control.launch.xml">
-    <arg name="send_format" value="$(arg send_format)" />
-    <arg name="recv_format" value="$(arg recv_format)" />
+  <include file="$(find gazebo_ros)/launch/empty_world.launch">
+    <arg name="world_name" value="$(find denso_robot_gazebo)/worlds/denso_robot.world"/>
   </include>
 
   <!-- Load the URDF, SRDF and other .yaml configuration files on the param server -->
   <!-- <param name="robot_description" type="str" textfile="$(find denso_robot_descriptions)/$(arg robot_description)/$(arg robot_name)/$(arg robot_name).urdf"/> -->
   <param name="robot_description" type="str" textfile="$(find denso_robot_descriptions)/$(arg robot_description)/$(arg robot_options)/$(arg robot_options).urdf.xacro"/>
 
-  <!-- Controller -->
-  <include ns="/$(arg robot_name)" file="$(find denso_robot_descriptions)/$(arg robot_description)/$(arg robot_options)/$(arg robot_name).launch.xml" />
-  <node name="denso_robot_control" pkg="denso_robot_control" type="denso_robot_control" output="screen" ns="/$(arg robot_name)"/>
+  <arg name="gui" default="true"/>
+  <param name="use_gui" value="$(arg gui)"/>
+
+  <node name="spawn_urdf" pkg="gazebo_ros" type="spawn_model" args="-param robot_description -urdf -model $(arg robot_name)" />
 
   <rosparam file="$(find denso_robot_descriptions)/$(arg robot_description)/$(arg robot_options)/denso_robot_control.yaml" command="load" />
   <node name="controller_spawner" pkg="controller_manager" type="spawner" respawn="false" output="screen"
-   ns="/$(arg robot_name)" args="joint_state_controller arm_controller" />
+	ns="/$(arg robot_name)" args="joint_state_controller arm_controller gripper_controller" />
 
   <!-- robot_state_publisher -->
-  <node name="robot_state_publisher" pkg="robot_state_publisher"
+  <node name="robot_state_publisher" pkg="robot_state_publisher" 
         type="robot_state_publisher" respawn="false" output="screen">
     <remap from="/joint_states" to="/$(arg robot_name)/joint_states" />
   </node>
@@ -47,6 +32,7 @@
   <!-- joint_state_publisher -->
   <arg name="robot_joint_states" default="[/$(arg robot_name)/joint_states]"/>
   <node name="joint_state_publisher" pkg="joint_state_publisher" type="joint_state_publisher">
+    <param name="/use_gui" value="False"/>
     <rosparam param="/source_list" subst_value="True">$(arg robot_joint_states)</rosparam>rosparam>
   </node>
 

@@ -5,7 +5,6 @@ Panels:
     Property Tree Widget:
       Expanded:
         - /MotionPlanning1
-        - /TF1
         - /TF1/Frames1
       Splitter Ratio: 0.742560029
     Tree Height: 421
@@ -102,7 +101,11 @@ Visualization Manager:
             Show Axes: false
             Show Trail: false
             Value: true
-          kinect_center:
+          hand_link:
+            Alpha: 1
+            Show Axes: false
+            Show Trail: false
+          kinect_center_link:
             Alpha: 1
             Show Axes: false
             Show Trail: false
@@ -111,7 +114,7 @@ Visualization Manager:
             Alpha: 1
             Show Axes: false
             Show Trail: false
-          kinect_left:
+          kinect_left_link:
             Alpha: 1
             Show Axes: false
             Show Trail: false
@@ -120,6 +123,35 @@ Visualization Manager:
             Alpha: 1
             Show Axes: false
             Show Trail: false
+          kinect_right_link:
+            Alpha: 1
+            Show Axes: false
+            Show Trail: false
+            Value: true
+          kinect_right_rgb_optical_frame:
+            Alpha: 1
+            Show Axes: false
+            Show Trail: false
+          mhand_body_link:
+            Alpha: 1
+            Show Axes: false
+            Show Trail: false
+            Value: true
+          mhand_finger_A:
+            Alpha: 1
+            Show Axes: false
+            Show Trail: false
+            Value: true
+          mhand_finger_B:
+            Alpha: 1
+            Show Axes: false
+            Show Trail: false
+            Value: true
+          mhand_finger_C:
+            Alpha: 1
+            Show Axes: false
+            Show Trail: false
+            Value: true
           world:
             Alpha: 1
             Show Axes: false
@@ -204,7 +236,11 @@ Visualization Manager:
             Show Axes: false
             Show Trail: false
             Value: true
-          kinect_center:
+          hand_link:
+            Alpha: 1
+            Show Axes: false
+            Show Trail: false
+          kinect_center_link:
             Alpha: 1
             Show Axes: false
             Show Trail: false
@@ -213,7 +249,7 @@ Visualization Manager:
             Alpha: 1
             Show Axes: false
             Show Trail: false
-          kinect_left:
+          kinect_left_link:
             Alpha: 1
             Show Axes: false
             Show Trail: false
@@ -222,6 +258,35 @@ Visualization Manager:
             Alpha: 1
             Show Axes: false
             Show Trail: false
+          kinect_right_link:
+            Alpha: 1
+            Show Axes: false
+            Show Trail: false
+            Value: true
+          kinect_right_rgb_optical_frame:
+            Alpha: 1
+            Show Axes: false
+            Show Trail: false
+          mhand_body_link:
+            Alpha: 1
+            Show Axes: false
+            Show Trail: false
+            Value: true
+          mhand_finger_A:
+            Alpha: 1
+            Show Axes: false
+            Show Trail: false
+            Value: true
+          mhand_finger_B:
+            Alpha: 1
+            Show Axes: false
+            Show Trail: false
+            Value: true
+          mhand_finger_C:
+            Alpha: 1
+            Show Axes: false
+            Show Trail: false
+            Value: true
           world:
             Alpha: 1
             Show Axes: false
@@ -242,7 +307,7 @@ Visualization Manager:
       Color: 255; 255; 255
       Color Transformer: RGB8
       Decay Time: 0
-      Enabled: true
+      Enabled: false
       Invert Rainbow: false
       Max Color: 255; 255; 255
       Max Intensity: 4096
@@ -259,7 +324,7 @@ Visualization Manager:
       Unreliable: false
       Use Fixed Frame: true
       Use rainbow: true
-      Value: true
+      Value: false
     - Alpha: 1
       Autocompute Intensity Bounds: true
       Autocompute Value Bounds:
@@ -272,7 +337,7 @@ Visualization Manager:
       Color: 255; 255; 255
       Color Transformer: RGB8
       Decay Time: 0
-      Enabled: true
+      Enabled: false
       Invert Rainbow: false
       Max Color: 255; 255; 255
       Max Intensity: 4096
@@ -289,7 +354,7 @@ Visualization Manager:
       Unreliable: false
       Use Fixed Frame: true
       Use rainbow: true
-      Value: true
+      Value: false
     - Class: rviz/TF
       Enabled: true
       Frame Timeout: 15
@@ -307,15 +372,47 @@ Visualization Manager:
           Value: false
         J6:
           Value: false
+        ar_marker_0:
+          Value: true
+        ar_marker_1:
+          Value: true
+        ar_marker_10:
+          Value: true
+        ar_marker_11:
+          Value: true
+        assembling_target_part:
+          Value: true
+        assembling_target_part_goal_point_0:
+          Value: true
+        assembling_target_part_goal_point_1:
+          Value: true
+        assembling_target_part_wrist_point_0:
+          Value: true
+        assembling_target_part_wrist_point_1:
+          Value: true
         base_link:
           Value: false
-        kinect_center:
+        hand_link:
+          Value: false
+        kinect_center_link:
           Value: true
         kinect_center_rgb_optical_frame:
           Value: true
-        kinect_left:
+        kinect_left_link:
           Value: true
         kinect_left_rgb_optical_frame:
+          Value: true
+        kinect_right_link:
+          Value: true
+        kinect_right_rgb_optical_frame:
+          Value: true
+        mhand_body_link:
+          Value: false
+        part_0:
+          Value: true
+        part_0_wrist_point_0:
+          Value: true
+        parts_pallete:
           Value: true
         world:
           Value: true
@@ -333,12 +430,35 @@ Visualization Manager:
                   J4:
                     J5:
                       J6:
-                        {}
-          kinect_center:
+                        hand_link:
+                          mhand_body_link:
+                            {}
+          kinect_center_link:
             kinect_center_rgb_optical_frame:
-              {}
-          kinect_left:
+              ar_marker_0:
+                part_0:
+                  part_0_wrist_point_0:
+                    {}
+              ar_marker_1:
+                {}
+              ar_marker_10:
+                parts_pallete:
+                  {}
+              ar_marker_11:
+                assembling_target_part:
+                  assembling_target_part_goal_point_0:
+                    {}
+                  assembling_target_part_goal_point_1:
+                    {}
+                  assembling_target_part_wrist_point_0:
+                    {}
+                  assembling_target_part_wrist_point_1:
+                    {}
+          kinect_left_link:
             kinect_left_rgb_optical_frame:
+              {}
+          kinect_right_link:
+            kinect_right_rgb_optical_frame:
               {}
       Update Interval: 0
       Value: true
@@ -358,25 +478,25 @@ Visualization Manager:
   Views:
     Current:
       Class: rviz/XYOrbit
-      Distance: 2.82759428
+      Distance: 1.86676681
       Enable Stereo Rendering:
         Stereo Eye Separation: 0.0599999987
         Stereo Focal Distance: 1
         Swap Stereo Eyes: false
         Value: false
       Focal Point:
-        X: 0.819697738
-        Y: 0.421494424
-        Z: 5.81145855e-07
+        X: 0.189193726
+        Y: -0.104603291
+        Z: 4.02331921e-07
       Focal Shape Fixed Size: true
       Focal Shape Size: 0.0500000007
       Invert Z Axis: false
       Name: Current View
       Near Clip Distance: 0.00999999978
-      Pitch: 0.385203004
+      Pitch: 0.159797594
       Target Frame: world
       Value: XYOrbit (rviz)
-      Yaw: 0.785394967
+      Yaw: 0.175392687
     Saved: ~
 Window Geometry:
   Displays:
@@ -394,5 +514,5 @@ Window Geometry:
   Views:
     collapsed: false
   Width: 1855
-  X: 65
+  X: 1985
   Y: 24

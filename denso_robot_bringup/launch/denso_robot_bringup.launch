@@ -2,7 +2,10 @@
   <!-- Override robot_name argument -->
   <arg name="robot_name" default="vs060" />
   <arg name="robot_options" default="vs060" />
- 
+
+  <!-- Load defferent move_group.launch file -->
+  <arg name="move_group_launch_file" default="move_group.launch" />
+
   <!-- the "sim" argument controls whether we connect to a Simulated or Real robot -->
   <!--  - if sim=false, a ip_address argument is required -->
   <arg name="sim" default="true" />
@@ -41,7 +44,7 @@
 
   <arg name="planner" default="ompl" />
 
-  <include file="$(eval find(arg('robot_name')+'_moveit_config')+'/launch/'+arg('robot_options')+'/move_group.launch')">
+  <include file="$(eval find(arg('robot_name')+'_moveit_config')+'/launch/'+arg('robot_options')+'/'+arg('move_group_launch_file'))">
     <arg name="publish_monitored_planning_scene" value="true" />
     <arg name="robot_name" value="$(arg robot_name)" />
     <arg name="robot_options" value="$(arg robot_options)"/>
