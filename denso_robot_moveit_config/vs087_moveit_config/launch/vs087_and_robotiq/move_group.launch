@@ -45,8 +45,10 @@
   </include>
 
   <!-- Start the actual move_group node/action server -->
+  <!-- <node name="move_group" launch-prefix="$(arg launch_prefix)" pkg="moveit_ros_move_group" type="move_group" respawn="false" output="screen" -->
+  <!--  args="joint_states:=/$(arg robot_name)/joint_states $(arg command_args)"> -->
   <node name="move_group" launch-prefix="$(arg launch_prefix)" pkg="moveit_ros_move_group" type="move_group" respawn="false" output="screen"
-   args="joint_states:=/$(arg robot_name)/joint_states $(arg command_args)">
+        args="joint_states:=/vs087_and_robotiq/joint_states $(arg command_args)">
 
     <!-- Set the display variable, in case OpenGL code is used internally -->
     <env name="DISPLAY" value="$(optenv DISPLAY :0)" />
