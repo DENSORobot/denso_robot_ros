@@ -34,8 +34,10 @@
   </group>
 
   <group unless="$(arg sim)">
-    <!-- M-Hand driver -->
-    <node pkg="robotiq_3f_driver" type="listener.py" name="robotiq_3f_driver_listener" output="screen"/>
+    <!-- Robotiq-3f-Hand driver -->
+    <include file="$(find robotiq_3f_driver)/launch/listener.launch">
+      <arg name="ip_address" value="192.168.1.11"/>
+    </include>
     <node pkg="robotiq_3f_control"  type="robotiq_3f_joint_state_republisher"  name="robotiq_3f_joint_state_republisher" output="screen">
       <param name="joint_state_republish_topic_name" value="/vs087_and_robotiq/joint_states" />
       <param name="joint_state_subscribe_topic_name" value="/vs087/joint_states" />
