@@ -1,0 +1,13 @@
+<launch>
+
+  <!-- This file makes it easy to include different planning pipelines; 
+       It is assumed that all planning pipelines are named XXX_planning_pipeline.launch  -->  
+
+  <arg name="pipeline" default="ompl" />
+  <arg name="robot_options" default="vs087_and_iai_gripper" />
+
+  <include file="$(find vs087_moveit_config)/launch/$(arg robot_options)/$(arg pipeline)_planning_pipeline.launch.xml">
+    <arg name="robot_options" value="$(arg robot_options)" />
+  </include>
+
+</launch>

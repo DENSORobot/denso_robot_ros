@@ -1,0 +1,56 @@
+<launch>
+  <!-- the "sim" argument controls whet
+  her we connect to a Simulated or Real robot -->
+  <!--  - if sim=false, a ip_address argument is required -->
+  <arg name="sim" default="true" />
+  <arg name="ip_address" default="192.168.2.22" />
+
+  <!-- Load defferent move_group.launch file -->
+  <arg name="move_group_launch_file" default="move_group.launch" />
+
+  <!-- If you want to change send and recieve format of denso_robot_control, -->
+  <!-- you can specify the send_format and recv_format parameters -->
+  <arg name="send_format" default="288" />
+  <arg name="recv_format" default="290" />
+
+  <!-- Choose robot options -->
+  <arg name="robot_options" default="vs087_and_iai_gripper" />
+
+  <!-- Define the motion planner we want to use (ompl or stomp) -->
+  <arg name="planner" default="ompl" />
+
+  <group if="$(arg sim)">
+    <!-- denso_robot_bringup.launch -->
+    <include file="$(find denso_robot_bringup)/launch/denso_robot_bringup.launch">
+      <arg name="robot_name" value="vs087"/>
+      <arg name="sim" value="$(arg sim)"/>
+      <arg name="move_group_launch_file" default="move_group_sim.launch" />
+      <arg name="robot_options" value="$(arg robot_options)"/>
+      <arg name="ip_address" value="$(arg ip_address)"/>
+      <arg name="send_format" value="$(arg send_format)" />
+      <arg name="recv_format" value="$(arg recv_format)" />
+      <arg name="planner" value="$(arg planner)" />
+    </include>
+  </group>
+
+  <group unless="$(arg sim)">
+    <!-- IAI  driver -->
+    <node pkg="iai_gripper_driver" type="listener.py" name="iai_driver" output="screen" />
+    <!-- <node pkg="iai_gripper_control"  type="mhand_joint_state_republisher"  name="mhand_joint_state_republisher" output="screen"> -->
+    <!--   <param name="joint_state_republish_topic_name" value="/vs087_and_mhand/joint_states" /> -->
+    <!--   <param name="joint_state_subscribe_topic_name" value="/vs087/joint_states" /> -->
+    <!-- </node> -->
+    <!-- denso_robot_bringup.launch -->
+    <include file="$(find denso_robot_bringup)/launch/denso_robot_bringup.launch">
+      <arg name="robot_name" value="vs087"/>
+      <arg name="move_group_launch_file" value="$(arg move_group_launch_file)"/>
+      <arg name="sim" value="$(arg sim)"/>
+      <arg name="robot_options" value="$(arg robot_options)"/>
+      <arg name="ip_address" value="$(arg ip_address)"/>
+      <arg name="send_format" value="$(arg send_format)" />
+      <arg name="recv_format" value="$(arg recv_format)" />
+      <arg name="planner" value="$(arg planner)" />
+    </include>
+  </group>
+
+</launch>
