@@ -206,7 +206,7 @@ HRESULT DensoBase::GetObjectNames(int32_t func_id, Name_Vec& vecName)
 
     if(argc == 0) {
       vntTmp->vt = VT_UI4;
-      vntTmp->ulVal = m_vecHandle[SRV_MIN];
+      vntTmp->ulVal = m_vecHandle[SRV_WATCH];
     } else {
       vntTmp->vt = VT_BSTR;
       vntTmp->bstrVal = SysAllocString(L"");
@@ -215,7 +215,7 @@ HRESULT DensoBase::GetObjectNames(int32_t func_id, Name_Vec& vecName)
     vntArgs.push_back(*vntTmp.get());
   }
 
-  hr = m_vecService[SRV_MIN]->ExecFunction(func_id, vntArgs, vntRet);
+  hr = m_vecService[SRV_WATCH]->ExecFunction(func_id, vntArgs, vntRet);
   if(SUCCEEDED(hr)) {
     BSTR    *pbstr;
     VARIANT *pvnt;

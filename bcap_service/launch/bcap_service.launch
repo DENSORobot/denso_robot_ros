@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <launch>
   <!-- Override conn_type argument -->
-  <arg name="conn_type" default="udp" />
+  <arg name="conn_type" default="tcp" />
 
   <!-- Override ip_address argument -->
   <arg name="ip_address" default="192.168.0.1" />
