@@ -22,8 +22,8 @@
  * THE SOFTWARE.
  */
 
-#ifndef _DENSO_TASK_H_
-#define _DENSO_TASK_H_
+#ifndef DENSO_TASK_H
+#define DENSO_TASK_H
 
 #include "denso_robot_core/denso_base.h"
 #include "denso_robot_core/denso_variable.h"
@@ -64,4 +64,4 @@ typedef std::vector<DensoTask_Ptr> DensoTask_Vec;
 
 }
 
-#endif
+#endif // DENSO_TASK_H

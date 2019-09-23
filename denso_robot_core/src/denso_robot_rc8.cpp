@@ -580,7 +580,12 @@ HRESULT DensoRobotRC8::ChangeMode(int mode)
 
       m_memTimeout = m_vecService[DensoBase::SRV_ACT]->get_Timeout();
       m_memRetry   = m_vecService[DensoBase::SRV_ACT]->get_Retry();
-      m_vecService[DensoBase::SRV_ACT]->put_Timeout(8);
+      if (mode & DensoRobotRC8::SLVMODE_SYNC_WAIT) {
+        m_vecService[DensoBase::SRV_ACT]->put_Timeout(this->SLVMODE_TIMEOUT_SYNC);
+      } else {
+        m_vecService[DensoBase::SRV_ACT]->put_Timeout(this->SLVMODE_TIMEOUT_ASYNC);
+      }
+      ROS_INFO("bcap-slave timeout changed to %d msec [mode: 0x%X]", m_vecService[DensoBase::SRV_ACT]->get_Timeout(), mode);
       m_vecService[DensoBase::SRV_ACT]->put_Retry(3);
     }
   } else {

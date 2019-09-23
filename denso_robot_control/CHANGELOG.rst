@@ -2,6 +2,10 @@
 Changelog for package denso_robot_control
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+3.0.3 (2019-09-23)
+------------------
+* Change to sleep in only slave sync mode
+
 3.0.2 (2017-12-15)
 ------------------
 * Add clear error step before motor on

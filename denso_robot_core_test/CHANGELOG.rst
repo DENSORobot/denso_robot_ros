@@ -2,6 +2,9 @@
 Changelog for package denso_robot_core_test
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+3.0.3 (2019-09-23)
+------------------
+
 3.0.2 (2017-12-15)
 ------------------
 * Remove new line from ROS_INFO,ROS_WARN,ROS_ERROR

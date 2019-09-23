@@ -22,8 +22,8 @@
  * THE SOFTWARE.
  */
 
-#ifndef _DENSO_BASE_H_
-#define _DENSO_BASE_H_
+#ifndef DENSO_BASE_H
+#define DENSO_BASE_H
 
 #include <ros/ros.h>
 #include "bcap_core/bcap_funcid.h"
@@ -174,4 +174,4 @@ typedef std::vector<DensoBase_Ptr> DensoBase_Vec;
 
 }
 
-#endif
+#endif // DENSO_BASE_H

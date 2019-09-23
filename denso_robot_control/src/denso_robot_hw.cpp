@@ -360,7 +360,6 @@ namespace denso_robot_control
             pose[i] = 0.0;
             break;
         }
-
         bits |= (1 << i);
       }
       pose.push_back(0x400000 | bits);
@@ -424,4 +423,12 @@ namespace denso_robot_control
     m_rob->put_RecvUserIO(*msg.get());
   }
 
-}
+  bool DensoRobotHW::is_SlaveSyncMode() const
+  {
+    if(m_eng->get_Mode() & DensoRobotRC8::SLVMODE_SYNC_WAIT)
+    {
+      return true;
+    }
+    return false;
+  }
+} // denso_robot_control

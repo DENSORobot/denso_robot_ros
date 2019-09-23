@@ -53,9 +53,15 @@ int main(int argc, char *argv[])
         ros::Duration diff = now - start;
         if(diff.toSec() > 5) {
           drobo.write(now, dt);
+        } else {
+          rate.sleep();
+          continue;
         }
 
-        rate.sleep();
+        if (!drobo.is_SlaveSyncMode())
+        {
+          rate.sleep();
+        }
       }
       spinner.stop();
   }

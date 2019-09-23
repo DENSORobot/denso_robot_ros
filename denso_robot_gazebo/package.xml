@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <package>
   <name>denso_robot_gazebo</name>
-  <version>3.0.2</version>
+  <version>3.0.3</version>
   <description>The denso robot gazebo package includes a launch file for simulating DENSO robot.</description>
   <maintainer email="denso_robot_soft@denso-wave.co.jp">DENSO WAVE INCORPORATED</maintainer>
   <license>MIT</license>
