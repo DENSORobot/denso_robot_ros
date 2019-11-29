@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <package>
   <name>denso_robot_core_test</name>
-  <version>3.0.3</version>
+  <version>3.0.4</version>
   <description>The denso robot core test package includes a node for testing denso robot core node.</description>
   <maintainer email="denso_robot_soft@denso-wave.co.jp">DENSO WAVE INCORPORATED</maintainer>
   <license>MIT</license>

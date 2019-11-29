@@ -2,6 +2,9 @@
 Changelog for package denso_robot_bringup
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+3.0.4 (2019-11-27)
+------------------
+
 3.0.3 (2019-09-23)
 ------------------
 * Change update_joint_limits.py `#23 <https://github.com/DENSORobot/denso_robot_ros/issues/23>`_
