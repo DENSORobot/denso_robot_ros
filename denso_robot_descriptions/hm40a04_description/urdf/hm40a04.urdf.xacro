@@ -1,0 +1,8 @@
+<?xml version="1.0"?>
+<robot name="hm40a04" xmlns:xacro="http://www.ros.org/wiki/xacro">
+  <xacro:include filename="$(find denso_robot_descriptions)/hm40a04_description/urdf/hm40a04.xacro"/>
+  <link name="base_link"/>
+  <xacro:hm40a04 parent="base_link">
+    <origin xyz="0 0 0" rpy="0 0 0"/>
+  </xacro:hm40a04>
+</robot>

@@ -1,0 +1,114 @@
+<?xml version="1.0"?>
+<!-- Copyright (C) 2020, TechMagic K.K. -->
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro">
+  <xacro:property name="folder" value="package://denso_robot_descriptions/hm40a04_description"/>
+  <xacro:macro name="hm40a04" params="parent *origin">
+    <joint name="hm40a04_base_joint" type="fixed">
+      <xacro:insert_block name="origin"/>
+      <parent link="${parent}"/>
+      <child link="link_0"/>
+    </joint>    
+    <link name="link_0">
+      <visual>
+	<geometry>
+	  <mesh filename="${folder}/mesh/hm40a04_0.stl"/>
+	</geometry>
+	<material name="white"/>
+      </visual>
+      <collision>
+	<geometry>
+	  <mesh filename="${folder}/mesh/hm40a04_0.stl"/>
+	</geometry>
+      </collision>
+      <inertial>
+	<mass value="1" />
+	<inertia ixx="1" ixy="0" ixz="0" iyy="1" iyz="0" izz="1" />
+      </inertial>
+    </link>
+    <joint name="joint_1" type="revolute">
+      <parent link="link_0"/>
+      <child link="link_1"/>
+      <origin xyz="0 0 0.293" rpy="0 0 0"/>
+      <axis xyz="0 0 1" />
+      <limit effort="1" lower="${-pi}" upper="${pi}" velocity="1.0" />
+      <dynamics damping="0" friction="0" />
+    </joint>
+    <link name="link_1">
+      <visual>
+	<geometry>
+	  <mesh filename="${folder}/mesh/hm40a04_1.stl"/>
+	</geometry>
+	<material name="white"/>
+      </visual>
+      <collision>
+	<geometry>
+	  <mesh filename="${folder}/mesh/hm40a04_1.stl"/>
+	</geometry>
+      </collision>
+      <inertial>
+	<mass value="1" />
+	<inertia ixx="1" ixy="0" ixz="0" iyy="1" iyz="0" izz="1" />
+      </inertial>
+    </link>
+    <joint name="joint_2" type="revolute">
+      <parent link="link_1" />
+      <child link="link_2" />
+      <origin rpy="0.000000 0.000000 0.000000" xyz="0.5 0.0 0.105" />
+      <axis xyz="0 0 1" />
+      <limit effort="1" lower="-${pi}" upper="${pi}" velocity="2.61799387799149" />
+      <dynamics damping="0" friction="0" />
+    </joint>
+    <link name="link_2">
+      <visual>
+	<geometry>
+	  <mesh filename="${folder}/mesh/hm40a04_2.stl"/>
+	</geometry>
+	<material name="white"/>
+      </visual>
+      <collision>
+	<geometry>
+	  <mesh filename="${folder}/mesh/hm40a04_2.stl"/>
+	</geometry>
+      </collision>
+      <inertial>
+	<mass value="1" />
+	<inertia ixx="1" ixy="0" ixz="0" iyy="1" iyz="0" izz="1" />
+      </inertial>
+    </link>
+    <joint name="joint_3" type="prismatic">
+      <parent link="link_2" />
+      <child link="link_3" />
+      <origin xyz="0.5 0 -0.04" />
+      <axis xyz="0 0 1" />
+      <limit effort="1" lower="-0.4" upper="0.0" velocity="1.0" />
+      <dynamics damping="0" friction="0" />
+    </joint>
+    <link name="link_3">
+      <visual>
+	<geometry>
+	  <mesh filename="${folder}/mesh/hm40a04_3.stl"/>
+	</geometry>
+	<material name="white"/>
+      </visual>
+      <collision>
+	<geometry>
+	  <mesh filename="${folder}/mesh/hm40a04_3.stl"/>
+	</geometry>
+      </collision>
+      <inertial>
+	<mass value="1" />
+	<inertia ixx="1" ixy="0" ixz="0" iyy="1" iyz="0" izz="1" />
+      </inertial>
+    </link>
+    <joint name="joint_4" type="revolute">
+      <parent link="link_3" />
+      <child link="link_4" />
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <axis xyz="0 0 1" />
+      <limit effort="1" lower="-2.705260340591211" upper="2.705260340591211" velocity="3.92699081698724" />
+      <dynamics damping="0" friction="0" />
+    </joint>
+    <link name="link_4">
+    </link>
+  </xacro:macro>
+</robot>
