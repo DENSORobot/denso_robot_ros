@@ -26,7 +26,8 @@
   </include>
 
   <!-- Load the URDF, SRDF and other .yaml configuration files on the param server -->
-  <param name="robot_description" type="str" textfile="$(find denso_robot_descriptions)/$(arg robot_description)/$(arg robot_name).urdf"/>
+  <!--<param name="robot_description" type="str" textfile="$(find denso_robot_descriptions)/$(arg robot_description)/$(arg robot_name).urdf"/>-->
+    <param name="robot_description" command="$(find xacro)/xacro '$(find denso_robot_descriptions)/$(arg robot_description)/$(arg robot_name).urdf.xacro'"/>
 
   <!-- Controller -->
   <include ns="/$(arg robot_name)" file="$(find denso_robot_descriptions)/$(arg robot_description)/$(arg robot_name).launch.xml" />
