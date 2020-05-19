@@ -1,0 +1,25 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://wiki.ros.org/xacro"
+       name="vs060" >
+
+      <xacro:arg name="limited" default="false"/>
+
+  <!-- THE ROBOT -->
+  <link name="world"/>
+
+  <!-- common stuff -->
+  <gazebo>
+    <plugin filename="libgazebo_ros_control.so" name="gazebo_ros_control">
+        <robotNamespace>/vs060</robotNamespace>
+    </plugin>
+  </gazebo>
+
+    <xacro:include filename="$(find denso_robot_descriptions)/vs060_description/vs060_arm.urdf.xacro" />
+    <joint name="joint_w" type="fixed">
+        <parent link = "world" />
+        <child link = "base_link" />
+        <origin xyz="0.00 0.00 0.00" rpy="0.0 0.0 0.0" />
+    </joint>
+    <xacro:vs060 prefix=""/>
+
+</robot>
