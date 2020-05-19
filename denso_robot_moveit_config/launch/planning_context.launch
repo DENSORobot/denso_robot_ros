@@ -9,7 +9,9 @@
   <arg name="robot_name" default="vs060"/>
 
   <!-- Load universal robot description format (URDF) -->
-  <param if="$(arg load_robot_description)" name="$(arg robot_description)" textfile="$(find denso_robot_descriptions)/$(arg robot_name)_description/$(arg robot_name).urdf"/>
+  <!--<param if="$(arg load_robot_description)" name="$(arg robot_description)" textfile="$(find denso_robot_descriptions)/$(arg robot_name)_description/$(arg robot_name).urdf"/>-->
+  <param if="$(arg load_robot_description)" name="$(arg robot_description)"
+         command="$(find xacro)/xacro '$(find denso_robot_descriptions)/$(arg robot_name)_description/$(arg robot_name).urdf.xacro'"/>
 
   <!-- The semantic description that corresponds to the URDF -->
   <param name="$(arg robot_description)_semantic" textfile="$(find denso_robot_moveit_config)/config/$(arg robot_name)_config/$(arg robot_name).srdf" />
