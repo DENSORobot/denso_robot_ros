@@ -78,9 +78,9 @@
     <joint name="joint_3" type="prismatic">
       <parent link="link_2" />
       <child link="link_3" />
-      <origin xyz="0.5 0 -0.04" />
+      <origin xyz="0.5 0 ${-0.105-0.293}" />
       <axis xyz="0 0 1" />
-      <limit effort="1" lower="-0.4" upper="0.0" velocity="1.0" />
+      <limit effort="1" lower="-0.05" upper="0.35" velocity="1.0" />
       <dynamics damping="0" friction="0" />
     </joint>
     <link name="link_3">
