@@ -11,6 +11,9 @@ find_package(catkin REQUIRED COMPONENTS
   std_msgs
 )
 
+find_package(PkgConfig)
+pkg_check_modules(tinyxml2 REQUIRED tinyxml2)
+
 add_message_files(
   FILES
   ExJoints.msg
@@ -49,6 +52,7 @@ catkin_package(
 include_directories(
   include
   ${catkin_INCLUDE_DIRS}
+  ${tinyxml2_INCLUDEDIR}
 )
 
 add_library(${PROJECT_NAME}
@@ -60,7 +64,6 @@ add_library(${PROJECT_NAME}
   src/denso_robot_rc8.cpp
   src/denso_task.cpp
   src/denso_variable.cpp
-  src/tinyxml2.cpp
 )
 
 add_dependencies(${PROJECT_NAME}
@@ -75,7 +78,6 @@ add_executable(${PROJECT_NAME}_exec
   src/denso_robot_rc8.cpp
   src/denso_task.cpp
   src/denso_variable.cpp
-  src/tinyxml2.cpp
 )
 
 add_dependencies(${PROJECT_NAME}_exec
@@ -83,11 +85,13 @@ add_dependencies(${PROJECT_NAME}_exec
 
 target_link_libraries(${PROJECT_NAME}
   ${catkin_LIBRARIES}
+  ${tinyxml2_LIBRARIES}
   ${bcap_service_LIBRARIES}
 )
 
 target_link_libraries(${PROJECT_NAME}_exec
   ${catkin_LIBRARIES}
+  ${tinyxml2_LIBRARIES}
   ${bcap_service_LIBRARIES}
 )
 
