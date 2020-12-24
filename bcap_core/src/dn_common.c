@@ -225,6 +225,7 @@ SafeArrayDestroy(SAFEARRAY *psa)
           for (i = 0; i < psa->rgsabound[0].cElements; i++) {
             VariantClear(((VARIANT*) psa->pvData + i));
           }
+          free(psa->pvData);
           break;
         default:
           free(psa->pvData);

@@ -22,8 +22,8 @@
  * THE SOFTWARE.
  */
 
-#ifndef _DENSO_ROBOT_CORE_H_
-#define _DENSO_ROBOT_CORE_H_
+#ifndef DENSO_ROBOT_CORE_H
+#define DENSO_ROBOT_CORE_H
 
 #include "denso_robot_core/denso_controller.h"
 
@@ -56,4 +56,4 @@ typedef boost::shared_ptr<DensoRobotCore> DensoRobotCore_Ptr;
 
 }
 
-#endif
+#endif // DENSO_ROBOT_CORE_H

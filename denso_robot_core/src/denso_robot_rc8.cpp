@@ -580,7 +580,12 @@ HRESULT DensoRobotRC8::ChangeMode(int mode)
 
       m_memTimeout = m_vecService[DensoBase::SRV_ACT]->get_Timeout();
       m_memRetry   = m_vecService[DensoBase::SRV_ACT]->get_Retry();
-      m_vecService[DensoBase::SRV_ACT]->put_Timeout(8);
+      if (mode & DensoRobotRC8::SLVMODE_SYNC_WAIT) {
+        m_vecService[DensoBase::SRV_ACT]->put_Timeout(this->SLVMODE_TIMEOUT_SYNC);
+      } else {
+        m_vecService[DensoBase::SRV_ACT]->put_Timeout(this->SLVMODE_TIMEOUT_ASYNC);
+      }
+      ROS_INFO("bcap-slave timeout changed to %d msec [mode: 0x%X]", m_vecService[DensoBase::SRV_ACT]->get_Timeout(), mode);
       m_vecService[DensoBase::SRV_ACT]->put_Retry(3);
     }
   } else {
@@ -663,9 +668,9 @@ HRESULT DensoRobotRC8::CreateSendParameter(
       return E_FAIL;
   }
 
-  if(joints < pose.size()) {
-    return E_FAIL;
-  }
+  //if(joints < pose.size()) {
+  //  return E_FAIL;
+  //}
 
   // Check send format
   bool send_hio, send_mio, send_uio, recv_uio;
@@ -689,6 +694,8 @@ HRESULT DensoRobotRC8::CreateSendParameter(
   double *pdbl;
   uint8_t *pbool;
 
+  // Number of joints + option
+  joints += 1;
   if(num == 1) {
     // Pose only
     send->vt = (VT_ARRAY | VT_R8);

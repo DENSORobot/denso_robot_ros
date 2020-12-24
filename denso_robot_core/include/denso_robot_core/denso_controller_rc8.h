@@ -22,8 +22,8 @@
  * THE SOFTWARE.
  */
 
-#ifndef _DENSO_CONTROLLER_RC8_H_
-#define _DENSO_CONTROLLER_RC8_H_
+#ifndef DENSO_CONTROLLER_RC8_H
+#define DENSO_CONTROLLER_RC8_H
 
 #include "denso_robot_core/denso_controller.h"
 #include "denso_robot_core/denso_robot_rc8.h"
@@ -44,4 +44,4 @@ typedef boost::shared_ptr<DensoControllerRC8> DensoControllerRC8_Ptr;
 
 }
 
-#endif
+#endif // DENSO_CONTROLLER_RC8_H

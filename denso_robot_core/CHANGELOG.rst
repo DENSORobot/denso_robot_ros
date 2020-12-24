@@ -2,6 +2,13 @@
 Changelog for package denso_robot_core
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+3.0.4 (2019-11-27)
+------------------
+
+3.0.3 (2019-09-23)
+------------------
+* Change bCap service UDP timeout
+
 3.0.2 (2017-12-15)
 ------------------
 * Add I/O function for denso_robot_core

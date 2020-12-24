@@ -22,8 +22,8 @@
  * THE SOFTWARE.
  */
 
-#ifndef _DENSO_ROBOT_HW_H_
-#define _DENSO_ROBOT_HW_H_
+#ifndef DENSO_ROBOT_HW_H
+#define DENSO_ROBOT_HW_H
 
 #include <ros/ros.h>
 
@@ -71,6 +71,8 @@ namespace denso_robot_control
 
     void read(ros::Time, ros::Duration);
     void write(ros::Time, ros::Duration);
+
+    bool is_SlaveSyncMode() const;
 
   private:
     HRESULT ChangeModeWithClearError(int mode);
@@ -120,4 +122,4 @@ namespace denso_robot_control
 
 }
 
-#endif
+#endif // DENSO_ROBOT_HW_H

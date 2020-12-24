@@ -22,8 +22,8 @@
  * THE SOFTWARE.
  */
 
-#ifndef _DENSO_ROBOT_RC8_H_
-#define _DENSO_ROBOT_RC8_H_
+#ifndef DENSO_ROBOT_RC8_H
+#define DENSO_ROBOT_RC8_H
 
 #include <boost/thread.hpp>
 #include "denso_robot_core/denso_robot.h"
@@ -73,6 +73,11 @@ public:
   enum {
     TSFMT_MILLISEC = 0,
     TSFMT_MICROSEC = 1,
+  };
+
+  enum {
+    SLVMODE_TIMEOUT_SYNC = 16,
+    SLVMODE_TIMEOUT_ASYNC = 8,
   };
 
 public:
@@ -172,4 +177,4 @@ typedef boost::shared_ptr<DensoRobotRC8> DensoRobotRC8_Ptr;
 
 }
 
-#endif
+#endif // DENSO_ROBOT_RC8_H

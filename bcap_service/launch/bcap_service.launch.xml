@@ -1,6 +1,6 @@
 <launch>
   <!-- Communication type: tcp or udp -->
-  <arg name="conn_type" default="udp" />
+  <arg name="conn_type" default="tcp" />
   <param name="conn_type" value="$(arg conn_type)" />
 
   <!-- IP address -->
