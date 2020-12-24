@@ -22,18 +22,27 @@
  * THE SOFTWARE.
  */
 
-#include "denso_robot_core/denso_robot_rc8.h"
+#ifndef DENSO_CONTROLLER_RC9_H
+#define DENSO_CONTROLLER_RC9_H
+
+#include "denso_robot_core/denso_controller.h"
+#include "denso_robot_core/denso_robot_rc9.h"
 
 namespace denso_robot_core
 {
-DensoRobotRC8::DensoRobotRC8(DensoBase* parent, Service_Vec& service, Handle_Vec& handle, const std::string& name,
-                             const int* mode)
-  : DensoRobot(parent, service, handle, name, mode)
+class DensoControllerRC9 : public DensoController
 {
-}
+public:
+  DensoControllerRC9(const std::string& name, const int* mode, const ros::Duration dt);
+  virtual ~DensoControllerRC9();
 
-DensoRobotRC8::~DensoRobotRC8()
-{
-}
+private:
+  HRESULT AddController();
+  HRESULT AddRobot(XMLElement* xmlElem);
+};
+
+typedef boost::shared_ptr<DensoControllerRC9> DensoControllerRC9_Ptr;
 
 }  // namespace denso_robot_core
+
+#endif  // DENSO_CONTROLLER_RC9_H

@@ -42,6 +42,8 @@ __BRINGUP_TEXT = """<launch>
   <arg name=\"send_format\" default=\"288\" />
   <arg name=\"recv_format\" default=\"292\" />
 
+  <arg name="bcap_slave_control_cycle_msec" default="8" />
+
   <include file=\"$(find denso_robot_bringup)/launch/denso_robot_bringup.launch\">
     <arg name=\"robot_name\" value=\"{rob_name}\"/>
     <arg name=\"sim\" value=\"$(arg sim)\"/>

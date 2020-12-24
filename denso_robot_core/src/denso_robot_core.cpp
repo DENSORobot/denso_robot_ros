@@ -24,6 +24,7 @@
 
 #include "denso_robot_core/denso_robot_core.h"
 #include "denso_robot_core/denso_controller_rc8.h"
+#include "denso_robot_core/denso_controller_rc9.h"
 #include <boost/thread.hpp>
 
 int main(int argc, char** argv)
@@ -35,10 +36,13 @@ int main(int argc, char** argv)
   denso_robot_core::DensoRobotCore engine;
 
   hr = engine.Initialize();
-  if(FAILED(hr)){
+  if (FAILED(hr))
+  {
     ROS_ERROR("Failed to initialize. (%X)", hr);
     return 1;
-  } else {
+  }
+  else
+  {
     boost::thread t(boost::bind(&denso_robot_core::DensoRobotCore::Start, &engine));
 
     ros::spin();
@@ -50,42 +54,54 @@ int main(int argc, char** argv)
   }
 }
 
-namespace denso_robot_core {
-
-DensoRobotCore::DensoRobotCore()
-  : m_ctrlType(0), m_mode(0), m_quit(false)
+namespace denso_robot_core
+{
+DensoRobotCore::DensoRobotCore() : m_ctrlType(0), m_mode(0), m_quit(false)
 {
   m_ctrl.reset();
 }
 
 DensoRobotCore::~DensoRobotCore()
 {
-
 }
 
 HRESULT DensoRobotCore::Initialize()
 {
   ros::NodeHandle node;
   std::string name, filename;
+  float ctrl_cycle_msec;
 
-  if(!node.getParam("controller_name", name)){
+  if (!node.getParam("controller_name", name))
+  {
     name = "";
   }
 
-  if(!node.getParam("controller_type", m_ctrlType)){
+  if (!node.getParam("controller_type", m_ctrlType))
+  {
     return E_FAIL;
   }
 
-  if(!node.getParam("config_file", filename)){
+  if (!node.getParam("config_file", filename))
+  {
     return E_FAIL;
   }
 
-  switch(m_ctrlType){
+  if (!node.getParam("bcap_slave_control_cycle_msec", ctrl_cycle_msec))
+  {
+    return E_FAIL;
+  }
+
+  switch (m_ctrlType)
+  {
     case 8:
-      m_ctrl = boost::make_shared<DensoControllerRC8>(name, &m_mode);
+      m_ctrl = boost::make_shared<DensoControllerRC8>(name, &m_mode, ros::Duration(ctrl_cycle_msec / 1000.0));
+      break;
+    case 9:
+      m_ctrl = boost::make_shared<DensoControllerRC9>(name, &m_mode, ros::Duration(ctrl_cycle_msec / 1000.0));
       break;
     default:
-      return E_FAIL;
+      ROS_ERROR("Invalid argument value [controller_type]");
+      return E_INVALIDARG;
   }
 
   return m_ctrl->InitializeBCAP(filename);
@@ -98,7 +114,8 @@ void DensoRobotCore::Start()
   m_quit = false;
   m_ctrl->StartService(nd);
 
-  while(!m_quit && ros::ok()){
+  while (!m_quit && ros::ok())
+  {
     ros::spinOnce();
     m_ctrl->Update();
     ros::Rate(1000).sleep();
@@ -117,10 +134,13 @@ HRESULT DensoRobotCore::ChangeMode(int mode, bool service)
 
   DensoRobot_Ptr pRob;
   HRESULT hr = m_ctrl->get_Robot(0, &pRob);
-  if(SUCCEEDED(hr)) {
-    switch(m_ctrlType) {
+  if (SUCCEEDED(hr))
+  {
+    switch (m_ctrlType)
+    {
       case 8:
-        hr = boost::dynamic_pointer_cast<DensoRobotRC8>(pRob)->ChangeMode(mode);
+      case 9:
+        hr = pRob->ChangeMode(mode);
         break;
       default:
         hr = E_FAIL;
@@ -130,7 +150,8 @@ HRESULT DensoRobotCore::ChangeMode(int mode, bool service)
 
   m_mode = SUCCEEDED(hr) ? mode : 0;
 
-  if((m_mode == 0) && service) {
+  if ((m_mode == 0) && service)
+  {
     ros::NodeHandle nd;
     m_ctrl->StartService(nd);
   }
@@ -138,4 +159,4 @@ HRESULT DensoRobotCore::ChangeMode(int mode, bool service)
   return hr;
 }
 
-}
+}  // namespace denso_robot_core

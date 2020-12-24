@@ -61,16 +61,17 @@ using namespace tinyxml2;
 #define MESSAGE_QUEUE (1)
 #define BCAP_VAR_DEFAULT_DURATION (1000) /* [ms] */
 
-namespace denso_robot_core {
-
-typedef std::vector<std::string>     Name_Vec;
-typedef std::vector<uint32_t>        Handle_Vec;
+namespace denso_robot_core
+{
+typedef std::vector<std::string> Name_Vec;
+typedef std::vector<uint32_t> Handle_Vec;
 typedef std::vector<BCAPService_Ptr> Service_Vec;
 
 class DensoBase
 {
 public:
-  enum {
+  enum
+  {
     SRV_MIN = 0,
     SRV_ACT = SRV_MIN,
     SRV_WATCH,
@@ -82,21 +83,15 @@ public:
   static BSTR ConvertStringToBSTR(const std::string& str);
 
 public:
-  DensoBase(const std::string& name, const int* mode)
-    : m_parent(NULL),
-      m_name(name), m_mode(mode), m_serving(false)
+  DensoBase(const std::string& name, const int* mode) : m_parent(NULL), m_name(name), m_mode(mode), m_serving(false)
   {
-
   }
 
-  DensoBase(DensoBase* parent,
-     Service_Vec& service, Handle_Vec& handle,
-     const std::string& name, const int* mode)
-    : m_parent(parent),
-      m_name(name), m_mode(mode), m_serving(false)
+  DensoBase(DensoBase* parent, Service_Vec& service, Handle_Vec& handle, const std::string& name, const int* mode)
+    : m_parent(parent), m_name(name), m_mode(mode), m_serving(false)
   {
     m_vecService = service;
-    m_vecHandle  = handle;
+    m_vecHandle = handle;
   }
 
   virtual ~DensoBase()
@@ -134,44 +129,40 @@ public:
   std::string RosName() const;
 
 protected:
-  HRESULT AddVariable(int32_t get_id,
-     const std::string& name,
-     std::vector<boost::shared_ptr<class DensoVariable> >& vecVar,
-     int16_t vt = VT_EMPTY, bool bRead = false, bool bWrite = false,
-     bool bID = false, int iDuration = BCAP_VAR_DEFAULT_DURATION);
+  HRESULT AddVariable(int32_t get_id, const std::string& name,
+                      std::vector<boost::shared_ptr<class DensoVariable> >& vecVar, int16_t vt = VT_EMPTY,
+                      bool bRead = false, bool bWrite = false, bool bID = false,
+                      int iDuration = BCAP_VAR_DEFAULT_DURATION);
 
-  HRESULT AddVariable(int32_t get_id,
-     const XMLElement *xmlVar,
-     std::vector<boost::shared_ptr<class DensoVariable> >& vecVar);
+  HRESULT AddVariable(int32_t get_id, const XMLElement* xmlVar,
+                      std::vector<boost::shared_ptr<class DensoVariable> >& vecVar);
 
-  HRESULT AddObject(int32_t get_id, const std::string& name,
-     Handle_Vec& vecHandle);
+  HRESULT AddObject(int32_t get_id, const std::string& name, Handle_Vec& vecHandle);
 
-  HRESULT GetObjectNames(int32_t func_id,
-     Name_Vec& vecName);
+  HRESULT GetObjectNames(int32_t func_id, Name_Vec& vecName);
 
-  HRESULT get_Object(const std::vector<boost::shared_ptr<DensoBase> >& vecBase,
-     int index, boost::shared_ptr<DensoBase> *obj);
+  HRESULT get_Object(const std::vector<boost::shared_ptr<DensoBase> >& vecBase, int index,
+                     boost::shared_ptr<DensoBase>* obj);
 
-  HRESULT get_Object(const std::vector<boost::shared_ptr<DensoBase> >& vecBase,
-     const std::string& name, boost::shared_ptr<DensoBase> *obj);
+  HRESULT get_Object(const std::vector<boost::shared_ptr<DensoBase> >& vecBase, const std::string& name,
+                     boost::shared_ptr<DensoBase>* obj);
 
 protected:
   DensoBase* m_parent;
 
   Service_Vec m_vecService;
-  Handle_Vec  m_vecHandle;
+  Handle_Vec m_vecHandle;
 
   std::string m_name;
   const int* m_mode;
 
   bool m_serving;
-  boost::mutex  m_mtxSrv;
+  boost::mutex m_mtxSrv;
 };
 
 typedef boost::shared_ptr<DensoBase> DensoBase_Ptr;
 typedef std::vector<DensoBase_Ptr> DensoBase_Vec;
 
-}
+}  // namespace denso_robot_core
 
-#endif // DENSO_BASE_H
+#endif  // DENSO_BASE_H

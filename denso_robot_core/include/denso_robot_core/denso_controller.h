@@ -32,16 +32,14 @@
 
 #define XML_CTRL_NAME "Controller"
 
-namespace denso_robot_core {
-
+namespace denso_robot_core
+{
 class DensoController : public DensoBase
 {
 public:
-  DensoController(const std::string& name, const int* mode);
   virtual ~DensoController();
 
-  virtual HRESULT InitializeBCAP(
-      const std::string& filename);
+  virtual HRESULT InitializeBCAP(const std::string& filename);
 
   virtual HRESULT StartService(ros::NodeHandle& node);
   virtual HRESULT StopService();
@@ -53,21 +51,32 @@ public:
   HRESULT get_Variable(const std::string& name, DensoVariable_Ptr* var);
 
   HRESULT AddVariable(const std::string& name);
+  virtual HRESULT ExecClearError();
+  virtual HRESULT ExecGetCurErrorCount(int& count);
+  virtual HRESULT ExecGetCurErrorInfo(int error_index, HRESULT& error_code, std::string& error_message);
+  virtual HRESULT ExecGetErrorDescription(HRESULT error_code, std::string& error_description);
+
+  ros::Duration get_Duration() const
+  {
+    return m_duration;
+  }
 
 protected:
+  DensoController(const std::string& name, const int* mode, const ros::Duration dt);
   virtual HRESULT AddController() = 0;
-  virtual HRESULT AddRobot(XMLElement *xmlElem) = 0;
-  virtual HRESULT AddTask(XMLElement *xmlElem);
+  virtual HRESULT AddRobot(XMLElement* xmlElem) = 0;
+  virtual HRESULT AddTask(XMLElement* xmlElem);
   virtual HRESULT AddVariable(XMLElement* xmlElem);
 
 protected:
-  DensoRobot_Vec    m_vecRobot;
-  DensoTask_Vec     m_vecTask;
+  DensoRobot_Vec m_vecRobot;
+  DensoTask_Vec m_vecTask;
   DensoVariable_Vec m_vecVar;
+  ros::Duration m_duration;
 };
 
 typedef boost::shared_ptr<DensoController> DensoController_Ptr;
 
-}
+}  // namespace denso_robot_core
 
-#endif // DENSO_CONTROLLER_H
+#endif  // DENSO_CONTROLLER_H

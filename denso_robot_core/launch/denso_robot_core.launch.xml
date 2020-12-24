@@ -7,6 +7,10 @@
   <arg name="controller_type" default="8" />
   <param name="controller_type" value="$(arg controller_type)" />
 
+  <!-- b-CAP slave motion control cycle [millisecond] -->
+  <arg name="bcap_slave_control_cycle_msec" default="8" />
+  <param name="bcap_slave_control_cycle_msec" value="$(arg bcap_slave_control_cycle_msec)" />
+
   <!-- Config file -->
   <arg name="config_file" default="$(find denso_robot_core)/config/config.xml" />
   <param name="config_file" value="$(arg config_file)" />

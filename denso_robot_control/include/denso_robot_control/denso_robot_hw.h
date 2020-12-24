@@ -28,7 +28,7 @@
 #include <ros/ros.h>
 
 // Message (std_msgs)
-#include <std_msgs/Int32.h>
+#include <std_msgs/UInt32.h>
 #include <std_msgs/Float64MultiArray.h>
 using namespace std_msgs;
 
@@ -40,7 +40,7 @@ using namespace std_msgs;
 
 #include "denso_robot_core/denso_robot_core.h"
 #include "denso_robot_core/denso_controller.h"
-#include "denso_robot_core/denso_robot_rc8.h"
+#include "denso_robot_core/denso_robot.h"
 #include "denso_robot_core/denso_variable.h"
 #include "denso_robot_core/UserIO.h"
 using namespace denso_robot_core;
@@ -51,75 +51,78 @@ using namespace denso_robot_core;
 
 namespace denso_robot_control
 {
-  class DensoRobotHW : public hardware_interface::RobotHW
+class DensoRobotHW : public hardware_interface::RobotHW
+{
+public:
+  DensoRobotHW();
+  virtual ~DensoRobotHW();
+
+  HRESULT Initialize();
+
+  ros::Time getTime() const
   {
-  public:
-    DensoRobotHW();
-    virtual ~DensoRobotHW();
+    return ros::Time::now();
+  }
 
-    HRESULT Initialize();
+  ros::Duration getPeriod() const
+  {
+    return m_ctrl->get_Duration();
+  }
 
-    ros::Time getTime() const
-    {
-      return ros::Time::now();
-    }
+  void read(ros::Time, ros::Duration);
+  void write(ros::Time, ros::Duration);
 
-    ros::Duration getPeriod() const
-    {
-      return ros::Duration(0.008);
-    }
+  bool isSlaveSyncMode() const;
 
-    void read(ros::Time, ros::Duration);
-    void write(ros::Time, ros::Duration);
+private:
+  HRESULT ChangeModeWithClearError(int mode);
+  void Callback_ChangeMode(const Int32::ConstPtr& msg);
 
-    bool is_SlaveSyncMode() const;
+  HRESULT CheckRobotType();
 
-  private:
-    HRESULT ChangeModeWithClearError(int mode);
-    void Callback_ChangeMode(const Int32::ConstPtr& msg);
+  void Callback_MiniIO(const UInt32::ConstPtr& msg);
+  void Callback_HandIO(const UInt32::ConstPtr& msg);
+  void Callback_SendUserIO(const UserIO::ConstPtr& msg);
+  void Callback_RecvUserIO(const UserIO::ConstPtr& msg);
 
-    HRESULT CheckRobotType();
+  bool hasError();
+  void printErrorDescription(HRESULT error_code, const std::string& error_message);
 
-    void Callback_MiniIO(const Int32::ConstPtr& msg);
-    void Callback_HandIO(const Int32::ConstPtr& msg);
-    void Callback_SendUserIO(const UserIO::ConstPtr& msg);
-    void Callback_RecvUserIO(const UserIO::ConstPtr& msg);    
+private:
+  hardware_interface::JointStateInterface m_JntStInterface;
+  hardware_interface::PositionJointInterface m_PosJntInterface;
+  double m_cmd[JOINT_MAX];
+  double m_pos[JOINT_MAX];
+  double m_vel[JOINT_MAX];
+  double m_eff[JOINT_MAX];
+  int m_type[JOINT_MAX];
+  std::vector<double> m_joint;
 
-  private:
-    hardware_interface::JointStateInterface m_JntStInterface;
-    hardware_interface::PositionJointInterface m_PosJntInterface;
-    double m_cmd[JOINT_MAX];
-    double m_pos[JOINT_MAX];
-    double m_vel[JOINT_MAX];
-    double m_eff[JOINT_MAX];
-    int m_type[JOINT_MAX];
-    std::vector<double> m_joint;
+  DensoRobotCore_Ptr m_eng;
+  DensoController_Ptr m_ctrl;
+  DensoRobot_Ptr m_rob;
+  DensoVariable_Ptr m_varErr;
 
-    DensoRobotCore_Ptr  m_eng;
-    DensoController_Ptr m_ctrl;
-    DensoRobotRC8_Ptr   m_rob;
-    DensoVariable_Ptr   m_varErr;
+  std::string m_robName;
+  int m_robJoints;
+  int m_sendfmt;
+  int m_recvfmt;
 
-    std::string m_robName;
-    int m_robJoints;
-    int m_sendfmt;
-    int m_recvfmt;
+  ros::Subscriber m_subChangeMode;
+  ros::Subscriber m_subMiniIO;
+  ros::Subscriber m_subHandIO;
+  ros::Subscriber m_subSendUserIO;
+  ros::Subscriber m_subRecvUserIO;
 
-    ros::Subscriber m_subChangeMode;
-    ros::Subscriber m_subMiniIO;
-    ros::Subscriber m_subHandIO;
-    ros::Subscriber m_subSendUserIO;
-    ros::Subscriber m_subRecvUserIO;
+  ros::Publisher m_pubCurMode;
+  ros::Publisher m_pubMiniIO;
+  ros::Publisher m_pubHandIO;
+  ros::Publisher m_pubRecvUserIO;
+  ros::Publisher m_pubCurrent;
 
-    ros::Publisher  m_pubCurMode;
-    ros::Publisher  m_pubMiniIO;
-    ros::Publisher  m_pubHandIO;
-    ros::Publisher  m_pubRecvUserIO;
-    ros::Publisher  m_pubCurrent;
+  boost::mutex m_mtxMode;
+};
 
-    boost::mutex m_mtxMode;
-  };
+}  // namespace denso_robot_control
 
-}
-
-#endif // DENSO_ROBOT_HW_H
+#endif  // DENSO_ROBOT_HW_H

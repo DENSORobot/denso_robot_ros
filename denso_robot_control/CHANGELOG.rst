@@ -2,6 +2,15 @@
 Changelog for package denso_robot_control
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+3.1.0 (2020-12-23)
+------------------
+* Add supporting for RC9
+* Add bcap_slave_control_cycle_msec
+* Add error descriptions of controller
+* Fix send_format/recv_format
+* Fix Int32 to UInt32 of MiniIO and HandIO
+* Remove first 5-seconds-sleep in main()
+
 3.0.4 (2019-11-27)
 ------------------
 

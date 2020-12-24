@@ -2,6 +2,11 @@
 Changelog for package denso_robot_moveit_config
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+3.1.0 (2020-12-23)
+------------------
+* Change planning_adapters from AddTimeParameterization to AddTimeOptimalParameterization
+* Modify to exclude default_warehouse_db.launch in denso_robot_bringup.launch
+
 3.0.4 (2019-11-27)
 ------------------
 

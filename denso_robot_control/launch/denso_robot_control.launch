@@ -14,11 +14,16 @@
   <!-- Recieve format -->
   <arg name="recv_format" default="292" />
 
+  <!-- b-CAP Slave motion control cycle [millisecond] -->
+  <arg name="bcap_slave_control_cycle_msec" default="8" />
+
   <include ns="/$(arg robot_name)" file="$(find bcap_service)/launch/bcap_service.launch.xml">
     <arg name="ip_address" value="$(arg ip_address)" />
   </include>
 
-  <include ns="/$(arg robot_name)" file="$(find denso_robot_core)/launch/denso_robot_core.launch.xml" />
+  <include ns="/$(arg robot_name)" file="$(find denso_robot_core)/launch/denso_robot_core.launch.xml">
+    <arg name="bcap_slave_control_cycle_msec" value="$(arg bcap_slave_control_cycle_msec)" />
+  </include>
 
   <include ns="/$(arg robot_name)" file="$(find denso_robot_control)/launch/denso_robot_control.launch.xml">
     <arg name="send_format" value="$(arg send_format)" />
@@ -36,7 +41,7 @@
   <node name="controller_spawner" pkg="controller_manager" type="spawner" respawn="false" output="screen"
    ns="/$(arg robot_name)" args="joint_state_controller arm_controller" />
 
-  <node name="robot_state_publisher" pkg="robot_state_publisher" 
+  <node name="robot_state_publisher" pkg="robot_state_publisher"
         type="robot_state_publisher" respawn="false" output="screen">
     <remap from="/joint_states" to="/$(arg robot_name)/joint_states" />
   </node>

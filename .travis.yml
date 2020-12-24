@@ -8,7 +8,7 @@ compiler:
 #    on_success: always
 #    on_failure: always
 #    recipients:
-#      - denso_robot_soft@denso-wave.co.jp
+#      - fa-support@denso-wave.com
 env:
   matrix:
     - USE_DEB=true  ROS_DISTRO="indigo" ROS_REPOSITORY_PATH=http://packages.ros.org/ros/ubuntu

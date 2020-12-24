@@ -2,6 +2,13 @@
 Changelog for package denso_robot_core
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+3.1.0 (2020-12-23)
+------------------
+* Add supporting for RC9
+* Add bcap_slave_control_cycle_msec
+* Add 4 functions about error
+* Upgrade tinyxml2 to official v3.0.0. for Melodic
+
 3.0.4 (2019-11-27)
 ------------------
 

@@ -1,7 +1,7 @@
 vs060:
   joint_state_controller:
     type: joint_state_controller/JointStateController
-    publish_rate: 125  
+    publish_rate: 125
 
   arm_controller:
     type: "position_controllers/JointTrajectoryController"

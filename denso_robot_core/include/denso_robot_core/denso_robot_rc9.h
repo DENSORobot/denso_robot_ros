@@ -22,18 +22,24 @@
  * THE SOFTWARE.
  */
 
-#include "denso_robot_core/denso_robot_rc8.h"
+#ifndef DENSO_ROBOT_RC9_H
+#define DENSO_ROBOT_RC9_H
+
+#include <boost/thread.hpp>
+#include "denso_robot_core/denso_robot.h"
 
 namespace denso_robot_core
 {
-DensoRobotRC8::DensoRobotRC8(DensoBase* parent, Service_Vec& service, Handle_Vec& handle, const std::string& name,
-                             const int* mode)
-  : DensoRobot(parent, service, handle, name, mode)
+class DensoRobotRC9 : public DensoRobot
 {
-}
+public:
+  DensoRobotRC9(DensoBase* parent, Service_Vec& service, Handle_Vec& handle, const std::string& name, const int* mode);
 
-DensoRobotRC8::~DensoRobotRC8()
-{
-}
+  ~DensoRobotRC9();
+};
+
+typedef boost::shared_ptr<DensoRobotRC9> DensoRobotRC9_Ptr;
 
 }  // namespace denso_robot_core
+
+#endif  // DENSO_ROBOT_RC9_H

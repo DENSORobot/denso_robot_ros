@@ -1,7 +1,7 @@
 <launch>
   <!-- Override robot_name argument -->
   <arg name="robot_name" default="vs060" />
- 
+
   <!-- the "sim" argument controls whether we connect to a Simulated or Real robot -->
   <!--  - if sim=false, a ip_address argument is required -->
   <arg name="sim" default="true" />
@@ -11,7 +11,9 @@
   <!-- you can specify the send_format and recv_format parameters -->
   <arg name="send_format" default="288" />
   <arg name="recv_format" default="292" />
- 
+
+  <arg name="bcap_slave_control_cycle_msec" default="8" />
+
   <!-- load the robot_description parameter before launching ROS-I nodes -->
   <include file="$(find denso_robot_moveit_config)/launch/planning_context.launch" >
     <arg name="load_robot_description" value="true" />
@@ -31,7 +33,7 @@
     <include file="$(find denso_robot_gazebo)/launch/denso_robot_gazebo.launch">
       <arg name="robot_name" value="$(arg robot_name)" />
     </include>
-  </group>  
+  </group>
 
   <group unless="$(arg sim)">
     <include file="$(find denso_robot_control)/launch/denso_robot_control.launch">
@@ -39,8 +41,9 @@
       <arg name="ip_address" value="$(arg ip_address)" />
       <arg name="send_format" value="$(arg send_format)" />
       <arg name="recv_format" value="$(arg recv_format)" />
+      <arg name="bcap_slave_control_cycle_msec" value="$(arg bcap_slave_control_cycle_msec)" />
     </include>
-  </group>  
+  </group>
 
 
   <include file="$(find denso_robot_moveit_config)/launch/move_group.launch">
@@ -51,7 +54,7 @@
   <include file="$(find denso_robot_moveit_config)/launch/moveit_rviz.launch">
     <arg name="config" value="true"/>
   </include>
-  
-  <include file="$(find denso_robot_moveit_config)/launch/default_warehouse_db.launch" />
+
+  <!-- <include file="$(find denso_robot_moveit_config)/launch/default_warehouse_db.launch" /> -->
 
 </launch>

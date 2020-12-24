@@ -22,24 +22,24 @@
  * THE SOFTWARE.
  */
 
-#include "denso_robot_core/denso_controller_rc8.h"
+#include "denso_robot_core/denso_controller_rc9.h"
 
 #define BCAP_CTRL_CONNECT_ARGS (4)
 
 namespace denso_robot_core
 {
-DensoControllerRC8::DensoControllerRC8(const std::string& name, const int* mode, const ros::Duration dt)
+DensoControllerRC9::DensoControllerRC9(const std::string& name, const int* mode, const ros::Duration dt)
   : DensoController(name, mode, dt)
 {
 }
 
-DensoControllerRC8::~DensoControllerRC8()
+DensoControllerRC9::~DensoControllerRC9()
 {
 }
 
-HRESULT DensoControllerRC8::AddController()
+HRESULT DensoControllerRC9::AddController()
 {
-  static const std::string CTRL_CONNECT_OPTION[BCAP_CTRL_CONNECT_ARGS] = { "", "CaoProv.DENSO.VRC", "localhost", "" };
+  static const std::string CTRL_CONNECT_OPTION[BCAP_CTRL_CONNECT_ARGS] = { "", "CaoProv.DENSO.VRC9", "localhost", "" };
 
   HRESULT hr = E_FAIL;
   int srvs, argc;
@@ -95,7 +95,7 @@ HRESULT DensoControllerRC8::AddController()
   return hr;
 }
 
-HRESULT DensoControllerRC8::AddRobot(XMLElement* xmlElem)
+HRESULT DensoControllerRC9::AddRobot(XMLElement* xmlElem)
 {
   int objs;
   HRESULT hr;
@@ -111,7 +111,7 @@ HRESULT DensoControllerRC8::AddRobot(XMLElement* xmlElem)
       if (FAILED(hr))
         break;
 
-      DensoRobot_Ptr rob(new DensoRobotRC8(this, m_vecService, vecHandle, vecName[objs], m_mode));
+      DensoRobot_Ptr rob(new DensoRobotRC9(this, m_vecService, vecHandle, vecName[objs], m_mode));
       hr = rob->InitializeBCAP(xmlElem);
       if (FAILED(hr))
         break;

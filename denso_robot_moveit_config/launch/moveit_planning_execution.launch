@@ -18,7 +18,8 @@
   <arg name="sim" default="true" />
   <arg name="robot_name" default="vs060" />
   <arg name="ip_address" default="192.168.0.1" />
- 
+  <arg name="bcap_slave_control_cycle_msec" default="8" />
+
   <!-- load the robot_description parameter before launching ROS-I nodes -->
   <include file="$(find denso_robot_moveit_config)/launch/planning_context.launch" >
     <arg name="load_robot_description" value="true" />
@@ -38,6 +39,7 @@
     <include file="$(find denso_robot_control)/launch/denso_robot_control.launch">
       <arg name="robot_name" value="$(arg robot_name)" />
       <arg name="ip_address" value="$(arg ip_address)" />
+      <arg name="bcap_slave_control_cycle_msec" value="$(arg bcap_slave_control_cycle_msec)" />
     </include>
   </group>  
 

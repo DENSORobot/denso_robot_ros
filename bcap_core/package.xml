@@ -1,12 +1,12 @@
 <?xml version="1.0"?>
 <package>
   <name>bcap_core</name>
-  <version>3.0.4</version>
+  <version>3.1.0</version>
   <description>The bcap core package includes libraries for communicating ORiN via b-CAP (Binary - Controller Access Protocol) protocol.</description>
-  <maintainer email="denso_robot_soft@denso-wave.co.jp">DENSO WAVE INCORPORATED</maintainer>
+  <maintainer email="fa-support@denso-wave.com">DENSO WAVE INCORPORATED</maintainer>
   <license>MIT</license>
   <url type="website">http://ros.org/wiki/bcap_core</url>
-  <author email="denso_robot_soft@denso-wave.co.jp">DENSO WAVE INCORPORATED</author>
+  <author email="fa-support@denso-wave.com">DENSO WAVE INCORPORATED</author>
 
   <buildtool_depend>catkin</buildtool_depend>
 </package>

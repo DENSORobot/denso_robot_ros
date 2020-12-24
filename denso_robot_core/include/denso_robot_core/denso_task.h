@@ -30,18 +30,16 @@
 
 #define XML_TASK_NAME "Task"
 
-namespace denso_robot_core {
-
+namespace denso_robot_core
+{
 class DensoTask : public DensoBase
 {
 public:
-  DensoTask(DensoBase* parent,
-      Service_Vec& service, Handle_Vec& handle,
-      const std::string& name, const int* mode);
+  DensoTask(DensoBase* parent, Service_Vec& service, Handle_Vec& handle, const std::string& name, const int* mode);
 
   virtual ~DensoTask();
 
-  HRESULT InitializeBCAP(XMLElement *xmlElem);
+  HRESULT InitializeBCAP(XMLElement* xmlElem);
 
   HRESULT StartService(ros::NodeHandle& node);
   HRESULT StopService();
@@ -62,6 +60,6 @@ private:
 typedef boost::shared_ptr<DensoTask> DensoTask_Ptr;
 typedef std::vector<DensoTask_Ptr> DensoTask_Vec;
 
-}
+}  // namespace denso_robot_core
 
-#endif // DENSO_TASK_H
+#endif  // DENSO_TASK_H

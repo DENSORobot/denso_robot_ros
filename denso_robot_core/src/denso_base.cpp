@@ -26,18 +26,19 @@
 #include "denso_robot_core/denso_base.h"
 #include "denso_robot_core/denso_variable.h"
 
-#define BCAP_GET_OBJECT_ARGS      (3)
+#define BCAP_GET_OBJECT_ARGS (3)
 #define BCAP_GET_OBJECTNAMES_ARGS (2)
 
-namespace denso_robot_core {
-
+namespace denso_robot_core
+{
 std::string DensoBase::ConvertBSTRToString(const BSTR bstr)
 {
   std::string strRet;
-  char *chTmp;
+  char* chTmp;
 
   chTmp = ConvertWideChar2MultiByte(bstr);
-  if(chTmp != NULL) {
+  if (chTmp != NULL)
+  {
     strRet = chTmp;
     free(chTmp);
   }
@@ -48,10 +49,11 @@ std::string DensoBase::ConvertBSTRToString(const BSTR bstr)
 BSTR DensoBase::ConvertStringToBSTR(const std::string& str)
 {
   BSTR strRet = NULL;
-  wchar_t *chTmp;
+  wchar_t* chTmp;
 
   chTmp = ConvertMultiByte2WideChar(str.c_str());
-  if(chTmp != NULL) {
+  if (chTmp != NULL)
+  {
     strRet = SysAllocString(chTmp);
     free(chTmp);
   }
@@ -71,34 +73,35 @@ std::string DensoBase::RosName() const
 
   // Erase @
   size_t c;
-  while((c = tmpName.find_first_of("@")) != std::string::npos) {
-    tmpName.erase(c,1);
+  while ((c = tmpName.find_first_of("@")) != std::string::npos)
+  {
+    tmpName.erase(c, 1);
   }
 
   // Erase *
-  while((c = tmpName.find_first_of("*")) != std::string::npos) {
-    tmpName.erase(c,1);
+  while ((c = tmpName.find_first_of("*")) != std::string::npos)
+  {
+    tmpName.erase(c, 1);
   }
 
   return tmpName;
 }
 
-HRESULT DensoBase::AddVariable(int32_t get_id,
-    const std::string& name,
-    DensoVariable_Vec& vecVar,
-    int16_t vt, bool bRead, bool bWrite, bool bID, int iDuration)
+HRESULT DensoBase::AddVariable(int32_t get_id, const std::string& name, DensoVariable_Vec& vecVar, int16_t vt,
+                               bool bRead, bool bWrite, bool bID, int iDuration)
 {
   DensoBase_Vec vecBase;
   vecBase.insert(vecBase.end(), vecVar.begin(), vecVar.end());
 
-  if(E_HANDLE == get_Object(vecBase, name, NULL)) {
+  if (E_HANDLE == get_Object(vecBase, name, NULL))
+  {
     Handle_Vec vecHandle;
     HRESULT hr = AddObject(get_id, name, vecHandle);
-    if(FAILED(hr)) return hr;
+    if (FAILED(hr))
+      return hr;
 
-    DensoVariable_Ptr var(new DensoVariable(this,
-        m_vecService, vecHandle, name, m_mode,
-        vt, bRead, bWrite, bID, iDuration));
+    DensoVariable_Ptr var(
+        new DensoVariable(this, m_vecService, vecHandle, name, m_mode, vt, bRead, bWrite, bID, iDuration));
 
     vecVar.push_back(var);
   }
@@ -106,65 +109,69 @@ HRESULT DensoBase::AddVariable(int32_t get_id,
   return S_OK;
 }
 
-HRESULT DensoBase::AddVariable(int32_t get_id,
-    const XMLElement *xmlVar,
-    DensoVariable_Vec& vecVar)
+HRESULT DensoBase::AddVariable(int32_t get_id, const XMLElement* xmlVar, DensoVariable_Vec& vecVar)
 {
-  const char *chTmp;
+  const char* chTmp;
 
   std::string name;
   int16_t vt = VT_EMPTY;
   bool bRead = false, bWrite = false, bID = false;
-  int  iDuration = BCAP_VAR_DEFAULT_DURATION;
+  int iDuration = BCAP_VAR_DEFAULT_DURATION;
 
   name = xmlVar->GetText();
 
   chTmp = xmlVar->Attribute(XML_ATTR_VARTYPE);
-  if(chTmp != NULL) vt = atoi(chTmp);
+  if (chTmp != NULL)
+    vt = atoi(chTmp);
 
   chTmp = xmlVar->Attribute(XML_ATTR_READ);
-  if(chTmp != NULL) bRead = (strcasecmp(chTmp, "true") == 0);
+  if (chTmp != NULL)
+    bRead = (strcasecmp(chTmp, "true") == 0);
 
   chTmp = xmlVar->Attribute(XML_ATTR_WRITE);
-  if(chTmp != NULL) bWrite = (strcasecmp(chTmp, "true") == 0);
+  if (chTmp != NULL)
+    bWrite = (strcasecmp(chTmp, "true") == 0);
 
   chTmp = xmlVar->Attribute(XML_ATTR_ID);
-  if(chTmp != NULL) bID = (strcasecmp(chTmp, "true") == 0);
+  if (chTmp != NULL)
+    bID = (strcasecmp(chTmp, "true") == 0);
 
   chTmp = xmlVar->Attribute(XML_ATTR_DURATION);
-  if(chTmp != NULL) iDuration = atoi(chTmp);
+  if (chTmp != NULL)
+    iDuration = atoi(chTmp);
 
   Handle_Vec vecHandle;
   HRESULT hr = AddObject(get_id, name, vecHandle);
-  if(FAILED(hr)) return hr;
+  if (FAILED(hr))
+    return hr;
 
-  DensoVariable_Ptr var(new DensoVariable(this,
-      m_vecService, vecHandle, name, m_mode,
-      vt, bRead, bWrite, bID, iDuration));
+  DensoVariable_Ptr var(
+      new DensoVariable(this, m_vecService, vecHandle, name, m_mode, vt, bRead, bWrite, bID, iDuration));
 
   vecVar.push_back(var);
 
   return S_OK;
 }
 
-HRESULT DensoBase::AddObject(
-    int32_t get_id, const std::string& name,
-    Handle_Vec& vecHandle)
+HRESULT DensoBase::AddObject(int32_t get_id, const std::string& name, Handle_Vec& vecHandle)
 {
   int srvs, argc;
   HRESULT hr;
 
-  for(srvs = SRV_MIN; srvs <= SRV_MAX; srvs++) {
+  for (srvs = SRV_MIN; srvs <= SRV_MAX; srvs++)
+  {
     VARIANT_Ptr vntRet(new VARIANT());
     VARIANT_Vec vntArgs;
 
     VariantInit(vntRet.get());
 
-    for(argc = 0; argc < BCAP_GET_OBJECT_ARGS; argc++) {
+    for (argc = 0; argc < BCAP_GET_OBJECT_ARGS; argc++)
+    {
       VARIANT_Ptr vntTmp(new VARIANT());
       VariantInit(vntTmp.get());
 
-      switch(argc) {
+      switch (argc)
+      {
         case 0:
           vntTmp->vt = VT_UI4;
           vntTmp->ulVal = m_vecHandle[srvs];
@@ -183,7 +190,8 @@ HRESULT DensoBase::AddObject(
     }
 
     hr = m_vecService[srvs]->ExecFunction(get_id, vntArgs, vntRet);
-    if(FAILED(hr)) break;
+    if (FAILED(hr))
+      break;
 
     vecHandle.push_back(vntRet->ulVal);
   }
@@ -200,14 +208,18 @@ HRESULT DensoBase::GetObjectNames(int32_t func_id, Name_Vec& vecName)
 
   VariantInit(vntRet.get());
 
-  for(argc = 0; argc < BCAP_GET_OBJECTNAMES_ARGS; argc++) {
+  for (argc = 0; argc < BCAP_GET_OBJECTNAMES_ARGS; argc++)
+  {
     VARIANT_Ptr vntTmp(new VARIANT());
     VariantInit(vntTmp.get());
 
-    if(argc == 0) {
+    if (argc == 0)
+    {
       vntTmp->vt = VT_UI4;
       vntTmp->ulVal = m_vecHandle[SRV_WATCH];
-    } else {
+    }
+    else
+    {
       vntTmp->vt = VT_BSTR;
       vntTmp->bstrVal = SysAllocString(L"");
     }
@@ -216,60 +228,70 @@ HRESULT DensoBase::GetObjectNames(int32_t func_id, Name_Vec& vecName)
   }
 
   hr = m_vecService[SRV_WATCH]->ExecFunction(func_id, vntArgs, vntRet);
-  if(SUCCEEDED(hr)) {
-    BSTR    *pbstr;
-    VARIANT *pvnt;
-    switch(vntRet->vt) {
+  if (SUCCEEDED(hr))
+  {
+    BSTR* pbstr;
+    VARIANT* pvnt;
+    switch (vntRet->vt)
+    {
       case (VT_ARRAY | VT_BSTR):
-	num = vntRet->parray->rgsabound->cElements;
-	SafeArrayAccessData(vntRet->parray, (void**)&pbstr);
-	for(i = 0; i < num; i++) {
-	  vecName.push_back(ConvertBSTRToString(pbstr[i]));
-	}
-	SafeArrayUnaccessData(vntRet->parray);
+        num = vntRet->parray->rgsabound->cElements;
+        SafeArrayAccessData(vntRet->parray, (void**)&pbstr);
+        for (i = 0; i < num; i++)
+        {
+          vecName.push_back(ConvertBSTRToString(pbstr[i]));
+        }
+        SafeArrayUnaccessData(vntRet->parray);
         break;
       case (VT_ARRAY | VT_VARIANT):
-	num = vntRet->parray->rgsabound->cElements;
-	SafeArrayAccessData(vntRet->parray, (void**)&pvnt);
-	for(i = 0; i < num; i++){
-	  if(pvnt[i].vt != VT_BSTR) {
-	    hr = E_FAIL;
-	    break;
-	  }
-	  vecName.push_back(ConvertBSTRToString(pvnt[i].bstrVal));
-	}
-	SafeArrayUnaccessData(vntRet->parray);
+        num = vntRet->parray->rgsabound->cElements;
+        SafeArrayAccessData(vntRet->parray, (void**)&pvnt);
+        for (i = 0; i < num; i++)
+        {
+          if (pvnt[i].vt != VT_BSTR)
+          {
+            hr = E_FAIL;
+            break;
+          }
+          vecName.push_back(ConvertBSTRToString(pvnt[i].bstrVal));
+        }
+        SafeArrayUnaccessData(vntRet->parray);
         break;
       default:
-	hr = S_FALSE;
-	break;
+        hr = S_FALSE;
+        break;
     }
   }
 
   return hr;
 }
 
-HRESULT DensoBase::get_Object(const DensoBase_Vec& vecBase,
-    int index, DensoBase_Ptr *obj)
+HRESULT DensoBase::get_Object(const DensoBase_Vec& vecBase, int index, DensoBase_Ptr* obj)
 {
-  try {
-    if(obj != NULL) {
+  try
+  {
+    if (obj != NULL)
+    {
       *obj = vecBase.at(index);
     }
-  } catch (std::out_of_range&) {
+  }
+  catch (std::out_of_range&)
+  {
     return E_HANDLE;
   }
 
   return S_OK;
 }
 
-HRESULT DensoBase::get_Object(const DensoBase_Vec& vecBase,
-    const std::string& name, DensoBase_Ptr *obj)
+HRESULT DensoBase::get_Object(const DensoBase_Vec& vecBase, const std::string& name, DensoBase_Ptr* obj)
 {
   DensoBase_Vec::const_iterator it;
-  for(it = vecBase.begin(); it != vecBase.end(); it++) {
-    if(!strcasecmp((*it)->Name().c_str(), name.c_str())) {
-      if(obj != NULL) {
+  for (it = vecBase.begin(); it != vecBase.end(); it++)
+  {
+    if (!strcasecmp((*it)->Name().c_str(), name.c_str()))
+    {
+      if (obj != NULL)
+      {
         *obj = *it;
       }
       return S_OK;
@@ -279,4 +301,4 @@ HRESULT DensoBase::get_Object(const DensoBase_Vec& vecBase,
   return E_HANDLE;
 }
 
-}
+}  // namespace denso_robot_core

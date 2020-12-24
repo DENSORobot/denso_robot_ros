@@ -26,44 +26,38 @@
 #include <controller_manager/controller_manager.h>
 #include "denso_robot_control/denso_robot_hw.h"
 
-int main(int argc, char *argv[])
+int main(int argc, char* argv[])
 {
   ros::init(argc, argv, "denso_robot_control");
   ros::NodeHandle nh;
 
   denso_robot_control::DensoRobotHW drobo;
   HRESULT hr = drobo.Initialize();
-  if(SUCCEEDED(hr)) {
-      controller_manager::ControllerManager cm(&drobo, nh);
+  if (SUCCEEDED(hr))
+  {
+    controller_manager::ControllerManager cm(&drobo, nh);
 
-      ros::Rate rate(1.0 / drobo.getPeriod().toSec());
-      ros::AsyncSpinner spinner(1);
-      spinner.start();
+    ros::Rate rate(1.0 / drobo.getPeriod().toSec());
+    ros::AsyncSpinner spinner(1);
+    spinner.start();
 
-      ros::Time start = drobo.getTime();
-      while(ros::ok())
+    while (ros::ok())
+    {
+      ros::Time now = drobo.getTime();
+      ros::Duration dt = drobo.getPeriod();
+
+      drobo.read(now, dt);
+
+      cm.update(now, dt);
+
+      drobo.write(now, dt);
+
+      if (!drobo.isSlaveSyncMode())
       {
-        ros::Time now = drobo.getTime();
-        ros::Duration dt = drobo.getPeriod();
-
-        drobo.read(now, dt);
-
-        cm.update(now, dt);
-
-        ros::Duration diff = now - start;
-        if(diff.toSec() > 5) {
-          drobo.write(now, dt);
-        } else {
-          rate.sleep();
-          continue;
-        }
-
-        if (!drobo.is_SlaveSyncMode())
-        {
-          rate.sleep();
-        }
+        rate.sleep();
       }
-      spinner.stop();
+    }
+    spinner.stop();
   }
 
   return 0;

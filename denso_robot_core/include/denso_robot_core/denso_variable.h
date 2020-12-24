@@ -29,21 +29,19 @@
 
 #define XML_VARIABLE_NAME "Variable"
 
-#define XML_ATTR_VARTYPE  "vt"
-#define XML_ATTR_READ     "read"
-#define XML_ATTR_WRITE    "write"
-#define XML_ATTR_ID       "id"
+#define XML_ATTR_VARTYPE "vt"
+#define XML_ATTR_READ "read"
+#define XML_ATTR_WRITE "write"
+#define XML_ATTR_ID "id"
 #define XML_ATTR_DURATION "duration"
 
-namespace denso_robot_core {
-
+namespace denso_robot_core
+{
 class DensoVariable : public DensoBase
 {
 public:
-  DensoVariable(DensoBase* parent,
-      Service_Vec& service, Handle_Vec& handle,
-      const std::string& name, const int* mode,
-      int16_t vt, bool Read, bool Write, bool ID, int Duration);
+  DensoVariable(DensoBase* parent, Service_Vec& service, Handle_Vec& handle, const std::string& name, const int* mode,
+                int16_t vt, bool Read, bool Write, bool ID, int Duration);
 
   virtual ~DensoVariable();
 
@@ -69,12 +67,12 @@ private:
 
 private:
   int16_t m_vt;
-  bool    m_bRead;
-  bool    m_bWrite;
-  bool    m_bID;
-  ros::Duration   m_Duration;
-  ros::Time       m_pubTimePrev;
-  ros::Publisher  m_pubValue;
+  bool m_bRead;
+  bool m_bWrite;
+  bool m_bID;
+  ros::Duration m_Duration;
+  ros::Time m_pubTimePrev;
+  ros::Publisher m_pubValue;
   ros::Subscriber m_subValue;
   ros::Subscriber m_subID;
 };
@@ -82,6 +80,6 @@ private:
 typedef boost::shared_ptr<DensoVariable> DensoVariable_Ptr;
 typedef std::vector<DensoVariable_Ptr> DensoVariable_Vec;
 
-}
+}  // namespace denso_robot_core
 
-#endif // DENSO_VARIABLE_H
+#endif  // DENSO_VARIABLE_H

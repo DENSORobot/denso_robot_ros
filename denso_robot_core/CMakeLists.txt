@@ -55,9 +55,11 @@ add_library(${PROJECT_NAME}
   src/denso_base.cpp
   src/denso_controller.cpp
   src/denso_controller_rc8.cpp
+  src/denso_controller_rc9.cpp
   src/denso_robot.cpp
   src/${PROJECT_NAME}.cpp
   src/denso_robot_rc8.cpp
+  src/denso_robot_rc9.cpp
   src/denso_task.cpp
   src/denso_variable.cpp
   src/tinyxml2.cpp
@@ -70,9 +72,11 @@ add_executable(${PROJECT_NAME}_exec
   src/denso_base.cpp
   src/denso_controller.cpp
   src/denso_controller_rc8.cpp
+  src/denso_controller_rc9.cpp
   src/denso_robot.cpp
   src/${PROJECT_NAME}.cpp
   src/denso_robot_rc8.cpp
+  src/denso_robot_rc9.cpp
   src/denso_task.cpp
   src/denso_variable.cpp
   src/tinyxml2.cpp

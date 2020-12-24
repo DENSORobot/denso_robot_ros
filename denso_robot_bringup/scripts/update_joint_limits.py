@@ -77,10 +77,10 @@ if __name__ == "__main__":
     r_joint = re.compile("(joint_\d+):")
     r_has_vel_limit = re.compile("has_velocity_limits: (\w+)")
     r_max_vel = re.compile("max_velocity: ([\d\.]+)")
-    
+
     cur_elem = None
     new_joint = False
-    
+
     f_limits = open(path_limits, "r+")
 
     # Insert space after colon.
@@ -100,7 +100,7 @@ if __name__ == "__main__":
             for elem in elem_joints:
                 if elem.attrib["name"] == m.group(1):
                     cur_elem = elem
-                    new_joint = True                    
+                    new_joint = True
                     break
 
         if new_joint:

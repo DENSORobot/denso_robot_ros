@@ -27,11 +27,10 @@
 
 #include "denso_robot_core/denso_controller.h"
 
-namespace denso_robot_core {
-
+namespace denso_robot_core
+{
 class DensoRobotCore
 {
-
 public:
   DensoRobotCore();
   virtual ~DensoRobotCore();
@@ -42,9 +41,15 @@ public:
   void Stop();
 
   HRESULT ChangeMode(int mode, bool service = false);
-  int get_Mode() const { return m_mode; }
+  int get_Mode() const
+  {
+    return m_mode;
+  }
 
-  const DensoController_Ptr& get_Controller() const { return m_ctrl; }
+  const DensoController_Ptr& get_Controller() const
+  {
+    return m_ctrl;
+  }
 
 private:
   DensoController_Ptr m_ctrl;
@@ -54,6 +59,6 @@ private:
 
 typedef boost::shared_ptr<DensoRobotCore> DensoRobotCore_Ptr;
 
-}
+}  // namespace denso_robot_core
 
-#endif // DENSO_ROBOT_CORE_H
+#endif  // DENSO_ROBOT_CORE_H
