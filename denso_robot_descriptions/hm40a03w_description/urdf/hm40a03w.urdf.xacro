@@ -1,0 +1,11 @@
+<?xml version="1.0"?>
+<robot name="hm40a03w" xmlns:xacro="http://www.ros.org/wiki/xacro">
+  <material name="white">
+    <color rgba="1.0 1.0 1.0 1.0"/>
+  </material>
+  <xacro:include filename="$(find denso_robot_descriptions)/hm40a03w_description/urdf/hm40a03w.xacro"/>
+  <link name="base_link"/>
+  <xacro:hm40a03w parent="base_link">
+    <origin xyz="0 0 0" rpy="0 0 0"/>
+  </xacro:hm40a03w>
+</robot>
