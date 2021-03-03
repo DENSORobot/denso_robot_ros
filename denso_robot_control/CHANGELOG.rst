@@ -2,6 +2,10 @@
 Changelog for package denso_robot_control
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+3.1.1 (2021-03-03)
+------------------
+* Add ros::spinOnce() for the callbacks.
+
 3.1.0 (2020-12-23)
 ------------------
 * Add supporting for RC9

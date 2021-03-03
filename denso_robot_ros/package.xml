@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <package>
   <name>denso_robot_ros</name>
-  <version>3.1.0</version>
+  <version>3.1.1</version>
   <description>The denso robot ros stack constains libraries, configuration files, and ROS nodes for controlling a DENSO robot from ROS.</description>
   <maintainer email="fa-support@denso-wave.com">DENSO WAVE INCORPORATED</maintainer>
   <license>MIT</license>

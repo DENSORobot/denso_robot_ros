@@ -2,6 +2,9 @@
 Changelog for package denso_robot_gazebo
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+3.1.1 (2021-03-03)
+------------------
+
 3.1.0 (2020-12-23)
 ------------------
 * Add to include denso_robot_description/(robot_name).launch.xml
