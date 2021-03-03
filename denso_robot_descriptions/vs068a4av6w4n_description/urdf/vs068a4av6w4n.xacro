@@ -1,0 +1,168 @@
+<?xml version="1.0"?>
+<!-- Copyright (C) 2021, TechMagic K.K. -->
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro">
+  <xacro:property name="folder" value="package://denso_robot_descriptions/vs068a4av6w4n_description"/>
+  <xacro:macro name="vs068a4av6w4n" params="parent *origin">
+    <joint name="vs068a4av6w4n_base_joint" type="fixed">
+      <xacro:insert_block name="origin"/>
+      <parent link="${parent}"/>
+      <child link="link_0"/>
+    </joint>    
+    <link name="link_0">
+      <visual>
+	<geometry>
+	  <mesh filename="${folder}/mesh/vs068a4av6w4n_0.stl" scale="0.001 0.001 0.001"/>
+	</geometry>
+	<material name="white"/>
+      </visual>
+      <collision>
+	<geometry>
+	  <mesh filename="${folder}/mesh/vs068a4av6w4n_0.stl" scale="0.001 0.001 0.001"/>
+	</geometry>
+      </collision>
+      <inertial>
+	<mass value="1" />
+	<inertia ixx="1" ixy="0" ixz="0" iyy="1" iyz="0" izz="1" />
+      </inertial>
+    </link>
+    <joint name="joint_1" type="revolute">
+      <parent link="link_0" />
+      <child link="link_1" />
+      <origin xyz="0 0 0.164" rpy="0 0 0"/>
+      <axis xyz="0 0 1" />
+      <limit effort="1" lower="-2.8797932657906435" upper="2.8797932657906435" velocity="3.92699081698724"/>
+      <dynamics damping="0" friction="0" />
+    </joint>
+    <link name="link_1">
+      <visual>
+	<geometry>
+	  <mesh filename="${folder}/mesh/vs068a4av6w4n_1.stl" scale="0.001 0.001 0.001"/>
+	</geometry>
+	<material name="white"/>
+      </visual>
+      <collision>
+	<geometry>
+	  <mesh filename="${folder}/mesh/vs068a4av6w4n_1.stl" scale="0.001 0.001 0.001"/>
+	</geometry>
+      </collision>
+      <inertial>
+	<mass value="1" />
+	<inertia ixx="1" ixy="0" ixz="0" iyy="1" iyz="0" izz="1" />
+      </inertial>
+    </link>
+    <joint name="joint_2" type="revolute">
+      <parent link="link_1" />
+      <child link="link_2" />
+      <origin xyz="0.03 0.0 0.1975" rpy="0 0 0"/>
+      <axis xyz="0 1 0" />
+      <limit effort="1" lower="-0.3" upper="2.2689280275926285" velocity="2.61799387799149" />
+      <dynamics damping="0" friction="0" />
+    </joint>
+    <link name="link_2">
+      <visual>
+	<geometry>
+	  <mesh filename="${folder}/mesh/vs068a4av6w4n_2.stl" scale="0.001 0.001 0.001"/>
+	</geometry>
+	<material name="white"/>
+      </visual>
+      <collision>
+	<geometry>
+	  <mesh filename="${folder}/mesh/vs068a4av6w4n_2.stl" scale="0.001 0.001 0.001"/>
+	</geometry>
+      </collision>
+      <inertial>
+	<mass value="1" />
+	<inertia ixx="1" ixy="0" ixz="0" iyy="1" iyz="0" izz="1" />
+      </inertial>
+    </link>
+    <joint name="joint_3" type="revolute">
+      <parent link="link_2" />
+      <child link="link_3" />
+      <origin xyz="0.0 0.0 0.340" rpy="0 0 0"/>
+      <axis xyz="0 1 0" />
+      <limit effort="1" lower="0.9594" upper="2.356194490192345" velocity="2.85832571599111" />
+      <dynamics damping="0" friction="0" />
+    </joint>
+    <link name="link_3">
+      <visual>
+	<geometry>
+	  <mesh filename="${folder}/mesh/vs068a4av6w4n_3.stl" scale="0.001 0.001 0.001"/>
+	</geometry>
+	<material name="white"/>
+      </visual>
+      <collision>
+	<geometry>
+	  <mesh filename="${folder}/mesh/vs068a4av6w4n_3.stl" scale="0.001 0.001 0.001"/>
+	</geometry>
+      </collision>
+      <inertial>
+	<mass value="1" />
+	<inertia ixx="1" ixy="0" ixz="0" iyy="1" iyz="0" izz="1" />
+      </inertial>
+    </link>
+    <joint name="joint_4" type="revolute">
+      <parent link="link_3" />
+      <child link="link_4" />
+      <origin xyz="-0.020 0.000 0.197" rpy="0 0 0"/>
+      <axis xyz="0 0 1" />
+      <limit effort="1" lower="-2.705260340591211" upper="2.705260340591211" velocity="3.92699081698724" />
+      <dynamics damping="0" friction="0" />
+    </joint>
+    <link name="link_4">
+      <visual>
+	<geometry>
+	  <mesh filename="${folder}/mesh/vs068a4av6w4n_4.stl" scale="0.001 0.001 0.001"/>
+	</geometry>
+	<material name="white"/>
+      </visual>
+      <collision>
+	<geometry>
+	  <mesh filename="${folder}/mesh/vs068a4av6w4n_4.stl" scale="0.001 0.001 0.001"/>
+	</geometry>
+      </collision>
+      <inertial>
+	<mass value="1" />
+	<inertia ixx="1" ixy="0" ixz="0" iyy="1" iyz="0" izz="1" />
+      </inertial>
+    </link>
+    <joint name="joint_5" type="revolute">
+      <parent link="link_4" />
+      <child link="link_5" />
+      <origin xyz="0.0 0.0 0.143" rpy="0 0 0"/>
+      <axis xyz="0 1 0" />
+      <limit effort="1" lower="-2.007128639793479" upper="2.007128639793479" velocity="3.02168853397778" />
+      <dynamics damping="0" friction="0" />
+    </joint>
+    <link name="link_5">
+      <visual>
+	<geometry>
+	  <mesh filename="${folder}/mesh/vs068a4av6w4n_5.stl" scale="0.001 0.001 0.001"/>
+	</geometry>
+	<material name="grey"/>
+      </visual>
+      <collision>
+	<geometry>
+	  <mesh filename="${folder}/mesh/vs068a4av6w4n_5.stl" scale="0.001 0.001 0.001"/>
+	</geometry>
+      </collision>
+      <inertial>
+	<mass value="1" />
+	<inertia ixx="1" ixy="0" ixz="0" iyy="1" iyz="0" izz="1" />
+      </inertial>
+    </link>
+    <joint name="joint_6" type="revolute">
+      <parent link="link_5" />
+      <child link="link_6" />
+      <origin xyz="0.0 0.0 0.08" rpy="0 0 0"/>
+      <axis xyz="0 0 1" />
+      <limit effort="1" lower="-4.101523742186674" upper="4.101523742186674" velocity="6.28318530717959" />
+      <dynamics damping="0" friction="0" />
+    </joint>
+    <link name="link_6">
+      <inertial>
+	<mass value="1" />
+	<inertia ixx="1" ixy="0" ixz="0" iyy="1" iyz="0" izz="1" />
+      </inertial>
+    </link>
+  </xacro:macro>
+</robot>

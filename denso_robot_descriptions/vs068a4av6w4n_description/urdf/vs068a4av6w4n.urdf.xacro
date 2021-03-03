@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<!-- Copyright (C) 2021, TechMagic K.K. -->
+<robot name="vs068a4av6w4n" xmlns:xacro="http://www.ros.org/wiki/xacro">
+  <material name="white">
+    <color rgba="1.0 1.0 1.0 1.0"/>
+  </material>
+  <material name="grey">
+    <color rgba="0.1 0.1 0.1 1.0"/>
+  </material>
+  <xacro:include filename="$(find denso_robot_descriptions)/vs068a4av6w4n_description/urdf/vs068a4av6w4n.xacro"/>
+  <link name="base_link"/>
+  <xacro:vs068a4av6w4n parent="base_link">
+    <origin xyz="0 0 0" rpy="0 0 0"/>
+  </xacro:vs068a4av6w4n>
+</robot>
