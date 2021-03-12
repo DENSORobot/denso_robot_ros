@@ -2,8 +2,9 @@
 Changelog for package bcap_core
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-3.1.1 (2021-03-03)
+3.1.1 (2021-03-12)
 ------------------
+* Change the symbolic link to the directory of include/bcap_core
 
 3.1.0 (2020-12-23)
 ------------------

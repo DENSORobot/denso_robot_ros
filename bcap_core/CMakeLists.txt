@@ -42,7 +42,7 @@ else(WIN32) # Linux
     option  (_USE_CATKIN "Use catkin for installation" ON)
     if(_USE_CATKIN)
     catkin_package(
-      INCLUDE_DIRS include
+      INCLUDE_DIRS include include/${PROJECT_NAME}
       LIBRARIES bcap_client bcap_server tpcomm rac_string
     )
     message (STATUS "_USE_CATKIN=${_USE_CATKIN}")
@@ -95,13 +95,14 @@ endif(_DN_USE_BSTR_API)
 
 include_directories(
   include
+  include/${PROJECT_NAME}
 )
 
 # Include stdint.h
 if(MSVC AND "${_VS_VER}" MATCHES "v([0-9]?[0-9])")
   if("${CMAKE_MATCH_1}" LESS 10)
     include_directories(
-      include/stdint
+      include/${PROJECT_NAME}/stdint
     )
   endif("${CMAKE_MATCH_1}" LESS 10)
 endif(MSVC AND "${_VS_VER}" MATCHES "v([0-9]?[0-9])")
@@ -121,7 +122,7 @@ add_library(bcap_client
 )
 
 target_include_directories(bcap_client PUBLIC
-  include/bCAPClient
+  include/${PROJECT_NAME}/bCAPClient
 )
 
 if(_USE_LINUX_API)
@@ -144,7 +145,7 @@ add_library(bcap_server
 )
 
 target_include_directories(bcap_server PUBLIC
-  include/bCAPServer
+  include/${PROJECT_NAME}/bCAPServer
 )
 
 if(_USE_LINUX_API)
@@ -160,7 +161,7 @@ add_library(rac_string
 )
 
 target_include_directories(rac_string PUBLIC
-  include/RACString
+  include/${PROJECT_NAME}/RACString
 )
 
 # tpcomm library
@@ -176,7 +177,7 @@ add_library(tpcomm
 )
 
 target_include_directories(tpcomm PUBLIC
-  include/TPComm
+  include/${PROJECT_NAME}/TPComm
 )
 
 if(_USE_LINUX_API)
@@ -221,7 +222,7 @@ else(_USE_CATKIN)
   # headers
   install(
     DIRECTORY include/
-    DESTINATION include/orin_bcap
+    DESTINATION include/${PROJECT_NAME}
     FILES_MATCHING PATTERN "*.h"
     PATTERN "${PROJECT_NAME}" EXCLUDE
     PATTERN ".svn" EXCLUDE
