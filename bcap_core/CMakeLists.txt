@@ -199,12 +199,11 @@ if(_USE_CATKIN)
   )
 
   # headers
-  install(DIRECTORY include/
+  install(DIRECTORY include/${PROJECT_NAME}/
     DESTINATION ${CATKIN_PACKAGE_INCLUDE_DESTINATION}
     FILES_MATCHING PATTERN "*.h"
-    PATTERN "${PROJECT_NAME}" EXCLUDE
-    PATTERN ".svn" EXCLUDE
   )
+
 else(_USE_CATKIN)
   # libraries
   if(WIN32 AND NOT BUILD_SHARED_LIBS)
@@ -221,11 +220,9 @@ else(_USE_CATKIN)
 
   # headers
   install(
-    DIRECTORY include/
+    DIRECTORY include/${PROJECT_NAME}/
     DESTINATION include/${PROJECT_NAME}
     FILES_MATCHING PATTERN "*.h"
-    PATTERN "${PROJECT_NAME}" EXCLUDE
-    PATTERN ".svn" EXCLUDE
   )
 
 endif(_USE_CATKIN)

@@ -2,9 +2,10 @@
 Changelog for package bcap_core
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-3.1.1 (2021-03-12)
+3.1.1 (2021-03-30)
 ------------------
 * Change the symbolic link to the directory of include/bcap_core
+* Fix the install section in CMakeLists.txt for build.ros.org failure
 
 3.1.0 (2020-12-23)
 ------------------
