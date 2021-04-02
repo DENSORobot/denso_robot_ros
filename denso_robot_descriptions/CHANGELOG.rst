@@ -2,6 +2,9 @@
 Changelog for package denso_robot_descriptions
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+3.1.2 (2021-04-02)
+------------------
+
 3.1.1 (2021-03-04)
 ------------------
 * Fix Controller ABORTED ([#5](https://github.com/DENSORobot/denso_robot_ros/issues/5))

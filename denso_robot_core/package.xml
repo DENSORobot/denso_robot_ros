@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <package>
   <name>denso_robot_core</name>
-  <version>3.1.1</version>
+  <version>3.1.2</version>
   <description>The denso robot core package includes a node for controlling DENSO robot controllers.</description>
   <maintainer email="fa-support@denso-wave.com">DENSO WAVE INCORPORATED</maintainer>
   <license>MIT</license>
