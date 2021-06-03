@@ -28,11 +28,6 @@
 #include "denso_robot_core/denso_base.h"
 #include "denso_robot_core/denso_variable.h"
 
-#define XML_ROBOT_NAME "Robot"
-
-#define S_BUF_FULL (HRESULT)(0x0F200501)
-#define E_BUF_FULL (HRESULT)(0x83201483)
-
 namespace denso_robot_core
 {
 class DensoRobot : public DensoBase
@@ -40,6 +35,27 @@ class DensoRobot : public DensoBase
   friend class DensoRobotCore;
 
 public:
+  static constexpr HRESULT S_BUF_FULL = 0x0F200501;
+  static constexpr HRESULT E_BUF_FULL = 0x83201483;
+
+  static constexpr int BCAP_ROBOT_EXECUTE_ARGS = 3;
+  static constexpr int BCAP_ROBOT_HALT_ARGS = 2;
+  static constexpr int BCAP_ROBOT_MOVE_ARGS = 4;
+  static constexpr int BCAP_ROBOT_SPEED_ARGS = 3;
+  static constexpr int BCAP_ROBOT_CHANGE_ARGS = 2;
+
+  static constexpr const char* XML_ROBOT_NAME = "Robot";
+
+  static constexpr const char* NAME_ARMGROUP = "_armgroup";
+  static constexpr const char* NAME_MOVESTRING = "_MoveString";
+  static constexpr const char* NAME_MOVEVALUE = "_MoveValue";
+  static constexpr const char* NAME_DRIVEEXSTRING = "_DriveExString";
+  static constexpr const char* NAME_DRIVEEXVALUE = "_DriveExValue";
+  static constexpr const char* NAME_DRIVEAEXSTRING = "_DriveAExString";
+  static constexpr const char* NAME_DRIVEAEXVALUE = "_DriveAExValue";
+  static constexpr const char* NAME_SPEED = "_Speed";
+  static constexpr const char* NAME_CHANGETOOL = "_ChangeTool";
+  static constexpr const char* NAME_CHANGEWORK = "_ChangeWork";
   enum
   {
     SLVMODE_NONE = 0,

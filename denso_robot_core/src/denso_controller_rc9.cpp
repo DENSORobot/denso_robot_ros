@@ -24,8 +24,6 @@
 
 #include "denso_robot_core/denso_controller_rc9.h"
 
-#define BCAP_CTRL_CONNECT_ARGS (4)
-
 namespace denso_robot_core
 {
 DensoControllerRC9::DensoControllerRC9(const std::string& name, const int* mode, const ros::Duration dt)
@@ -39,7 +37,8 @@ DensoControllerRC9::~DensoControllerRC9()
 
 HRESULT DensoControllerRC9::AddController()
 {
-  static const std::string CTRL_CONNECT_OPTION[BCAP_CTRL_CONNECT_ARGS] = { "", "CaoProv.DENSO.VRC9", "localhost", "" };
+  static const std::string CTRL_CONNECT_OPTION[BCAP_CONTROLLER_CONNECT_ARGS]
+                                               = { "", "CaoProv.DENSO.VRC9", "localhost", "" };
 
   HRESULT hr = E_FAIL;
   int srvs, argc;
@@ -59,7 +58,7 @@ HRESULT DensoControllerRC9::AddController()
 
     VariantInit(vntRet.get());
 
-    for (argc = 0; argc < BCAP_CTRL_CONNECT_ARGS; argc++)
+    for (argc = 0; argc < BCAP_CONTROLLER_CONNECT_ARGS; argc++)
     {
       VARIANT_Ptr vntTmp(new VARIANT());
       VariantInit(vntTmp.get());
@@ -121,6 +120,62 @@ HRESULT DensoControllerRC9::AddRobot(XMLElement* xmlElem)
   }
 
   return hr;
+}
+
+HRESULT DensoControllerRC9::get_Robot(int index, DensoRobotRC9_Ptr* robot)
+{
+  if (robot == NULL)
+  {
+    return E_INVALIDARG;
+  }
+
+  DensoBase_Vec vecBase;
+  vecBase.insert(vecBase.end(), m_vecRobot.begin(), m_vecRobot.end());
+
+  DensoBase_Ptr pBase;
+  HRESULT hr = DensoBase::get_Object(vecBase, index, &pBase);
+  if (SUCCEEDED(hr))
+  {
+    *robot = boost::dynamic_pointer_cast<DensoRobotRC9>(pBase);
+  }
+
+  return hr;
+}
+
+/**
+ * CaoController::Execute("ResetStoState")
+ * Reset the STO(Safe Torque Off) state.
+ * Do NOT call on b-CAP Slave.
+ * @return HRESULT
+ */
+HRESULT DensoControllerRC9::ExecResetStoState()
+{
+  int argc;
+  VARIANT_Vec vntArgs;
+  VARIANT_Ptr vntRet(new VARIANT());
+
+  for (argc = 0; argc < BCAP_CONTROLLER_EXECUTE_ARGS; argc++)
+  {
+    VARIANT_Ptr vntTmp(new VARIANT());
+
+    VariantInit(vntTmp.get());
+
+    switch (argc)
+    {
+      case 0:
+        vntTmp->vt = VT_I4;
+        vntTmp->ulVal = m_vecHandle[DensoBase::SRV_WATCH];
+        break;
+      case 1:
+        vntTmp->vt = VT_BSTR;
+        vntTmp->bstrVal = SysAllocString(L"ResetStoState");
+        break;
+    }
+
+    vntArgs.push_back(*vntTmp.get());
+  }
+
+  return m_vecService[DensoBase::SRV_WATCH]->ExecFunction(ID_CONTROLLER_EXECUTE, vntArgs, vntRet);
 }
 
 }  // namespace denso_robot_core

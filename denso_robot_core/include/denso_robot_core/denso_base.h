@@ -70,6 +70,8 @@ typedef std::vector<BCAPService_Ptr> Service_Vec;
 class DensoBase
 {
 public:
+  static constexpr int BCAP_GET_OBJECT_ARGS = 3;
+  static constexpr int BCAP_GET_OBJECTNAMES_ARGS = 2;
   enum
   {
     SRV_MIN = 0,

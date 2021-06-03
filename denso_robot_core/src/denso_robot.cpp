@@ -24,23 +24,6 @@
 
 #include "denso_robot_core/denso_robot.h"
 
-#define BCAP_ROBOT_EXECUTE_ARGS (3)
-#define BCAP_ROBOT_HALT_ARGS (2)
-#define BCAP_ROBOT_MOVE_ARGS (4)
-#define BCAP_ROBOT_SPEED_ARGS (3)
-#define BCAP_ROBOT_CHANGE_ARGS (2)
-
-#define NAME_ARMGROUP "_armgroup"
-#define NAME_MOVESTRING "_MoveString"
-#define NAME_MOVEVALUE "_MoveValue"
-#define NAME_DRIVEEXSTRING "_DriveExString"
-#define NAME_DRIVEEXVALUE "_DriveExValue"
-#define NAME_DRIVEAEXSTRING "_DriveAExString"
-#define NAME_DRIVEAEXVALUE "_DriveAExValue"
-#define NAME_SPEED "_Speed"
-#define NAME_CHANGETOOL "_ChangeTool"
-#define NAME_CHANGEWORK "_ChangeWork"
-
 namespace denso_robot_core
 {
 enum
@@ -333,8 +316,8 @@ HRESULT DensoRobot::AddVariable(XMLElement* xmlElem)
   HRESULT hr = S_OK;
   XMLElement* xmlVar;
 
-  for (xmlVar = xmlElem->FirstChildElement(XML_VARIABLE_NAME); xmlVar != NULL;
-       xmlVar = xmlVar->NextSiblingElement(XML_VARIABLE_NAME))
+  for (xmlVar = xmlElem->FirstChildElement(DensoVariable::XML_VARIABLE_NAME); xmlVar != NULL;
+       xmlVar = xmlVar->NextSiblingElement(DensoVariable::XML_VARIABLE_NAME))
   {
     hr = DensoBase::AddVariable(ID_ROBOT_GETVARIABLE, xmlVar, m_vecVar);
     if (FAILED(hr))

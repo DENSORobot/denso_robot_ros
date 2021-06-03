@@ -30,13 +30,16 @@
 #include "denso_robot_core/denso_task.h"
 #include "denso_robot_core/denso_variable.h"
 
-#define XML_CTRL_NAME "Controller"
-
 namespace denso_robot_core
 {
 class DensoController : public DensoBase
 {
 public:
+  static constexpr int BCAP_CONTROLLER_CONNECT_ARGS = 4;
+  static constexpr int BCAP_CONTROLLER_EXECUTE_ARGS = 3;
+
+  static constexpr const char* XML_CTRL_NAME = "Controller";
+
   virtual ~DensoController();
 
   virtual HRESULT InitializeBCAP(const std::string& filename);
@@ -52,6 +55,7 @@ public:
 
   HRESULT AddVariable(const std::string& name);
   virtual HRESULT ExecClearError();
+  virtual HRESULT ExecResetStoState() = 0;
   virtual HRESULT ExecGetCurErrorCount(int& count);
   virtual HRESULT ExecGetCurErrorInfo(int error_index, HRESULT& error_code, std::string& error_message);
   virtual HRESULT ExecGetErrorDescription(HRESULT error_code, std::string& error_description);

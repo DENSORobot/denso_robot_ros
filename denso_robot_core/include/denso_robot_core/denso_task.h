@@ -28,13 +28,13 @@
 #include "denso_robot_core/denso_base.h"
 #include "denso_robot_core/denso_variable.h"
 
-#define XML_TASK_NAME "Task"
-
 namespace denso_robot_core
 {
 class DensoTask : public DensoBase
 {
 public:
+  static constexpr const char* XML_TASK_NAME = "Task";
+
   DensoTask(DensoBase* parent, Service_Vec& service, Handle_Vec& handle, const std::string& name, const int* mode);
 
   virtual ~DensoTask();

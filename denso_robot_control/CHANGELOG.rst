@@ -2,12 +2,16 @@
 Changelog for package denso_robot_control
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+3.2.0 (2021-06-02)
+------------------
+* Add "ResetStoState" to initialization
+
 3.1.2 (2021-04-02)
 ------------------
 
 3.1.1 (2021-03-03)
 ------------------
-* Add ros::spinOnce() for the callbacks.
+* Add ros::spinOnce() for the callbacks
 
 3.1.0 (2020-12-23)
 ------------------

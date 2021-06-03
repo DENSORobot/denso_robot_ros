@@ -22,84 +22,16 @@
  * THE SOFTWARE.
  */
 
-#include "denso_robot_core/denso_controller_rc8.h"
+#include "denso_robot_core/denso_controller_rc8_cobotta.h"
 
 namespace denso_robot_core
 {
-DensoControllerRC8::DensoControllerRC8(const std::string& name, const int* mode, const ros::Duration dt)
-  : DensoController(name, mode, dt)
-{
-}
-
-DensoControllerRC8::~DensoControllerRC8()
-{
-}
-
-HRESULT DensoControllerRC8::AddController()
-{
-  static const std::string CTRL_CONNECT_OPTION[BCAP_CONTROLLER_CONNECT_ARGS]
-                                               = { "", "CaoProv.DENSO.VRC", "localhost", "" };
-
-  HRESULT hr = E_FAIL;
-  int srvs, argc;
-
-  if (m_duration != ros::Duration(0.008))
-  {
-    ROS_ERROR("Invalid argument value [bcap_slave_control_cycle_msec]");
-    return E_INVALIDARG;
-  }
-
-  for (srvs = DensoBase::SRV_MIN; srvs <= DensoBase::SRV_MAX; srvs++)
-  {
-    std::stringstream ss;
-    std::string strTmp;
-    VARIANT_Ptr vntRet(new VARIANT());
-    VARIANT_Vec vntArgs;
-
-    VariantInit(vntRet.get());
-
-    for (argc = 0; argc < BCAP_CONTROLLER_CONNECT_ARGS; argc++)
-    {
-      VARIANT_Ptr vntTmp(new VARIANT());
-      VariantInit(vntTmp.get());
-
-      vntTmp->vt = VT_BSTR;
-
-      if (argc == 0)
-      {
-        strTmp = "";
-        if (m_name != "")
-        {
-          ss << ros::this_node::getNamespace() << m_name << srvs;
-          strTmp = ss.str();
-        }
-      }
-      else
-      {
-        strTmp = CTRL_CONNECT_OPTION[argc];
-      }
-
-      vntTmp->bstrVal = ConvertStringToBSTR(strTmp);
-
-      vntArgs.push_back(*vntTmp.get());
-    }
-
-    hr = m_vecService[srvs]->ExecFunction(ID_CONTROLLER_CONNECT, vntArgs, vntRet);
-    if (FAILED(hr))
-      break;
-
-    m_vecHandle.push_back(vntRet->ulVal);
-  }
-
-  return hr;
-}
-
-HRESULT DensoControllerRC8::AddRobot(XMLElement* xmlElem)
+HRESULT DensoControllerRC8Cobotta::AddRobot(XMLElement* xmlElem)
 {
   int objs;
   HRESULT hr;
-
   Name_Vec vecName;
+
   hr = DensoBase::GetObjectNames(ID_CONTROLLER_GETROBOTNAMES, vecName);
   if (SUCCEEDED(hr))
   {
@@ -110,7 +42,7 @@ HRESULT DensoControllerRC8::AddRobot(XMLElement* xmlElem)
       if (FAILED(hr))
         break;
 
-      DensoRobot_Ptr rob(new DensoRobotRC8(this, m_vecService, vecHandle, vecName[objs], m_mode));
+      DensoRobot_Ptr rob(new DensoRobotRC8Cobotta(this, m_vecService, vecHandle, vecName[objs], m_mode));
       hr = rob->InitializeBCAP(xmlElem);
       if (FAILED(hr))
         break;
@@ -122,7 +54,7 @@ HRESULT DensoControllerRC8::AddRobot(XMLElement* xmlElem)
   return hr;
 }
 
-HRESULT DensoControllerRC8::get_Robot(int index, DensoRobotRC8_Ptr* robot)
+HRESULT DensoControllerRC8Cobotta::get_Robot(int index, DensoRobotRC8Cobotta_Ptr* robot)
 {
   if (robot == NULL)
   {
@@ -136,7 +68,36 @@ HRESULT DensoControllerRC8::get_Robot(int index, DensoRobotRC8_Ptr* robot)
   HRESULT hr = DensoBase::get_Object(vecBase, index, &pBase);
   if (SUCCEEDED(hr))
   {
-    *robot = boost::dynamic_pointer_cast<DensoRobotRC8>(pBase);
+    *robot = boost::dynamic_pointer_cast<DensoRobotRC8Cobotta>(pBase);
+  }
+
+  return hr;
+}
+
+/**
+ * Clear an error that occurs in the controller.
+ * Do NOT call on b-CAP Slave.
+ * @return HRESULT
+ */
+HRESULT DensoControllerRC8Cobotta::ExecClearError()
+{
+  DensoRobotRC8Cobotta_Ptr pRob;
+  HRESULT hr;
+
+  hr = this->get_Robot(0, &pRob);
+  if (FAILED(hr))
+  {
+    return hr;
+  }
+  hr = pRob->ExecManualResetPreparation();
+  if (FAILED(hr))
+  {
+    return hr;
+  }
+  hr = DensoControllerRC8::ExecClearError();
+  if (FAILED(hr))
+  {
+    return hr;
   }
 
   return hr;
@@ -147,15 +108,45 @@ HRESULT DensoControllerRC8::get_Robot(int index, DensoRobotRC8_Ptr* robot)
  * Do NOT call on b-CAP Slave.
  * @return HRESULT
  */
-HRESULT DensoControllerRC8::ExecResetStoState()
+HRESULT DensoControllerRC8Cobotta::ExecResetStoState()
 {
-  /*
-   * NOTE:
-   *
-   * RC8: Do nothing.
-   * RC8A: Do nothing because "ClearError" can reset the STO together.
-   */
-  return 0;
+  DensoRobotRC8Cobotta_Ptr pRob;
+  HRESULT hr;
+
+  hr = this->get_Robot(0, &pRob);
+  if (FAILED(hr))
+  {
+    return hr;
+  }
+  hr = pRob->ExecManualResetPreparation();
+  if (FAILED(hr))
+  {
+    return hr;
+  }
+  hr = pRob->ExecMotionPreparation();
+  if (FAILED(hr))
+  {
+    return hr;
+  }
+
+  return hr;
+}
+
+/**
+ * @param robot_name
+ * @return True if robot_name is COBOTTA.
+ */
+bool DensoControllerRC8Cobotta::IsCobotta(const std::string& robot_name)
+{
+  std::string cobotta = ROBOT_NAME_RC8_COBOTTA;
+
+  if (std::equal(cobotta.begin(),cobotta.end(),
+                 robot_name.begin(), robot_name.begin() + cobotta.length()))
+  {
+    return true;
+  }
+
+  return false;
 }
 
 }  // namespace denso_robot_core

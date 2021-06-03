@@ -114,8 +114,8 @@ HRESULT DensoTask::AddVariable(XMLElement* xmlElem)
   HRESULT hr = S_OK;
   XMLElement* xmlVar;
 
-  for (xmlVar = xmlElem->FirstChildElement(XML_VARIABLE_NAME); xmlVar != NULL;
-       xmlVar = xmlVar->NextSiblingElement(XML_VARIABLE_NAME))
+  for (xmlVar = xmlElem->FirstChildElement(DensoVariable::XML_VARIABLE_NAME); xmlVar != NULL;
+       xmlVar = xmlVar->NextSiblingElement(DensoVariable::XML_VARIABLE_NAME))
   {
     hr = DensoBase::AddVariable(ID_TASK_GETVARIABLE, xmlVar, m_vecVar);
     if (FAILED(hr))

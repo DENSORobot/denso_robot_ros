@@ -24,6 +24,7 @@
 
 #include "denso_robot_core/denso_robot_core.h"
 #include "denso_robot_core/denso_controller_rc8.h"
+#include "denso_robot_core/denso_controller_rc8_cobotta.h"
 #include "denso_robot_core/denso_controller_rc9.h"
 #include <boost/thread.hpp>
 
@@ -70,6 +71,7 @@ HRESULT DensoRobotCore::Initialize()
   ros::NodeHandle node;
   std::string name, filename;
   float ctrl_cycle_msec;
+  std::string robot_name;
 
   if (!node.getParam("controller_name", name))
   {
@@ -90,11 +92,22 @@ HRESULT DensoRobotCore::Initialize()
   {
     return E_FAIL;
   }
+  if (!node.getParam("robot_name", robot_name))
+  {
+    return E_FAIL;
+  }
 
   switch (m_ctrlType)
   {
     case 8:
-      m_ctrl = boost::make_shared<DensoControllerRC8>(name, &m_mode, ros::Duration(ctrl_cycle_msec / 1000.0));
+      if (DensoControllerRC8Cobotta::IsCobotta(robot_name))
+      {
+        m_ctrl = boost::make_shared<DensoControllerRC8Cobotta>(name, &m_mode, ros::Duration(ctrl_cycle_msec / 1000.0));
+      }
+      else
+      {
+        m_ctrl = boost::make_shared<DensoControllerRC8>(name, &m_mode, ros::Duration(ctrl_cycle_msec / 1000.0));
+      }
       break;
     case 9:
       m_ctrl = boost::make_shared<DensoControllerRC9>(name, &m_mode, ros::Duration(ctrl_cycle_msec / 1000.0));

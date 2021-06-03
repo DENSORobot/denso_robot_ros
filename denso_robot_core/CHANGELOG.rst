@@ -2,6 +2,15 @@
 Changelog for package denso_robot_core
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+3.2.0 (2021-06-02)
+------------------
+* Add "ResetStoState" to clear the STO state for RC9 and COBOTTA
+* Add "ManualResetPreparation" to confirm safey-related command for COBOTTA
+* Add "MotionPreparation" to execute Motion preparation for COBOTTA
+* Add "AutoCal" to execute CALSET for COBOTTA
+* Change "ClearError" to execute "ManualResetPreparation" first for COBOTTA
+* Change most of the macros to constants
+
 3.1.2 (2021-04-02)
 ------------------
 

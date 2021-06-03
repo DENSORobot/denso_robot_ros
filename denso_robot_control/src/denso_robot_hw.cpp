@@ -138,6 +138,33 @@ HRESULT DensoRobotHW::Initialize()
 
   m_rob->ChangeArmGroup(armGroup);
 
+  hr = m_ctrl->AddVariable("@ERROR_CODE");
+  if (FAILED(hr))
+  {
+    printErrorDescription(hr, "Failed to add @ERROR_CODE object");
+    return hr;
+  }
+  hr = m_ctrl->get_Variable("@ERROR_CODE", &m_varErr);
+  if (FAILED(hr))
+  {
+    printErrorDescription(hr, "Failed to get @ERROR_CODE object");
+    return hr;
+  }
+
+  hr = m_ctrl->ExecClearError();
+  if (FAILED(hr))
+  {
+    printErrorDescription(hr, "Failed to clear error");
+    return hr;
+  }
+
+  hr = m_ctrl->ExecResetStoState();
+  if (FAILED(hr))
+  {
+    printErrorDescription(hr, "Failed to reset STO");
+    return hr;
+  }
+
   hr = m_rob->ExecCurJnt(m_joint);
   if (FAILED(hr))
   {
@@ -163,26 +190,6 @@ HRESULT DensoRobotHW::Initialize()
   }
   registerInterface(&m_JntStInterface);
   registerInterface(&m_PosJntInterface);
-
-  hr = m_ctrl->AddVariable("@ERROR_CODE");
-  if (FAILED(hr))
-  {
-    printErrorDescription(hr, "Failed to add @ERROR_CODE object");
-    return hr;
-  }
-  hr = m_ctrl->get_Variable("@ERROR_CODE", &m_varErr);
-  if (FAILED(hr))
-  {
-    printErrorDescription(hr, "Failed to get @ERROR_CODE object");
-    return hr;
-  }
-
-  hr = m_ctrl->ExecClearError();
-  if (FAILED(hr))
-  {
-    printErrorDescription(hr, "Failed to clear error");
-    return hr;
-  }
 
   hr = m_rob->AddVariable("@SERVO_ON");
   if (SUCCEEDED(hr))
@@ -433,7 +440,7 @@ void DensoRobotHW::write(ros::Time time, ros::Duration period)
         m_pubRecvUserIO.publish(msg);
       }
     }
-    else if (FAILED(hr) && (hr != E_BUF_FULL))
+    else if (FAILED(hr) && (hr != DensoRobot::E_BUF_FULL))
     {
       int error_count = 0;
 

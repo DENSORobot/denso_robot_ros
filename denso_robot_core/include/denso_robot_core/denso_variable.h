@@ -27,19 +27,23 @@
 
 #include "denso_robot_core/denso_base.h"
 
-#define XML_VARIABLE_NAME "Variable"
-
-#define XML_ATTR_VARTYPE "vt"
-#define XML_ATTR_READ "read"
-#define XML_ATTR_WRITE "write"
-#define XML_ATTR_ID "id"
-#define XML_ATTR_DURATION "duration"
-
 namespace denso_robot_core
 {
 class DensoVariable : public DensoBase
 {
 public:
+  static constexpr const char* NAME_READ = "_Read";
+  static constexpr const char* NAME_WRITE = "_Write";
+  static constexpr const char* NAME_ID = "_ID";
+
+  static constexpr const char* XML_VARIABLE_NAME = "Variable";
+
+  static constexpr const char* XML_ATTR_VARTYPE = "vt";
+  static constexpr const char* XML_ATTR_READ = "read";
+  static constexpr const char* XML_ATTR_WRITE = "write";
+  static constexpr const char* XML_ATTR_ID = "id";
+  static constexpr const char* XML_ATTR_DURATION = "duration";
+
   DensoVariable(DensoBase* parent, Service_Vec& service, Handle_Vec& handle, const std::string& name, const int* mode,
                 int16_t vt, bool Read, bool Write, bool ID, int Duration);
 

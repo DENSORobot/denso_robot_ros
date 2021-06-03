@@ -24,10 +24,6 @@
 
 #include "denso_robot_core/denso_variable.h"
 
-#define NAME_READ "_Read"
-#define NAME_WRITE "_Write"
-#define NAME_ID "_ID"
-
 namespace denso_robot_core
 {
 DensoVariable::DensoVariable(DensoBase* parent, Service_Vec& service, Handle_Vec& handle, const std::string& name,

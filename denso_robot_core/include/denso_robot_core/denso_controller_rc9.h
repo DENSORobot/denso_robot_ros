@@ -36,6 +36,10 @@ public:
   DensoControllerRC9(const std::string& name, const int* mode, const ros::Duration dt);
   virtual ~DensoControllerRC9();
 
+  HRESULT get_Robot(int index, DensoRobotRC9_Ptr* robot);
+
+  virtual HRESULT ExecResetStoState() override;
+
 private:
   HRESULT AddController();
   HRESULT AddRobot(XMLElement* xmlElem);

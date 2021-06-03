@@ -24,8 +24,6 @@
 
 #include "denso_robot_core/denso_controller.h"
 
-#define BCAP_CONTROLLER_EXECUTE_ARGS (3)
-
 namespace denso_robot_core
 {
 DensoController::DensoController(const std::string& name, const int* mode, const ros::Duration dt)
@@ -74,7 +72,7 @@ HRESULT DensoController::InitializeBCAP(const std::string& filename)
   if (FAILED(hr))
     return hr;
 
-  xmlCtrl = xmlDoc.FirstChildElement(XML_CTRL_NAME);
+  xmlCtrl = xmlDoc.FirstChildElement(DensoController::XML_CTRL_NAME);
   if (xmlCtrl == NULL)
     return E_FAIL;
 
@@ -82,7 +80,7 @@ HRESULT DensoController::InitializeBCAP(const std::string& filename)
   if (FAILED(hr))
     return hr;
 
-  xmlRob = xmlCtrl->FirstChildElement(XML_ROBOT_NAME);
+  xmlRob = xmlCtrl->FirstChildElement(DensoRobot::XML_ROBOT_NAME);
   if (xmlRob == NULL)
     return E_FAIL;
 
@@ -90,7 +88,7 @@ HRESULT DensoController::InitializeBCAP(const std::string& filename)
   if (FAILED(hr))
     return hr;
 
-  xmlTsk = xmlCtrl->FirstChildElement(XML_TASK_NAME);
+  xmlTsk = xmlCtrl->FirstChildElement(DensoTask::XML_TASK_NAME);
   if (xmlTsk == NULL)
     return E_FAIL;
 
@@ -277,8 +275,8 @@ HRESULT DensoController::AddVariable(XMLElement* xmlElem)
   HRESULT hr = S_OK;
   XMLElement* xmlVar;
 
-  for (xmlVar = xmlElem->FirstChildElement(XML_VARIABLE_NAME); xmlVar != NULL;
-       xmlVar = xmlVar->NextSiblingElement(XML_VARIABLE_NAME))
+  for (xmlVar = xmlElem->FirstChildElement(DensoVariable::XML_VARIABLE_NAME); xmlVar != NULL;
+       xmlVar = xmlVar->NextSiblingElement(DensoVariable::XML_VARIABLE_NAME))
   {
     hr = DensoBase::AddVariable(ID_CONTROLLER_GETVARIABLE, xmlVar, m_vecVar);
     if (FAILED(hr))

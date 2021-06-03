@@ -26,9 +26,6 @@
 #include "denso_robot_core/denso_base.h"
 #include "denso_robot_core/denso_variable.h"
 
-#define BCAP_GET_OBJECT_ARGS (3)
-#define BCAP_GET_OBJECTNAMES_ARGS (2)
-
 namespace denso_robot_core
 {
 std::string DensoBase::ConvertBSTRToString(const BSTR bstr)
@@ -120,23 +117,23 @@ HRESULT DensoBase::AddVariable(int32_t get_id, const XMLElement* xmlVar, DensoVa
 
   name = xmlVar->GetText();
 
-  chTmp = xmlVar->Attribute(XML_ATTR_VARTYPE);
+  chTmp = xmlVar->Attribute(DensoVariable::XML_ATTR_VARTYPE);
   if (chTmp != NULL)
     vt = atoi(chTmp);
 
-  chTmp = xmlVar->Attribute(XML_ATTR_READ);
+  chTmp = xmlVar->Attribute(DensoVariable::XML_ATTR_READ);
   if (chTmp != NULL)
     bRead = (strcasecmp(chTmp, "true") == 0);
 
-  chTmp = xmlVar->Attribute(XML_ATTR_WRITE);
+  chTmp = xmlVar->Attribute(DensoVariable::XML_ATTR_WRITE);
   if (chTmp != NULL)
     bWrite = (strcasecmp(chTmp, "true") == 0);
 
-  chTmp = xmlVar->Attribute(XML_ATTR_ID);
+  chTmp = xmlVar->Attribute(DensoVariable::XML_ATTR_ID);
   if (chTmp != NULL)
     bID = (strcasecmp(chTmp, "true") == 0);
 
-  chTmp = xmlVar->Attribute(XML_ATTR_DURATION);
+  chTmp = xmlVar->Attribute(DensoVariable::XML_ATTR_DURATION);
   if (chTmp != NULL)
     iDuration = atoi(chTmp);
 

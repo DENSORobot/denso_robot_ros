@@ -22,31 +22,28 @@
  * THE SOFTWARE.
  */
 
-#ifndef DENSO_CONTROLLER_RC8_H
-#define DENSO_CONTROLLER_RC8_H
+#ifndef DENSO_ROBOT_RC8_COBOTTA_H
+#define DENSO_ROBOT_RC8_COBOTTA_H
 
-#include "denso_robot_core/denso_controller.h"
+#include <boost/thread.hpp>
 #include "denso_robot_core/denso_robot_rc8.h"
 
 namespace denso_robot_core
 {
-class DensoControllerRC8 : public DensoController
+class DensoRobotRC8Cobotta : public DensoRobotRC8
 {
 public:
-  DensoControllerRC8(const std::string& name, const int* mode, const ros::Duration dt);
-  virtual ~DensoControllerRC8();
+  using DensoRobotRC8::DensoRobotRC8;
+  virtual ~DensoRobotRC8Cobotta() = default;
 
-  HRESULT get_Robot(int index, DensoRobotRC8_Ptr* robot);
+  HRESULT ExecManualResetPreparation();
+  HRESULT ExecMotionPreparation();
+  HRESULT ExecAutoCal();
 
-  virtual HRESULT ExecResetStoState() override;
-
-private:
-  HRESULT AddController();
-  HRESULT AddRobot(XMLElement* xmlElem);
 };
 
-typedef boost::shared_ptr<DensoControllerRC8> DensoControllerRC8_Ptr;
+typedef boost::shared_ptr<DensoRobotRC8Cobotta> DensoRobotRC8Cobotta_Ptr;
 
 }  // namespace denso_robot_core
 
-#endif  // DENSO_CONTROLLER_RC8_H
+#endif  // DENSO_ROBOT_RC8_COBOTTA_H

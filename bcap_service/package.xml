@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <package>
   <name>bcap_service</name>
-  <version>3.1.2</version>
+  <version>3.2.0</version>
   <description>The bcap service package includes a node for communicating ORiN from ROS.</description>
   <maintainer email="fa-support@denso-wave.com">DENSO WAVE INCORPORATED</maintainer>
   <license>MIT</license>
