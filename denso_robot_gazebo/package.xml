@@ -9,9 +9,11 @@
   <author email="fa-support@denso-wave.com">DENSO WAVE INCORPORATED</author>
 
   <buildtool_depend>catkin</buildtool_depend>
+  <run_depend>denso_robot_descriptions</run_depend>
   <run_depend>gazebo_ros_control</run_depend>
   <run_depend>gazebo_ros_pkgs</run_depend>
   <run_depend>joint_state_controller</run_depend>
   <run_depend>joint_trajectory_controller</run_depend>
+  <run_depend>robot_state_publisher</run_depend>
 
 </package>
