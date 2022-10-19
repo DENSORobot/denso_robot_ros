@@ -34,11 +34,11 @@
 #include <time.h>
 #include <sys/time.h>
 #else
-#include "dn_additional.h"
+#include "bcap_core/dn_additional.h"
 #endif
 
-#include "dn_common.h"
-#include "dn_thread.h"
+#include "bcap_core/dn_common.h"
+#include "bcap_core/dn_thread.h"
 
 #if defined(_USE_LINUX_API)
 /**

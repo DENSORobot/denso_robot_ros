@@ -36,18 +36,18 @@
 #include <pthread.h>
 #include <termios.h>
 #else
-#include "dn_additional.h"
+#include "bcap_core/dn_additional.h"
 #endif
 
-#include "dn_common.h"
-#include "dn_device.h"
-#include "dn_tcp.h"
-#include "dn_udp.h"
-#include "dn_com.h"
-#include "dn_thread.h"
-#include "bcap_common.h"
-#include "bcap_mapid.h"
-#include "bcap_server.h"
+#include "bcap_core/dn_common.h"
+#include "bcap_core/dn_device.h"
+#include "bcap_core/dn_tcp.h"
+#include "bcap_core/dn_udp.h"
+#include "bcap_core/dn_com.h"
+#include "bcap_core/dn_thread.h"
+#include "bcap_core/bcap_common.h"
+#include "bcap_core/bCAPServer/bcap_mapid.h"
+#include "bcap_core/bCAPServer/bcap_server.h"
 
 /**
  * @def	  _BCAP_SERVER_MAX

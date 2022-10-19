@@ -25,13 +25,16 @@
 #ifndef _BCAP_SERVICE_H_
 #define _BCAP_SERVICE_H_
 
-#include <ros/ros.h>
+#include <rclcpp/rclcpp.hpp>
 #include <boost/interprocess/smart_ptr/unique_ptr.hpp>
 
 #include "variant_allocator.h"
-#include "bcap_service/bcap.h"
+#include "bcap_service/msg/variant.hpp"
+#include "bcap_service/srv/bcap.hpp"
 #include "bcap_core/dn_common.h"
 #include "bcap_core/dn_device.h"
+
+#include "visibility_control.h"
 
 typedef std::pair<int32_t,uint32_t> KeyHandle;
 typedef std::vector<KeyHandle>      KeyHandle_Vec;

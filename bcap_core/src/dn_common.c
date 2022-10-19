@@ -41,7 +41,7 @@
 #endif
 #endif
 
-#include "dn_common.h"
+#include "bcap_core/dn_common.h"
 
 /**
  * @def   _LEN_VARIANT2BSTR

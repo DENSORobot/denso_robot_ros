@@ -34,18 +34,18 @@
 #include <arpa/inet.h>
 #include <termios.h>
 #else
-#include "dn_additional.h"
+#include "bcap_core/dn_additional.h"
 #endif
 
-#include "dn_common.h"
-#include "dn_device.h"
-#include "dn_tcp.h"
-#include "dn_udp.h"
-#include "dn_com.h"
-#include "dn_thread.h"
-#include "bcap_common.h"
-#include "bcap_funcid.h"
-#include "bcap_client.h"
+#include "bcap_core/dn_common.h"
+#include "bcap_core/dn_device.h"
+#include "bcap_core/dn_tcp.h"
+#include "bcap_core/dn_udp.h"
+#include "bcap_core/dn_com.h"
+#include "bcap_core/dn_thread.h"
+#include "bcap_core/bcap_common.h"
+#include "bcap_core/bcap_funcid.h"
+#include "bcap_core/bCAPClient/bcap_client.h"
 
 /**
  * @def   _RETRY_MIN

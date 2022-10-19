@@ -37,11 +37,11 @@
 #define strnicmp strncasecmp
 #endif
 #else
-#include "dn_additional.h"
+#include "bcap_core/dn_additional.h"
 #endif
 
-#include "dn_common.h"
-#include "dn_device.h"
+#include "bcap_core/dn_common.h"
+#include "bcap_core/dn_device.h"
 
 #define _STR_ISNUMERIC "0123456789"
 

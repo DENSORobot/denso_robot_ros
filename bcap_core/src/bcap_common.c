@@ -32,7 +32,7 @@
 #if defined(_USE_LINUX_API)
 #include <arpa/inet.h>
 #else
-#include "dn_additional.h"
+#include "bcap_core/dn_additional.h"
 #endif
 
 /**
@@ -49,10 +49,10 @@
 
 #endif
 
-#include "dn_common.h"
-#include "dn_device.h"
-#include "dn_udp.h"
-#include "bcap_common.h"
+#include "bcap_core/dn_common.h"
+#include "bcap_core/dn_device.h"
+#include "bcap_core/dn_udp.h"
+#include "bcap_core/bcap_common.h"
 
 static HRESULT
 bcap_vntary2bytary(const VARIANT *src, uint32_t argc, char *dst,

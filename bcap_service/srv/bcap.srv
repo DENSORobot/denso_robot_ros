@@ -1,5 +1,0 @@
-int32 func_id
-variant[] vntArgs
----
-int32 HRESULT
-variant vntRet
