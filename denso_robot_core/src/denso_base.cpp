@@ -23,8 +23,8 @@
  */
 
 #include <stdlib.h>
-#include "denso_robot_core/denso_base.h"
-#include "denso_robot_core/denso_variable.h"
+#include "denso_robot_core/denso_base.hpp"
+#include "denso_robot_core/denso_variable.hpp"
 
 namespace denso_robot_core
 {
@@ -58,32 +58,6 @@ BSTR DensoBase::ConvertStringToBSTR(const std::string& str)
   return strRet;
 }
 
-std::string DensoBase::RosName() const
-{
-  std::string tmpName = m_name;
-
-  // Replace space to _
-  std::replace(tmpName.begin(), tmpName.end(), ' ', '_');
-
-  // Replace backslash to /
-  std::replace(tmpName.begin(), tmpName.end(), '\\', '/');
-
-  // Erase @
-  size_t c;
-  while ((c = tmpName.find_first_of("@")) != std::string::npos)
-  {
-    tmpName.erase(c, 1);
-  }
-
-  // Erase *
-  while ((c = tmpName.find_first_of("*")) != std::string::npos)
-  {
-    tmpName.erase(c, 1);
-  }
-
-  return tmpName;
-}
-
 HRESULT DensoBase::AddVariable(int32_t get_id, const std::string& name, DensoVariable_Vec& vecVar, int16_t vt,
                                bool bRead, bool bWrite, bool bID, int iDuration)
 {
@@ -98,7 +72,7 @@ HRESULT DensoBase::AddVariable(int32_t get_id, const std::string& name, DensoVar
       return hr;
 
     DensoVariable_Ptr var(
-        new DensoVariable(this, m_vecService, vecHandle, name, m_mode, vt, bRead, bWrite, bID, iDuration));
+        new DensoVariable(this, vecService_, vecHandle, name, mode_, vt, bRead, bWrite, bID, iDuration));
 
     vecVar.push_back(var);
   }
@@ -143,7 +117,7 @@ HRESULT DensoBase::AddVariable(int32_t get_id, const XMLElement* xmlVar, DensoVa
     return hr;
 
   DensoVariable_Ptr var(
-      new DensoVariable(this, m_vecService, vecHandle, name, m_mode, vt, bRead, bWrite, bID, iDuration));
+      new DensoVariable(this, vecService_, vecHandle, name, mode_, vt, bRead, bWrite, bID, iDuration));
 
   vecVar.push_back(var);
 
@@ -171,7 +145,7 @@ HRESULT DensoBase::AddObject(int32_t get_id, const std::string& name, Handle_Vec
       {
         case 0:
           vntTmp->vt = VT_UI4;
-          vntTmp->ulVal = m_vecHandle[srvs];
+          vntTmp->ulVal = vecHandle_[srvs];
           break;
         case 1:
           vntTmp->vt = VT_BSTR;
@@ -186,7 +160,7 @@ HRESULT DensoBase::AddObject(int32_t get_id, const std::string& name, Handle_Vec
       vntArgs.push_back(*vntTmp.get());
     }
 
-    hr = m_vecService[srvs]->ExecFunction(get_id, vntArgs, vntRet);
+    hr = vecService_[srvs]->ExecFunction(get_id, vntArgs, vntRet);
     if (FAILED(hr))
       break;
 
@@ -213,7 +187,7 @@ HRESULT DensoBase::GetObjectNames(int32_t func_id, Name_Vec& vecName)
     if (argc == 0)
     {
       vntTmp->vt = VT_UI4;
-      vntTmp->ulVal = m_vecHandle[SRV_WATCH];
+      vntTmp->ulVal = vecHandle_[SRV_WATCH];
     }
     else
     {
@@ -224,7 +198,7 @@ HRESULT DensoBase::GetObjectNames(int32_t func_id, Name_Vec& vecName)
     vntArgs.push_back(*vntTmp.get());
   }
 
-  hr = m_vecService[SRV_WATCH]->ExecFunction(func_id, vntArgs, vntRet);
+  hr = vecService_[SRV_WATCH]->ExecFunction(func_id, vntArgs, vntRet);
   if (SUCCEEDED(hr))
   {
     BSTR* pbstr;

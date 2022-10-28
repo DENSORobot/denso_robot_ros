@@ -10,9 +10,29 @@ find_package(ament_cmake REQUIRED)
 find_package(rosidl_default_generators REQUIRED)
 find_package(std_msgs REQUIRED)
 
-rosidl_generate_interfaces(${PROJECT_NAME}
+set(msg_files
   "msg/Variant.msg"
-  "srv/Bcap.srv"
+  "msg/ExJoints.msg"
+  "msg/Joints.msg"
+  "msg/PoseData.msg"
+  "msg/UserIO.msg"
+)
+
+# set(srv_files
+#   "srv/Bcap.srv"
+# )
+
+set(action_files
+  "action/DriveString.action"
+  "action/DriveValue.action"
+  "action/MoveString.action"
+  "action/MoveValue.action"
+)
+
+
+rosidl_generate_interfaces(${PROJECT_NAME}
+  ${msg_files}
+  ${action_files}
   DEPENDENCIES std_msgs # Add packages that above messages depend on, in this case geometry_msgs for Sphere.msg
 )
 # uncomment the following section in order to fill in

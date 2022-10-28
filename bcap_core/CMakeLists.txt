@@ -37,6 +37,7 @@ if(WIN32)
 else(WIN32) # Linux
   # Search catkin
   find_package(ament_cmake REQUIRED)
+  
   if(ament_cmake_FOUND)
     option  (_USE_CATKIN "Use catkin for installation" ON)
     if(_USE_CATKIN)
@@ -104,7 +105,7 @@ endif(MSVC AND "${_VS_VER}" MATCHES "v([0-9]?[0-9])")
 
 
 # bcap_client library
-add_library(bcap_client
+add_library(bcap_client SHARED
   src/bCAPClient/bcap_client.c
   src/bcap_common.c
   src/dn_com.c
@@ -116,7 +117,7 @@ add_library(bcap_client
   src/dn_udp.c
 )
 
-target_include_directories(bcap_client PUBLIC
+target_include_directories(bcap_client
   PUBLIC
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
   $<INSTALL_INTERFACE:include>
@@ -129,7 +130,7 @@ if(_USE_LINUX_API)
 endif(_USE_LINUX_API)
 
 # bcap_server library
-add_library(bcap_server
+add_library(bcap_server SHARED
   src/bCAPServer/bcap_server.c
   src/bcap_common.c
   src/dn_com.c
@@ -141,7 +142,7 @@ add_library(bcap_server
   src/dn_udp.c
 )
 
-target_include_directories(bcap_server PUBLIC
+target_include_directories(bcap_server
   PUBLIC
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
   $<INSTALL_INTERFACE:include>
@@ -154,19 +155,19 @@ if(_USE_LINUX_API)
 endif(_USE_LINUX_API)
 
 # rac_string library
-add_library(rac_string
+add_library(rac_string SHARED
   src/RACString/rac_string.c
   src/dn_common.c
 )
 
-target_include_directories(rac_string PUBLIC
+target_include_directories(rac_string
   PUBLIC
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
   $<INSTALL_INTERFACE:include>
 )
 
 # tpcomm library
-add_library(tpcomm
+add_library(tpcomm SHARED
   src/TPComm/dn_tpcomm.c
   src/dn_com.c
   src/dn_common.c
@@ -177,7 +178,7 @@ add_library(tpcomm
   src/dn_udp.c
 )
 
-target_include_directories(tpcomm PUBLIC
+target_include_directories(tpcomm
   PUBLIC
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
   $<INSTALL_INTERFACE:include>
@@ -199,6 +200,7 @@ install(TARGETS bcap_client bcap_server rac_string tpcomm
   ARCHIVE DESTINATION lib
   LIBRARY DESTINATION lib
   RUNTIME DESTINATION lib/{${PROJECT_NAME}}
+  INCLUDES DESTIONATION include
 )
 
 # headers
@@ -206,6 +208,17 @@ install(DIRECTORY include/
   DESTINATION include
   FILES_MATCHING PATTERN "*.h"
 )
+
+ament_export_include_directories(
+  include
+)
+ament_export_libraries(
+  bcap_client 
+  bcap_server 
+  rac_string 
+  tpcomm
+)
+
 ament_package()
 
 else(_USE_CATKIN)

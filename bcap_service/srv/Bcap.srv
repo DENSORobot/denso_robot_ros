@@ -1,5 +1,0 @@
-int32 func_id
-Variant[] vntreq
----
-int32 result
-Variant vntret

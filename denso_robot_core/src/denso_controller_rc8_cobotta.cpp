@@ -22,32 +22,31 @@
  * THE SOFTWARE.
  */
 
-#include "denso_robot_core/denso_controller_rc8_cobotta.h"
+#include "denso_robot_core/denso_controller_rc8_cobotta.hpp"
 
 namespace denso_robot_core
 {
 HRESULT DensoControllerRC8Cobotta::AddRobot(XMLElement* xmlElem)
 {
-  int objs;
   HRESULT hr;
   Name_Vec vecName;
 
   hr = DensoBase::GetObjectNames(ID_CONTROLLER_GETROBOTNAMES, vecName);
   if (SUCCEEDED(hr))
   {
-    for (objs = 0; objs < vecName.size(); objs++)
+    for (size_t objs = 0; objs < vecName.size(); objs++)
     {
       Handle_Vec vecHandle;
       hr = DensoBase::AddObject(ID_CONTROLLER_GETROBOT, vecName[objs], vecHandle);
       if (FAILED(hr))
         break;
 
-      DensoRobot_Ptr rob(new DensoRobotRC8Cobotta(this, m_vecService, vecHandle, vecName[objs], m_mode));
+      DensoRobot_Ptr rob(new DensoRobotRC8Cobotta(this, vecService_, vecHandle, vecName[objs], mode_));
       hr = rob->InitializeBCAP(xmlElem);
       if (FAILED(hr))
         break;
 
-      m_vecRobot.push_back(rob);
+      vecRobot_.push_back(rob);
     }
   }
 
@@ -62,7 +61,7 @@ HRESULT DensoControllerRC8Cobotta::get_Robot(int index, DensoRobotRC8Cobotta_Ptr
   }
 
   DensoBase_Vec vecBase;
-  vecBase.insert(vecBase.end(), m_vecRobot.begin(), m_vecRobot.end());
+  vecBase.insert(vecBase.end(), vecRobot_.begin(), vecRobot_.end());
 
   DensoBase_Ptr pBase;
   HRESULT hr = DensoBase::get_Object(vecBase, index, &pBase);

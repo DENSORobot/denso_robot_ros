@@ -14,8 +14,9 @@
   <test_depend>ament_lint_common</test_depend>
 
   <run_depend>bcap_core</run_depend>
-  <!-- <run_depend>bcap_service</run_depend>
-  <run_depend>bcap_service_test</run_depend>
+  <run_depend>bcap_service</run_depend>
+  <run_depend>denso_msgs</run_depend>
+  <!-- <run_depend>bcap_service_test</run_depend>
   <run_depend>denso_robot_bringup</run_depend>
   <run_depend>denso_robot_control</run_depend>
   <run_depend>denso_robot_core</run_depend>

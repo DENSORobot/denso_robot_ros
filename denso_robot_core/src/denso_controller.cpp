@@ -22,17 +22,18 @@
  * THE SOFTWARE.
  */
 
-#include "denso_robot_core/denso_controller.h"
+#include "denso_robot_core/denso_controller.hpp"
+#include "boost/make_shared.hpp"
 
 namespace denso_robot_core
 {
-DensoController::DensoController(const std::string& name, const int* mode, const ros::Duration dt)
-  : DensoBase(name, mode), m_duration(dt)
+DensoController::DensoController(const std::string& name, const int* mode)
+  : DensoBase(name, mode)
 {
   for (int srvs = DensoBase::SRV_MIN; srvs <= DensoBase::SRV_MAX; srvs++)
   {
-    BCAPService_Ptr service = boost::make_shared<bcap_service::BCAPService>();
-    service->parseParams();
+    BcapService_Ptr service = boost::make_shared<bcap_service::BcapService>();
+    // service->parseParams();
     switch (srvs)
     {
       case DensoBase::SRV_ACT:
@@ -42,7 +43,7 @@ DensoController::DensoController(const std::string& name, const int* mode, const
         service->put_Type("tcp");
         break;
     }
-    m_vecService.push_back(service);
+    vecService_.push_back(service);
   }
 }
 
@@ -59,7 +60,7 @@ HRESULT DensoController::InitializeBCAP(const std::string& filename)
 
   for (int srvs = DensoBase::SRV_MIN; srvs <= DensoBase::SRV_MAX; srvs++)
   {
-    hr = m_vecService[srvs]->Connect();
+    hr = vecService_[srvs]->Connect();
     if (FAILED(hr))
       return hr;
   }
@@ -97,51 +98,51 @@ HRESULT DensoController::InitializeBCAP(const std::string& filename)
   return hr;
 }
 
-HRESULT DensoController::StartService(ros::NodeHandle& node)
+HRESULT DensoController::StartService()
 {
   DensoRobot_Vec::iterator itRob;
-  for (itRob = m_vecRobot.begin(); itRob != m_vecRobot.end(); itRob++)
+  for (itRob = vecRobot_.begin(); itRob != vecRobot_.end(); itRob++)
   {
-    (*itRob)->StartService(node);
+    (*itRob)->StartService();
   }
 
   DensoTask_Vec::iterator itTsk;
-  for (itTsk = m_vecTask.begin(); itTsk != m_vecTask.end(); itTsk++)
+  for (itTsk = vecTask_.begin(); itTsk != vecTask_.end(); itTsk++)
   {
-    (*itTsk)->StartService(node);
+    (*itTsk)->StartService();
   }
 
   DensoVariable_Vec::iterator itVar;
-  for (itVar = m_vecVar.begin(); itVar != m_vecVar.end(); itVar++)
+  for (itVar = vecVar_.begin(); itVar != vecVar_.end(); itVar++)
   {
-    (*itVar)->StartService(node);
+    (*itVar)->StartService();
   }
 
-  m_serving = true;
+  serving_ = true;
 
   return S_OK;
 }
 
 HRESULT DensoController::StopService()
 {
-  m_mtxSrv.lock();
-  m_serving = false;
-  m_mtxSrv.unlock();
+  mtxSrv_.lock();
+  serving_ = false;
+  mtxSrv_.unlock();
 
   DensoRobot_Vec::iterator itRob;
-  for (itRob = m_vecRobot.begin(); itRob != m_vecRobot.end(); itRob++)
+  for (itRob = vecRobot_.begin(); itRob != vecRobot_.end(); itRob++)
   {
     (*itRob)->StopService();
   }
 
   DensoTask_Vec::iterator itTsk;
-  for (itTsk = m_vecTask.begin(); itTsk != m_vecTask.end(); itTsk++)
+  for (itTsk = vecTask_.begin(); itTsk != vecTask_.end(); itTsk++)
   {
     (*itTsk)->StopService();
   }
 
   DensoVariable_Vec::iterator itVar;
-  for (itVar = m_vecVar.begin(); itVar != m_vecVar.end(); itVar++)
+  for (itVar = vecVar_.begin(); itVar != vecVar_.end(); itVar++)
   {
     (*itVar)->StopService();
   }
@@ -151,24 +152,24 @@ HRESULT DensoController::StopService()
 
 bool DensoController::Update()
 {
-  boost::mutex::scoped_lock lockSrv(m_mtxSrv);
-  if (!m_serving)
+  boost::mutex::scoped_lock lockSrv(mtxSrv_);
+  if (!serving_)
     return false;
 
   DensoRobot_Vec::iterator itRob;
-  for (itRob = m_vecRobot.begin(); itRob != m_vecRobot.end(); itRob++)
+  for (itRob = vecRobot_.begin(); itRob != vecRobot_.end(); itRob++)
   {
     (*itRob)->Update();
   }
 
   DensoTask_Vec::iterator itTsk;
-  for (itTsk = m_vecTask.begin(); itTsk != m_vecTask.end(); itTsk++)
+  for (itTsk = vecTask_.begin(); itTsk != vecTask_.end(); itTsk++)
   {
     (*itTsk)->Update();
   }
 
   DensoVariable_Vec::iterator itVar;
-  for (itVar = m_vecVar.begin(); itVar != m_vecVar.end(); itVar++)
+  for (itVar = vecVar_.begin(); itVar != vecVar_.end(); itVar++)
   {
     (*itVar)->Update();
   }
@@ -184,7 +185,7 @@ HRESULT DensoController::get_Robot(int index, DensoRobot_Ptr* robot)
   }
 
   DensoBase_Vec vecBase;
-  vecBase.insert(vecBase.end(), m_vecRobot.begin(), m_vecRobot.end());
+  vecBase.insert(vecBase.end(), vecRobot_.begin(), vecRobot_.end());
 
   DensoBase_Ptr pBase;
   HRESULT hr = DensoBase::get_Object(vecBase, index, &pBase);
@@ -204,7 +205,7 @@ HRESULT DensoController::get_Task(const std::string& name, DensoTask_Ptr* task)
   }
 
   DensoBase_Vec vecBase;
-  vecBase.insert(vecBase.end(), m_vecTask.begin(), m_vecTask.end());
+  vecBase.insert(vecBase.end(), vecTask_.begin(), vecTask_.end());
 
   DensoBase_Ptr pBase;
   HRESULT hr = DensoBase::get_Object(vecBase, name, &pBase);
@@ -224,7 +225,7 @@ HRESULT DensoController::get_Variable(const std::string& name, DensoVariable_Ptr
   }
 
   DensoBase_Vec vecBase;
-  vecBase.insert(vecBase.end(), m_vecVar.begin(), m_vecVar.end());
+  vecBase.insert(vecBase.end(), vecVar_.begin(), vecVar_.end());
 
   DensoBase_Ptr pBase;
   HRESULT hr = DensoBase::get_Object(vecBase, name, &pBase);
@@ -238,27 +239,26 @@ HRESULT DensoController::get_Variable(const std::string& name, DensoVariable_Ptr
 
 HRESULT DensoController::AddTask(XMLElement* xmlElem)
 {
-  int objs;
   HRESULT hr;
 
   Name_Vec vecName;
   hr = DensoBase::GetObjectNames(ID_CONTROLLER_GETTASKNAMES, vecName);
   if (SUCCEEDED(hr))
   {
-    for (objs = 0; objs < vecName.size(); objs++)
+    for (size_t objs = 0; objs < vecName.size(); objs++)
     {
       Handle_Vec vecHandle;
       hr = DensoBase::AddObject(ID_CONTROLLER_GETTASK, vecName[objs], vecHandle);
       if (FAILED(hr))
         break;
 
-      DensoTask_Ptr tsk(new DensoTask(this, m_vecService, vecHandle, vecName[objs], m_mode));
+      DensoTask_Ptr tsk(new DensoTask(this, vecService_, vecHandle, vecName[objs], mode_));
 
       hr = tsk->InitializeBCAP(xmlElem);
       if (FAILED(hr))
         break;
 
-      m_vecTask.push_back(tsk);
+      vecTask_.push_back(tsk);
     }
   }
 
@@ -267,7 +267,7 @@ HRESULT DensoController::AddTask(XMLElement* xmlElem)
 
 HRESULT DensoController::AddVariable(const std::string& name)
 {
-  return DensoBase::AddVariable(ID_CONTROLLER_GETVARIABLE, name, m_vecVar);
+  return DensoBase::AddVariable(ID_CONTROLLER_GETVARIABLE, name, vecVar_);
 }
 
 HRESULT DensoController::AddVariable(XMLElement* xmlElem)
@@ -278,7 +278,7 @@ HRESULT DensoController::AddVariable(XMLElement* xmlElem)
   for (xmlVar = xmlElem->FirstChildElement(DensoVariable::XML_VARIABLE_NAME); xmlVar != NULL;
        xmlVar = xmlVar->NextSiblingElement(DensoVariable::XML_VARIABLE_NAME))
   {
-    hr = DensoBase::AddVariable(ID_CONTROLLER_GETVARIABLE, xmlVar, m_vecVar);
+    hr = DensoBase::AddVariable(ID_CONTROLLER_GETVARIABLE, xmlVar, vecVar_);
     if (FAILED(hr))
       break;
   }
@@ -307,7 +307,7 @@ HRESULT DensoController::ExecClearError()
     {
       case 0:
         vntTmp->vt = VT_I4;
-        vntTmp->ulVal = m_vecHandle[DensoBase::SRV_WATCH];
+        vntTmp->ulVal = vecHandle_[DensoBase::SRV_WATCH];
         break;
       case 1:
         vntTmp->vt = VT_BSTR;
@@ -318,7 +318,7 @@ HRESULT DensoController::ExecClearError()
     vntArgs.push_back(*vntTmp.get());
   }
 
-  return m_vecService[DensoBase::SRV_WATCH]->ExecFunction(ID_CONTROLLER_EXECUTE, vntArgs, vntRet);
+  return vecService_[DensoBase::SRV_WATCH]->ExecFunction(ID_CONTROLLER_EXECUTE, vntArgs, vntRet);
 }
 
 /**
@@ -345,7 +345,7 @@ HRESULT DensoController::ExecGetCurErrorCount(int& count)
     {
       case 0:
         vntTmp->vt = VT_I4;
-        vntTmp->lVal = m_vecHandle[DensoBase::SRV_WATCH];
+        vntTmp->lVal = vecHandle_[DensoBase::SRV_WATCH];
         break;
       case 1:
         vntTmp->vt = VT_BSTR;
@@ -356,7 +356,7 @@ HRESULT DensoController::ExecGetCurErrorCount(int& count)
     vntArgs.push_back(*vntTmp.get());
   }
 
-  hr = m_vecService[DensoBase::SRV_WATCH]->ExecFunction(ID_CONTROLLER_EXECUTE, vntArgs, vntRet);
+  hr = vecService_[DensoBase::SRV_WATCH]->ExecFunction(ID_CONTROLLER_EXECUTE, vntArgs, vntRet);
 
   if (FAILED(hr) || (vntRet->vt != VT_I4))
   {
@@ -395,7 +395,7 @@ HRESULT DensoController::ExecGetCurErrorInfo(int error_index, HRESULT& error_cod
     {
       case 0:
         vntTmp->vt = VT_I4;
-        vntTmp->lVal = m_vecHandle[DensoBase::SRV_WATCH];
+        vntTmp->lVal = vecHandle_[DensoBase::SRV_WATCH];
         break;
       case 1:
         vntTmp->vt = VT_BSTR;
@@ -410,7 +410,7 @@ HRESULT DensoController::ExecGetCurErrorInfo(int error_index, HRESULT& error_cod
     vntArgs.push_back(*vntTmp.get());
   }
 
-  hr = m_vecService[DensoBase::SRV_WATCH]->ExecFunction(ID_CONTROLLER_EXECUTE, vntArgs, vntRet);
+  hr = vecService_[DensoBase::SRV_WATCH]->ExecFunction(ID_CONTROLLER_EXECUTE, vntArgs, vntRet);
 
   if (FAILED(hr) || (vntRet->vt != (VT_ARRAY | VT_VARIANT)))
   {
@@ -446,7 +446,7 @@ HRESULT DensoController::ExecGetErrorDescription(HRESULT error_code, std::string
   VARIANT_Vec vntArgs;
   VARIANT_Ptr vntRet(new VARIANT());
 
-  VARIANT* elements;
+  // VARIANT* elements;
 
   for (argc = 0; argc < BCAP_CONTROLLER_EXECUTE_ARGS; argc++)
   {
@@ -458,7 +458,7 @@ HRESULT DensoController::ExecGetErrorDescription(HRESULT error_code, std::string
     {
       case 0:
         vntTmp->vt = VT_I4;
-        vntTmp->lVal = m_vecHandle[DensoBase::SRV_WATCH];
+        vntTmp->lVal = vecHandle_[DensoBase::SRV_WATCH];
         break;
       case 1:
         vntTmp->vt = VT_BSTR;
@@ -473,7 +473,7 @@ HRESULT DensoController::ExecGetErrorDescription(HRESULT error_code, std::string
     vntArgs.push_back(*vntTmp.get());
   }
 
-  hr = m_vecService[DensoBase::SRV_WATCH]->ExecFunction(ID_CONTROLLER_EXECUTE, vntArgs, vntRet);
+  hr = vecService_[DensoBase::SRV_WATCH]->ExecFunction(ID_CONTROLLER_EXECUTE, vntArgs, vntRet);
 
   if (FAILED(hr) || (vntRet->vt != VT_BSTR))
   {

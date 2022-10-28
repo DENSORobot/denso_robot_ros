@@ -1,0 +1,12 @@
+<launch>
+	<param name="controller_type" value="8"/> 
+	<param name="robot_name" value="VS087A4-AV6-NNN-NNN B"/>
+	<param name="robot_joints" value="6"/>
+	<param name="joint_7" value="1"/>
+	<param name="joint_8" value="1"/>
+	<param name="joint_9" value="1"/>
+	<param name="joint_10" value="1"/>
+	<param name="joint_11" value="1"/>
+	<param name="joint_12" value="2"/>
+	<param name="arm_group" value="0"/>
+</launch>

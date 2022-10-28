@@ -22,7 +22,7 @@
  * THE SOFTWARE.
  */
 
-#include "denso_robot_core/denso_robot_rc8.h"
+#include "denso_robot_core/denso_robot_rc8.hpp"
 
 namespace denso_robot_core
 {

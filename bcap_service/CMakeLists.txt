@@ -7,76 +7,40 @@ endif()
 
 # find dependencies
 find_package(ament_cmake REQUIRED)
-find_package(rosidl_default_generators REQUIRED)
-find_package(std_msgs REQUIRED)
 find_package(bcap_core REQUIRED)
 
-set(msg_files
-  "msg/Variant.msg"
+add_library(
+  ${PROJECT_NAME}
+  SHARED
+  src/bcap_service.cpp
 )
-set(srv_files
-  "srv/Bcap.srv"
+target_include_directories(
+  ${PROJECT_NAME}
+  PUBLIC
+  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+  $<INSTALL_INTERFACE:include>
+)
+ament_target_dependencies(
+  ${PROJECT_NAME}
+  bcap_core
 )
 
-rosidl_generate_interfaces(${PROJECT_NAME}
-  ${msg_files}
-  ${srv_files}
-  DEPENDENCIES std_msgs # Add packages that above messages depend on, in this case geometry_msgs for Sphere.msg
+install(
+  TARGETS ${PROJECT_NAME}
+  DESTINATION lib
 )
-# ament_export_dependencies(rosidl_default_runtime)
+install(
+  DIRECTORY include/
+  DESTINATION include
+)
 
+ament_export_include_directories(
+  include
+)
+ament_export_libraries(
+  ${PROJECT_NAME}
+)
 
-###########
-## Build ##
-###########
-
-# include_directories(
-#   include
-#   ${catkin_INCLUDE_DIRS}
-# )
-
-# add_library(${PROJECT_NAME}
-#   src/${PROJECT_NAME}.cpp)
-
-# add_dependencies(${PROJECT_NAME}
-#   ${PROJECT_NAME}_generate_messages_cpp)
-
-# add_executable(${PROJECT_NAME}_exec
-#   src/${PROJECT_NAME}.cpp)
-
-# add_dependencies(${PROJECT_NAME}_exec
-#   ${PROJECT_NAME}_generate_messages_cpp)
-
-# target_link_libraries(${PROJECT_NAME}
-#   ${catkin_LIBRARIES}
-#   ${bcap_core_LIBRARIES}
-# )
-
-# target_link_libraries(${PROJECT_NAME}_exec
-#   ${catkin_LIBRARIES}
-#   ${bcap_core_LIBRARIES}
-# )
-
-#############
-## Install ##
-#############
-
-# install(TARGETS ${PROJECT_NAME} ${PROJECT_NAME}_exec
-#   ARCHIVE DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
-#   LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
-#   RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
-# )
-
-# # headers
-# install(DIRECTORY include/${PROJECT_NAME}/
-#   DESTINATION ${CATKIN_PACKAGE_INCLUDE_DESTINATION}
-#   FILES_MATCHING PATTERN "*.h"
-#   PATTERN ".svn" EXCLUDE
-# )
-
-# # launch
-# install(DIRECTORY launch
-#   DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION})
 if(BUILD_TESTING)
   find_package(ament_lint_auto REQUIRED)
   # the following line skips the linter which checks for copyrights
@@ -88,4 +52,5 @@ if(BUILD_TESTING)
   set(ament_cmake_cpplint_FOUND TRUE)
   ament_lint_auto_find_test_dependencies()
 endif()
+
 ament_package()

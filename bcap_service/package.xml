@@ -3,20 +3,15 @@
 <package format="3">
   <name>bcap_service</name>
   <version>4.0.0</version>
-  <description>The bcap service package includes a node for communicating ORiN from ROS.</description>
-  <maintainer email="fa-support@denso-wave.com">DENSO WAVE INCORPORATED</maintainer>
+  <description>The bcap service library for communicating ORiN.</description>
+  <maintainer email="leledeyuan@gmail.com">Dayuan Chen</maintainer>
   <license>MIT</license>
   <url type="website">http://ros.org/wiki/bcap_service</url>
   <author email="fa-support@denso-wave.com">DENSO WAVE INCORPORATED</author>
 
   <buildtool_depend>ament_cmake</buildtool_depend>
 
-  <buildtool_depend>rosidl_default_generators</buildtool_depend>
-  <exec_depend>rosidl_default_runtime</exec_depend>
-  <member_of_group>rosidl_interface_packages</member_of_group>  
-
-  <build_depend>bcap_core</build_depend>
-  <exec_depend>bcap_core</exec_depend>
+  <depend>bcap_core</depend>
 
   <test_depend>ament_lint_auto</test_depend>
   <test_depend>ament_lint_common</test_depend>

@@ -22,15 +22,15 @@
  * THE SOFTWARE.
  */
 
-#include "denso_robot_core/denso_robot.h"
+#include "denso_robot_core/denso_robot.hpp"
 
 namespace denso_robot_core
 {
 enum
 {
-  NUM_POSITION = 7,
-  NUM_JOINT = 8,
-  NUM_TRANS = 10
+  NUPOSITION_ = 7,
+  NUJOINT_ = 8,
+  NUTRANS_ = 10
 };
 
 enum
@@ -48,28 +48,28 @@ enum
 DensoRobot::DensoRobot(DensoBase* parent, Service_Vec& service, Handle_Vec& handle, const std::string& name,
                        const int* mode)
   : DensoBase(parent, service, handle, name, mode)
-  , m_ArmGroup(0)
-  , m_curAct(ACT_RESET)
-  , m_memTimeout(0)
-  , m_memRetry(0)
-  , m_tsfmt(0)
-  , m_timestamp(0)
-  , m_sendfmt(0)
-  , m_send_miniio(0)
-  , m_send_handio(0)
-  , m_recvfmt(0)
-  , m_recv_miniio(0)
-  , m_recv_handio(0)
-  , m_send_userio_offset(UserIO::MIN_USERIO_OFFSET)
-  , m_send_userio_size(1)
-  , m_recv_userio_offset(UserIO::MIN_USERIO_OFFSET)
-  , m_recv_userio_size(1)
+  , ArmGroup_(0)
+  , curAct_(ACT_RESET)
+  , memTimeout_(0)
+  , memRetry_(0)
+  , tsfmt_(0)
+  , timestamp_(0)
+  , sendfmt_(0)
+  , send_miniio_(0)
+  , send_handio_(0)
+  , recvfmt_(0)
+  , recv_miniio_(0)
+  , recv_handio_(0)
+  , send_userio_offset_(DEFAULT_MIN_USERIO_OFFSET)
+  , send_userio_size_(1)
+  , recv_userio_offset_(DEFAULT_MIN_USERIO_OFFSET)
+  , recv_userio_size_(1)
 {
-  m_tsfmt = TSFMT_MILLISEC;
+  tsfmt_ = TSFMT_MILLISEC;
 
-  m_sendfmt = SENDFMT_MINIIO | SENDFMT_HANDIO;
+  sendfmt_ = SENDFMT_MINIIO | SENDFMT_HANDIO;
 
-  m_recvfmt = RECVFMT_POSE_PJ | RECVFMT_MINIIO | RECVFMT_HANDIO;
+  recvfmt_ = RECVFMT_POSE_PJ | RECVFMT_MINIIO | RECVFMT_HANDIO;
 }
 
 DensoRobot::~DensoRobot()
@@ -81,126 +81,124 @@ HRESULT DensoRobot::InitializeBCAP(XMLElement* xmlElem)
   return AddVariable(xmlElem);
 }
 
-HRESULT DensoRobot::StartService(ros::NodeHandle& node)
+HRESULT DensoRobot::StartService()
 {
-  std::string tmpName = DensoBase::RosName();
+  // std::string tmpName = DensoBase::RosName();
 
-  if (*m_mode == 0)
+  if (*mode_ == 0)
   {
-    m_subSpeed = node.subscribe<Float32>(tmpName + NAME_SPEED, MESSAGE_QUEUE, &DensoRobot::Callback_Speed, this);
+    // subSpeed_ = node.subscribe<Float32>(tmpName + NAME_SPEED, MESSAGE_QUEUE, &DensoRobot::Callback_Speed, this);
 
-    m_subChangeTool = node.subscribe<Int32>(tmpName + NAME_CHANGETOOL, MESSAGE_QUEUE,
-                                            boost::bind(&DensoRobot::Callback_Change, this, "Tool", _1));
+    // subChangeTool_ = node.subscribe<Int32>(tmpName + NAME_CHANGETOOL, MESSAGE_QUEUE,
+    //                                         boost::bind(&DensoRobot::Callback_Change, this, "Tool", _1));
 
-    m_subChangeWork = node.subscribe<Int32>(tmpName + NAME_CHANGEWORK, MESSAGE_QUEUE,
-                                            boost::bind(&DensoRobot::Callback_Change, this, "Work", _1));
+    // subChangeWork_ = node.subscribe<Int32>(tmpName + NAME_CHANGEWORK, MESSAGE_QUEUE,
+    //                                         boost::bind(&DensoRobot::Callback_Change, this, "Work", _1));
 
-    m_actMoveString = boost::make_shared<SimpleActionServer<MoveStringAction> >(
-        node, DensoBase::RosName() + NAME_MOVESTRING, boost::bind(&DensoRobot::Callback_MoveString, this, _1), false);
+    // actMoveString_ = boost::make_shared<SimpleActionServer<MoveStringAction> >(
+    //     node, DensoBase::RosName() + NAME_MOVESTRING, boost::bind(&DensoRobot::Callback_MoveString, this, _1), false);
 
-    m_actMoveString->registerPreemptCallback(boost::bind(&DensoRobot::Callback_Cancel, this));
+    // actMoveString_->registerPreemptCallback(boost::bind(&DensoRobot::Callback_Cancel, this));
 
-    m_actMoveString->start();
+    // actMoveString_->start();
 
-    m_actMoveValue = boost::make_shared<SimpleActionServer<MoveValueAction> >(
-        node, DensoBase::RosName() + NAME_MOVEVALUE, boost::bind(&DensoRobot::Callback_MoveValue, this, _1), false);
+    // actMoveValue_ = boost::make_shared<SimpleActionServer<MoveValueAction> >(
+    //     node, DensoBase::RosName() + NAME_MOVEVALUE, boost::bind(&DensoRobot::Callback_MoveValue, this, _1), false);
 
-    m_actMoveValue->registerPreemptCallback(boost::bind(&DensoRobot::Callback_Cancel, this));
+    // actMoveValue_->registerPreemptCallback(boost::bind(&DensoRobot::Callback_Cancel, this));
 
-    m_actMoveValue->start();
+    // actMoveValue_->start();
 
-    m_actDriveExString = boost::make_shared<SimpleActionServer<DriveStringAction> >(
-        node, DensoBase::RosName() + NAME_DRIVEEXSTRING,
-        boost::bind(&DensoRobot::Callback_DriveString, this, "DriveEx", _1), false);
+    // actDriveExString_ = boost::make_shared<SimpleActionServer<DriveStringAction> >(
+    //     node, DensoBase::RosName() + NAME_DRIVEEXSTRING,
+    //     boost::bind(&DensoRobot::Callback_DriveString, this, "DriveEx", _1), false);
 
-    m_actDriveExString->registerPreemptCallback(boost::bind(&DensoRobot::Callback_Cancel, this));
+    // actDriveExString_->registerPreemptCallback(boost::bind(&DensoRobot::Callback_Cancel, this));
 
-    m_actDriveExString->start();
+    // actDriveExString_->start();
 
-    m_actDriveExValue = boost::make_shared<SimpleActionServer<DriveValueAction> >(
-        node, DensoBase::RosName() + NAME_DRIVEEXVALUE,
-        boost::bind(&DensoRobot::Callback_DriveValue, this, "DriveEx", _1), false);
+    // actDriveExValue_ = boost::make_shared<SimpleActionServer<DriveValueAction> >(
+    //     node, DensoBase::RosName() + NAME_DRIVEEXVALUE,
+    //     boost::bind(&DensoRobot::Callback_DriveValue, this, "DriveEx", _1), false);
 
-    m_actDriveExValue->registerPreemptCallback(boost::bind(&DensoRobot::Callback_Cancel, this));
+    // actDriveExValue_->registerPreemptCallback(boost::bind(&DensoRobot::Callback_Cancel, this));
 
-    m_actDriveExValue->start();
+    // actDriveExValue_->start();
 
-    m_actDriveAExString = boost::make_shared<SimpleActionServer<DriveStringAction> >(
-        node, DensoBase::RosName() + NAME_DRIVEAEXSTRING,
-        boost::bind(&DensoRobot::Callback_DriveString, this, "DriveAEx", _1), false);
+    // actDriveAExString_ = boost::make_shared<SimpleActionServer<DriveStringAction> >(
+    //     node, DensoBase::RosName() + NAME_DRIVEAEXSTRING,
+    //     boost::bind(&DensoRobot::Callback_DriveString, this, "DriveAEx", _1), false);
 
-    m_actDriveAExString->registerPreemptCallback(boost::bind(&DensoRobot::Callback_Cancel, this));
+    // actDriveAExString_->registerPreemptCallback(boost::bind(&DensoRobot::Callback_Cancel, this));
 
-    m_actDriveAExString->start();
+    // actDriveAExString_->start();
 
-    m_actDriveAExValue = boost::make_shared<SimpleActionServer<DriveValueAction> >(
-        node, DensoBase::RosName() + NAME_DRIVEAEXVALUE,
-        boost::bind(&DensoRobot::Callback_DriveValue, this, "DriveAEx", _1), false);
+    // actDriveAExValue_ = boost::make_shared<SimpleActionServer<DriveValueAction> >(
+    //     node, DensoBase::RosName() + NAME_DRIVEAEXVALUE,
+    //     boost::bind(&DensoRobot::Callback_DriveValue, this, "DriveAEx", _1), false);
 
-    m_actDriveAExValue->registerPreemptCallback(boost::bind(&DensoRobot::Callback_Cancel, this));
+    // actDriveAExValue_->registerPreemptCallback(boost::bind(&DensoRobot::Callback_Cancel, this));
 
-    m_actDriveAExValue->start();
+    // actDriveAExValue_->start();
 
-    m_subArmGroup = node.subscribe<Int32>(tmpName + NAME_ARMGROUP, MESSAGE_QUEUE, &DensoRobot::Callback_ArmGroup, this);
+    // subArmGroup_ = node.subscribe<Int32>(tmpName + NAME_ARMGROUP, MESSAGE_QUEUE, &DensoRobot::Callback_ArmGroup, this);
   }
 
   DensoVariable_Vec::iterator itVar;
-  for (itVar = m_vecVar.begin(); itVar != m_vecVar.end(); itVar++)
+  for (itVar = vecVar_.begin(); itVar != vecVar_.end(); itVar++)
   {
-    (*itVar)->StartService(node);
+    (*itVar)->StartService();
   }
 
-  m_serving = true;
+  serving_ = true;
 
-  m_curAct = ACT_NONE;
+  curAct_ = ACT_NONE;
 
   return S_OK;
 }
 
 HRESULT DensoRobot::StopService()
 {
-  m_mtxSrv.lock();
-  m_serving = false;
-  m_mtxSrv.unlock();
-
-  m_subArmGroup.shutdown();
+  mtxSrv_.lock();
+  serving_ = false;
+  mtxSrv_.unlock();
 
   DensoVariable_Vec::iterator itVar;
-  for (itVar = m_vecVar.begin(); itVar != m_vecVar.end(); itVar++)
+  for (itVar = vecVar_.begin(); itVar != vecVar_.end(); itVar++)
   {
     (*itVar)->StopService();
   }
 
-  m_mtxAct.lock();
-  m_curAct = ACT_RESET;
-  m_mtxAct.unlock();
+  mtxAct_.lock();
+  curAct_ = ACT_RESET;
+  mtxAct_.unlock();
 
-  m_subSpeed.shutdown();
-  m_subChangeTool.shutdown();
-  m_subChangeWork.shutdown();
-  m_actMoveString.reset();
-  m_actMoveValue.reset();
-  m_actDriveExString.reset();
-  m_actDriveExValue.reset();
-  m_actDriveAExString.reset();
-  m_actDriveAExValue.reset();
+  // subSpeed_.shutdown();
+  // subChangeTool_.shutdown();
+  // subChangeWork_.shutdown();
+  // actMoveString_.reset();
+  // actMoveValue_.reset();
+  // actDriveExString_.reset();
+  // actDriveExValue_.reset();
+  // actDriveAExString_.reset();
+  // actDriveAExValue_.reset();
 
   return S_OK;
 }
 
 bool DensoRobot::Update()
 {
-  boost::mutex::scoped_lock lockSrv(m_mtxSrv);
-  if (!m_serving)
+  boost::mutex::scoped_lock lockSrv(mtxSrv_);
+  if (!serving_)
     return false;
 
   DensoVariable_Vec::iterator itVar;
-  for (itVar = m_vecVar.begin(); itVar != m_vecVar.end(); itVar++)
+  for (itVar = vecVar_.begin(); itVar != vecVar_.end(); itVar++)
   {
     (*itVar)->Update();
   }
 
-  Action_Feedback();
+  // Action_Feedback();
 
   return true;
 }
@@ -223,7 +221,7 @@ HRESULT DensoRobot::ExecTakeArm()
     {
       case 0:
         vntTmp->vt = VT_UI4;
-        vntTmp->ulVal = m_vecHandle[DensoBase::SRV_ACT];
+        vntTmp->ulVal = vecHandle_[DensoBase::SRV_ACT];
         break;
       case 1:
         vntTmp->vt = VT_BSTR;
@@ -233,7 +231,7 @@ HRESULT DensoRobot::ExecTakeArm()
         vntTmp->vt = (VT_ARRAY | VT_I4);
         vntTmp->parray = SafeArrayCreateVector(VT_I4, 0, 2);
         SafeArrayAccessData(vntTmp->parray, (void**)&pval);
-        pval[0] = m_ArmGroup;  // Arm group
+        pval[0] = ArmGroup_;  // Arm group
         pval[1] = 1L;          // Keep
         SafeArrayUnaccessData(vntTmp->parray);
         break;
@@ -242,7 +240,7 @@ HRESULT DensoRobot::ExecTakeArm()
     vntArgs.push_back(*vntTmp.get());
   }
 
-  return m_vecService[DensoBase::SRV_ACT]->ExecFunction(ID_ROBOT_EXECUTE, vntArgs, vntRet);
+  return vecService_[DensoBase::SRV_ACT]->ExecFunction(ID_ROBOT_EXECUTE, vntArgs, vntRet);
 }
 
 HRESULT DensoRobot::ExecGiveArm()
@@ -262,7 +260,7 @@ HRESULT DensoRobot::ExecGiveArm()
     {
       case 0:
         vntTmp->vt = VT_UI4;
-        vntTmp->ulVal = m_vecHandle[DensoBase::SRV_ACT];
+        vntTmp->ulVal = vecHandle_[DensoBase::SRV_ACT];
         break;
       case 1:
         vntTmp->vt = VT_BSTR;
@@ -273,18 +271,18 @@ HRESULT DensoRobot::ExecGiveArm()
     vntArgs.push_back(*vntTmp.get());
   }
 
-  return m_vecService[DensoBase::SRV_ACT]->ExecFunction(ID_ROBOT_EXECUTE, vntArgs, vntRet);
+  return vecService_[DensoBase::SRV_ACT]->ExecFunction(ID_ROBOT_EXECUTE, vntArgs, vntRet);
 }
 
 void DensoRobot::ChangeArmGroup(int number)
 {
-  m_ArmGroup = number;
+  ArmGroup_ = number;
 }
 
-void DensoRobot::Callback_ArmGroup(const Int32::ConstPtr& msg)
-{
-  ChangeArmGroup(msg->data);
-}
+// void DensoRobot::Callback_ArmGroup(const Int32::ConstPtr& msg)
+// {
+//   ChangeArmGroup(msg->data);
+// }
 
 HRESULT DensoRobot::get_Variable(const std::string& name, DensoVariable_Ptr* var)
 {
@@ -294,7 +292,7 @@ HRESULT DensoRobot::get_Variable(const std::string& name, DensoVariable_Ptr* var
   }
 
   DensoBase_Vec vecBase;
-  vecBase.insert(vecBase.end(), m_vecVar.begin(), m_vecVar.end());
+  vecBase.insert(vecBase.end(), vecVar_.begin(), vecVar_.end());
 
   DensoBase_Ptr pBase;
   HRESULT hr = DensoBase::get_Object(vecBase, name, &pBase);
@@ -308,7 +306,7 @@ HRESULT DensoRobot::get_Variable(const std::string& name, DensoVariable_Ptr* var
 
 HRESULT DensoRobot::AddVariable(const std::string& name)
 {
-  return DensoBase::AddVariable(ID_ROBOT_GETVARIABLE, name, m_vecVar);
+  return DensoBase::AddVariable(ID_ROBOT_GETVARIABLE, name, vecVar_);
 }
 
 HRESULT DensoRobot::AddVariable(XMLElement* xmlElem)
@@ -319,7 +317,7 @@ HRESULT DensoRobot::AddVariable(XMLElement* xmlElem)
   for (xmlVar = xmlElem->FirstChildElement(DensoVariable::XML_VARIABLE_NAME); xmlVar != NULL;
        xmlVar = xmlVar->NextSiblingElement(DensoVariable::XML_VARIABLE_NAME))
   {
-    hr = DensoBase::AddVariable(ID_ROBOT_GETVARIABLE, xmlVar, m_vecVar);
+    hr = DensoBase::AddVariable(ID_ROBOT_GETVARIABLE, xmlVar, vecVar_);
     if (FAILED(hr))
       break;
   }
@@ -349,7 +347,7 @@ HRESULT DensoRobot::ExecMove(int comp, const VARIANT_Ptr& pose, const std::strin
       {
         case 0:
           vntTmp->vt = VT_UI4;
-          vntTmp->ulVal = m_vecHandle[DensoBase::SRV_ACT];
+          vntTmp->ulVal = vecHandle_[DensoBase::SRV_ACT];
           break;
         case 1:
           vntTmp->vt = VT_I4;
@@ -367,7 +365,7 @@ HRESULT DensoRobot::ExecMove(int comp, const VARIANT_Ptr& pose, const std::strin
       vntArgs.push_back(*vntTmp.get());
     }
 
-    hr = m_vecService[DensoBase::SRV_ACT]->ExecFunction(ID_ROBOT_MOVE, vntArgs, vntRet);
+    hr = vecService_[DensoBase::SRV_ACT]->ExecFunction(ID_ROBOT_MOVE, vntArgs, vntRet);
 
     ExecGiveArm();
   }
@@ -397,7 +395,7 @@ HRESULT DensoRobot::ExecDrive(const std::string& name, const VARIANT_Ptr& option
       {
         case 0:
           vntTmp->vt = VT_UI4;
-          vntTmp->ulVal = m_vecHandle[DensoBase::SRV_ACT];
+          vntTmp->ulVal = vecHandle_[DensoBase::SRV_ACT];
           break;
         case 1:
           vntTmp->vt = VT_BSTR;
@@ -411,7 +409,7 @@ HRESULT DensoRobot::ExecDrive(const std::string& name, const VARIANT_Ptr& option
       vntArgs.push_back(*vntTmp.get());
     }
 
-    hr = m_vecService[DensoBase::SRV_ACT]->ExecFunction(ID_ROBOT_EXECUTE, vntArgs, vntRet);
+    hr = vecService_[DensoBase::SRV_ACT]->ExecFunction(ID_ROBOT_EXECUTE, vntArgs, vntRet);
 
     ExecGiveArm();
   }
@@ -441,7 +439,7 @@ HRESULT DensoRobot::ExecSpeed(float value)
       {
         case 0:
           vntTmp->vt = VT_UI4;
-          vntTmp->ulVal = m_vecHandle[DensoBase::SRV_ACT];
+          vntTmp->ulVal = vecHandle_[DensoBase::SRV_ACT];
           break;
         case 1:
           vntTmp->vt = VT_I4;
@@ -456,7 +454,7 @@ HRESULT DensoRobot::ExecSpeed(float value)
       vntArgs.push_back(*vntTmp.get());
     }
 
-    hr = m_vecService[DensoBase::SRV_ACT]->ExecFunction(ID_ROBOT_SPEED, vntArgs, vntRet);
+    hr = vecService_[DensoBase::SRV_ACT]->ExecFunction(ID_ROBOT_SPEED, vntArgs, vntRet);
 
     ExecGiveArm();
   }
@@ -486,7 +484,7 @@ HRESULT DensoRobot::ExecChange(const std::string& value)
       {
         case 0:
           vntTmp->vt = VT_UI4;
-          vntTmp->ulVal = m_vecHandle[DensoBase::SRV_ACT];
+          vntTmp->ulVal = vecHandle_[DensoBase::SRV_ACT];
           break;
         case 1:
           vntTmp->vt = VT_BSTR;
@@ -497,7 +495,7 @@ HRESULT DensoRobot::ExecChange(const std::string& value)
       vntArgs.push_back(*vntTmp.get());
     }
 
-    hr = m_vecService[DensoBase::SRV_ACT]->ExecFunction(ID_ROBOT_CHANGE, vntArgs, vntRet);
+    hr = vecService_[DensoBase::SRV_ACT]->ExecFunction(ID_ROBOT_CHANGE, vntArgs, vntRet);
 
     ExecGiveArm();
   }
@@ -521,7 +519,7 @@ HRESULT DensoRobot::ExecHalt()
     {
       case 0:
         vntTmp->vt = VT_UI4;
-        vntTmp->ulVal = m_vecHandle[DensoBase::SRV_WATCH];
+        vntTmp->ulVal = vecHandle_[DensoBase::SRV_WATCH];
         break;
       case 1:
         vntTmp->vt = VT_BSTR;
@@ -532,7 +530,7 @@ HRESULT DensoRobot::ExecHalt()
     vntArgs.push_back(*vntTmp.get());
   }
 
-  return m_vecService[DensoBase::SRV_WATCH]->ExecFunction(ID_ROBOT_HALT, vntArgs, vntRet);
+  return vecService_[DensoBase::SRV_WATCH]->ExecFunction(ID_ROBOT_HALT, vntArgs, vntRet);
 }
 
 HRESULT DensoRobot::ExecCurJnt(std::vector<double>& pose)
@@ -554,7 +552,7 @@ HRESULT DensoRobot::ExecCurJnt(std::vector<double>& pose)
     {
       case 0:
         vntTmp->vt = VT_UI4;
-        vntTmp->ulVal = m_vecHandle[DensoBase::SRV_WATCH];
+        vntTmp->ulVal = vecHandle_[DensoBase::SRV_WATCH];
         break;
       case 1:
         vntTmp->vt = VT_BSTR;
@@ -565,7 +563,7 @@ HRESULT DensoRobot::ExecCurJnt(std::vector<double>& pose)
     vntArgs.push_back(*vntTmp.get());
   }
 
-  hr = m_vecService[DensoBase::SRV_WATCH]->ExecFunction(ID_ROBOT_EXECUTE, vntArgs, vntRet);
+  hr = vecService_[DensoBase::SRV_WATCH]->ExecFunction(ID_ROBOT_EXECUTE, vntArgs, vntRet);
 
   if (SUCCEEDED(hr) && (vntRet->vt == (VT_ARRAY | VT_R8)))
   {
@@ -600,15 +598,15 @@ HRESULT DensoRobot::ExecSlaveMove(const std::vector<double>& pose, std::vector<d
     {
       case 0:
         vntTmp->vt = VT_UI4;
-        vntTmp->ulVal = m_vecHandle[DensoBase::SRV_ACT];
+        vntTmp->ulVal = vecHandle_[DensoBase::SRV_ACT];
         break;
       case 1:
         vntTmp->vt = VT_BSTR;
         vntTmp->bstrVal = SysAllocString(L"slvMove");
         break;
       case 2:
-        hr = CreateSendParameter(pose, vntTmp, m_send_miniio, m_send_handio, m_recv_userio_offset, m_recv_userio_size,
-                                 m_send_userio_offset, m_send_userio_size, m_send_userio);
+        hr = CreateSendParameter(pose, vntTmp, send_miniio_, send_handio_, recv_userio_offset_, recv_userio_size_,
+                                 send_userio_offset_, send_userio_size_, send_userio_);
         if (FAILED(hr))
           return hr;
         break;
@@ -617,13 +615,13 @@ HRESULT DensoRobot::ExecSlaveMove(const std::vector<double>& pose, std::vector<d
     vntArgs.push_back(*vntTmp.get());
   }
 
-  hr = m_vecService[DensoBase::SRV_ACT]->ExecFunction(ID_ROBOT_EXECUTE, vntArgs, vntRet);
+  hr = vecService_[DensoBase::SRV_ACT]->ExecFunction(ID_ROBOT_EXECUTE, vntArgs, vntRet);
   if (SUCCEEDED(hr))
   {
-    HRESULT hrTmp = ParseRecvParameter(vntRet, m_position, m_joint, m_trans, m_recv_miniio, m_recv_handio, m_timestamp,
-                                       m_recv_userio, m_current);
+    HRESULT hrTmp = ParseRecvParameter(vntRet, position_, joint_, trans_, recv_miniio_, recv_handio_, timestamp_,
+                                       recv_userio_, current_);
 
-    joint = m_joint;
+    joint = joint_;
 
     if (FAILED(hrTmp))
     {
@@ -636,7 +634,7 @@ HRESULT DensoRobot::ExecSlaveMove(const std::vector<double>& pose, std::vector<d
 
 int DensoRobot::get_SendFormat() const
 {
-  return m_sendfmt;
+  return sendfmt_;
 }
 
 /**
@@ -644,7 +642,7 @@ int DensoRobot::get_SendFormat() const
  */
 void DensoRobot::put_SendFormat(int format)
 {
-  ROS_WARN("DensoRobot::put_SendFormat() has been deprecated.");
+  // // ROS_WARN("DensoRobot::put_SendFormat() has been deprecated.");
   switch (format)
   {
     case SENDFMT_NONE:
@@ -653,22 +651,22 @@ void DensoRobot::put_SendFormat(int format)
     case SENDFMT_HANDIO | SENDFMT_MINIIO:
     case SENDFMT_USERIO:
     case SENDFMT_USERIO | SENDFMT_HANDIO:
-      m_sendfmt = format;
+      sendfmt_ = format;
       break;
     default:
-      ROS_WARN("Failed to put_SendFormat.");
+      // // ROS_WARN("Failed to put_SendFormat.");
       break;
   }
 }
 
 void DensoRobot::set_SendFormat(int format)
 {
-  m_sendfmt = format;
+  sendfmt_ = format;
 }
 
 int DensoRobot::get_RecvFormat() const
 {
-  return m_recvfmt;
+  return recvfmt_;
 }
 
 /**
@@ -676,7 +674,7 @@ int DensoRobot::get_RecvFormat() const
  */
 void DensoRobot::put_RecvFormat(int format)
 {
-  ROS_WARN("DensoRobot::put_RecvFormat() has been deprecated.");
+  // // ROS_WARN("DensoRobot::put_RecvFormat() has been deprecated.");
   int pose = format & RECVFMT_POSE;
   if ((RECVFMT_NONE <= pose) && (pose <= RECVFMT_POSE_TJ))
   {
@@ -705,131 +703,131 @@ void DensoRobot::put_RecvFormat(int format)
       case RECVFMT_TIME | RECVFMT_CURRENT | RECVFMT_USERIO:
       case RECVFMT_CURRENT | RECVFMT_MINIIO | RECVFMT_USERIO:
       case RECVFMT_TIME | RECVFMT_CURRENT | RECVFMT_HANDIO | RECVFMT_USERIO:
-        m_recvfmt = format;
+        recvfmt_ = format;
         break;
       default:
-        ROS_WARN("Failed to put_RecvFormat.");
+        // // ROS_WARN("Failed to put_RecvFormat.");
         break;
     }
   }
   else
   {
-    ROS_WARN("Failed to put_RecvFormat.");
+    // // ROS_WARN("Failed to put_RecvFormat.");
   }
 }
 
 void DensoRobot::set_RecvFormat(int format)
 {
-  m_recvfmt = format;
+  recvfmt_ = format;
 }
 
 int DensoRobot::get_TimeFormat() const
 {
-  return m_tsfmt;
+  return tsfmt_;
 }
 
 void DensoRobot::put_TimeFormat(int format)
 {
   if ((format == TSFMT_MILLISEC) || (format == TSFMT_MICROSEC))
   {
-    m_tsfmt = format;
+    tsfmt_ = format;
   }
   else
   {
-    ROS_WARN("Failed to put_TimeFormat.");
+    // ROS_WARN("Failed to put_TimeFormat.");
   }
 }
 
 unsigned int DensoRobot::get_MiniIO() const
 {
-  return m_recv_miniio;
+  return recv_miniio_;
 }
 
 void DensoRobot::put_MiniIO(unsigned int value)
 {
-  m_send_miniio = value;
+  send_miniio_ = value;
 }
 
 unsigned int DensoRobot::get_HandIO() const
 {
-  return m_recv_handio;
+  return recv_handio_;
 }
 
 void DensoRobot::put_HandIO(unsigned int value)
 {
-  m_send_handio = value;
+  send_handio_ = value;
 }
 
 void DensoRobot::put_SendUserIO(const UserIO& value)
 {
-  if (value.offset < UserIO::MIN_USERIO_OFFSET)
+  if (value.offset < DEFAULT_MIN_USERIO_OFFSET)
   {
-    ROS_WARN("User I/O offset has to be greater than %d.", UserIO::MIN_USERIO_OFFSET - 1);
+    // ROS_WARN("User I/O offset has to be greater than %d.", UserIO::MIN_USERIO_OFFSET - 1);
     return;
   }
 
-  if (value.offset % UserIO::USERIO_ALIGNMENT)
+  if (value.offset % DEFAULT_USERIO_ALIGNMENT)
   {
-    ROS_WARN("User I/O offset has to be multiple of %d.", UserIO::USERIO_ALIGNMENT);
+    // ROS_WARN("User I/O offset has to be multiple of %d.", DEFAULT_USERIO_ALIGNMENT);
     return;
   }
 
   if (value.size <= 0)
   {
-    ROS_WARN("User I/O size has to be greater than 0.");
+    // ROS_WARN("User I/O size has to be greater than 0.");
     return;
   }
 
   if (value.size < value.value.size())
   {
-    ROS_WARN("User I/O size has to be equal or greater than the value length.");
+    // ROS_WARN("User I/O size has to be equal or greater than the value length.");
     return;
   }
 
-  m_send_userio_offset = value.offset;
-  m_send_userio_size = value.size;
-  m_send_userio = value.value;
+  send_userio_offset_ = value.offset;
+  send_userio_size_ = value.size;
+  send_userio_ = value.value;
 }
 
 void DensoRobot::put_RecvUserIO(const UserIO& value)
 {
-  if (value.offset < UserIO::MIN_USERIO_OFFSET)
+  if (value.offset < DEFAULT_MIN_USERIO_OFFSET)
   {
-    ROS_WARN("User I/O offset has to be greater than %d.", UserIO::MIN_USERIO_OFFSET - 1);
+    // ROS_WARN("User I/O offset has to be greater than %d.", UserIO::MIN_USERIO_OFFSET - 1);
     return;
   }
 
-  if (value.offset % UserIO::USERIO_ALIGNMENT)
+  if (value.offset % DEFAULT_USERIO_ALIGNMENT)
   {
-    ROS_WARN("User I/O offset has to be multiple of %d.", UserIO::USERIO_ALIGNMENT);
+    // ROS_WARN("User I/O offset has to be multiple of %d.", DEFAULT_USERIO_ALIGNMENT);
     return;
   }
 
   if (value.size <= 0)
   {
-    ROS_WARN("User I/O size has to be greater than 0.");
+    // ROS_WARN("User I/O size has to be greater than 0.");
     return;
   }
 
-  m_recv_userio_offset = value.offset;
-  m_recv_userio_size = value.size;
+  recv_userio_offset_ = value.offset;
+  recv_userio_size_ = value.size;
 }
 
 void DensoRobot::get_RecvUserIO(UserIO& value) const
 {
-  value.offset = m_recv_userio_offset;
-  value.size = m_recv_userio.size();
-  value.value = m_recv_userio;
+  value.offset = recv_userio_offset_;
+  value.size = recv_userio_.size();
+  value.value = recv_userio_;
 }
 
 void DensoRobot::get_Current(std::vector<double>& current) const
 {
-  current = m_current;
+  current = current_;
 }
 
 int DensoRobot::get_Timestamp() const
 {
-  return m_timestamp;
+  return timestamp_;
 }
 
 HRESULT DensoRobot::CreatePoseData(const PoseData& pose, VARIANT& vnt)
@@ -914,21 +912,21 @@ HRESULT DensoRobot::ChangeMode(int mode)
 {
   HRESULT hr = S_OK;
 
-  if (*m_mode == 0)
+  if (*mode_ == 0)
   {
     // Change to slave mode
     if (mode != 0)
     {
-      hr = ExecSlaveMode("slvSendFormat", m_sendfmt);
+      hr = ExecSlaveMode("slvSendFormat", sendfmt_);
       if (FAILED(hr))
       {
-        ROS_ERROR("Invalid argument value (send_format = 0x%x)", m_sendfmt);
+        // ROS_ERROR("Invalid argument value (send_format = 0x%x)", sendfmt_);
         return hr;
       }
-      hr = ExecSlaveMode("slvRecvFormat", m_recvfmt, m_tsfmt);
+      hr = ExecSlaveMode("slvRecvFormat", recvfmt_, tsfmt_);
       if (FAILED(hr))
       {
-        ROS_ERROR("Invalid argument value (recv_format = 0x%x)", m_recvfmt);
+        // ROS_ERROR("Invalid argument value (recv_format = 0x%x)", recvfmt_);
         return hr;
       }
       hr = ExecTakeArm();
@@ -939,25 +937,25 @@ HRESULT DensoRobot::ChangeMode(int mode)
       if (FAILED(hr))
         return hr;
 
-      m_memTimeout = m_vecService[DensoBase::SRV_ACT]->get_Timeout();
-      m_memRetry = m_vecService[DensoBase::SRV_ACT]->get_Retry();
+      memTimeout_ = vecService_[DensoBase::SRV_ACT]->get_Timeout();
+      memRetry_ = vecService_[DensoBase::SRV_ACT]->get_Retry();
       if (mode & DensoRobot::SLVMODE_SYNC_WAIT)
       {
-        m_vecService[DensoBase::SRV_ACT]->put_Timeout(this->SLVMODE_TIMEOUT_SYNC);
+        vecService_[DensoBase::SRV_ACT]->put_Timeout(this->SLVMODE_TIMEOUT_SYNC);
       }
       else
       {
-        m_vecService[DensoBase::SRV_ACT]->put_Timeout(this->SLVMODE_TIMEOUT_ASYNC);
+        vecService_[DensoBase::SRV_ACT]->put_Timeout(this->SLVMODE_TIMEOUT_ASYNC);
       }
-      ROS_INFO("bcap-slave timeout changed to %d msec [mode: 0x%X]", m_vecService[DensoBase::SRV_ACT]->get_Timeout(),
-               mode);
-      m_vecService[DensoBase::SRV_ACT]->put_Retry(3);
+      // ROS_INFO("bcap-slave timeout changed to %d msec [mode: 0x%X]", vecService_[DensoBase::SRV_ACT]->get_Timeout(),
+              //  mode);
+      vecService_[DensoBase::SRV_ACT]->put_Retry(3);
     }
   }
   else
   {
-    m_vecService[DensoBase::SRV_ACT]->put_Timeout(m_memTimeout);
-    m_vecService[DensoBase::SRV_ACT]->put_Retry(m_memRetry);
+    vecService_[DensoBase::SRV_ACT]->put_Timeout(memTimeout_);
+    vecService_[DensoBase::SRV_ACT]->put_Retry(memRetry_);
 
     hr = ExecSlaveMode("slvChangeMode", mode);
     ExecGiveArm();
@@ -984,7 +982,7 @@ HRESULT DensoRobot::ExecSlaveMode(const std::string& name, int32_t format, int32
     {
       case 0:
         vntTmp->vt = VT_UI4;
-        vntTmp->ulVal = m_vecHandle[DensoBase::SRV_ACT];
+        vntTmp->ulVal = vecHandle_[DensoBase::SRV_ACT];
         break;
       case 1:
         vntTmp->vt = VT_BSTR;
@@ -1011,7 +1009,7 @@ HRESULT DensoRobot::ExecSlaveMode(const std::string& name, int32_t format, int32
     vntArgs.push_back(*vntTmp.get());
   }
 
-  return m_vecService[DensoBase::SRV_ACT]->ExecFunction(ID_ROBOT_EXECUTE, vntArgs, vntRet);
+  return vecService_[DensoBase::SRV_ACT]->ExecFunction(ID_ROBOT_EXECUTE, vntArgs, vntRet);
 }
 
 HRESULT DensoRobot::CreateSendParameter(const std::vector<double>& pose, VARIANT_Ptr& send, const int miniio,
@@ -1019,20 +1017,20 @@ HRESULT DensoRobot::CreateSendParameter(const std::vector<double>& pose, VARIANT
                                         const int send_userio_offset, const int send_userio_size,
                                         const std::vector<uint8_t>& send_userio)
 {
-  int type = *m_mode & SLVMODE_POSE;
+  int type = *mode_ & SLVMODE_POSE;
 
   // Check pose type
   int joints = 0;
   switch (type)
   {
     case SLVMODE_POSE_P:
-      joints = NUM_POSITION;
+      joints = NUPOSITION_;
       break;
     case SLVMODE_POSE_J:
-      joints = NUM_JOINT;
+      joints = NUJOINT_;
       break;
     case SLVMODE_POSE_T:
-      joints = NUM_TRANS;
+      joints = NUTRANS_;
       break;
     default:
       return E_FAIL;
@@ -1044,9 +1042,9 @@ HRESULT DensoRobot::CreateSendParameter(const std::vector<double>& pose, VARIANT
 
   // Check send format
   bool send_hio, send_mio, send_uio, recv_uio;
-  send_hio = m_sendfmt & SENDFMT_HANDIO;
-  send_mio = m_sendfmt & SENDFMT_MINIIO;
-  send_uio = m_sendfmt & SENDFMT_USERIO;
+  send_hio = sendfmt_ & SENDFMT_HANDIO;
+  send_mio = sendfmt_ & SENDFMT_MINIIO;
+  send_uio = sendfmt_ & SENDFMT_USERIO;
 
   if (send_uio)
   {
@@ -1057,7 +1055,7 @@ HRESULT DensoRobot::CreateSendParameter(const std::vector<double>& pose, VARIANT
   }
 
   // Check receive format
-  recv_uio = m_recvfmt & RECVFMT_USERIO;
+  recv_uio = recvfmt_ & RECVFMT_USERIO;
 
   // Number of arguments
   int num = 1 + send_hio + send_mio + 3 * send_uio + 2 * recv_uio;
@@ -1115,7 +1113,7 @@ HRESULT DensoRobot::CreateSendParameter(const std::vector<double>& pose, VARIANT
       pvnt[offset + 0].lVal = send_userio_offset;
 
       pvnt[offset + 1].vt = VT_I4;
-      pvnt[offset + 1].lVal = send_userio_size * UserIO::USERIO_ALIGNMENT;
+      pvnt[offset + 1].lVal = send_userio_size * DEFAULT_USERIO_ALIGNMENT;
 
       pvnt[offset + 2].vt = (VT_ARRAY | VT_UI1);
       pvnt[offset + 2].parray = SafeArrayCreateVector(VT_UI1, 0, send_userio_size);
@@ -1134,7 +1132,7 @@ HRESULT DensoRobot::CreateSendParameter(const std::vector<double>& pose, VARIANT
       pvnt[offset + 0].lVal = recv_userio_offset;
 
       pvnt[offset + 1].vt = VT_I4;
-      pvnt[offset + 1].lVal = recv_userio_size * UserIO::USERIO_ALIGNMENT;
+      pvnt[offset + 1].lVal = recv_userio_size * DEFAULT_USERIO_ALIGNMENT;
 
       offset += 2;
     }
@@ -1158,7 +1156,7 @@ HRESULT DensoRobot::ParseRecvParameter(const VARIANT_Ptr& recv, std::vector<doub
                                        std::vector<double>& joint, std::vector<double>& trans, int& miniio, int& handio,
                                        int& timestamp, std::vector<uint8_t>& recv_userio, std::vector<double>& current)
 {
-  int type = m_recvfmt & SLVMODE_POSE;
+  int type = recvfmt_ & SLVMODE_POSE;
 
   // Check pose type
   int j = 0, j1 = 0, j2 = 0, joints = 0;
@@ -1167,26 +1165,26 @@ HRESULT DensoRobot::ParseRecvParameter(const VARIANT_Ptr& recv, std::vector<doub
   switch (type)
   {
     case RECVFMT_POSE_P:
-      j1 = NUM_POSITION;
+      j1 = NUPOSITION_;
       pose1 = &position;
       break;
     case RECVFMT_POSE_J:
-      j1 = NUM_JOINT;
+      j1 = NUJOINT_;
       pose1 = &joint;
       break;
     case RECVFMT_POSE_T:
-      j1 = NUM_TRANS;
+      j1 = NUTRANS_;
       pose1 = &trans;
       break;
     case RECVFMT_POSE_PJ:
-      j1 = NUM_POSITION;
-      j2 = NUM_JOINT;
+      j1 = NUPOSITION_;
+      j2 = NUJOINT_;
       pose1 = &position;
       pose2 = &joint;
       break;
     case RECVFMT_POSE_TJ:
-      j1 = NUM_TRANS;
-      j2 = NUM_JOINT;
+      j1 = NUTRANS_;
+      j2 = NUJOINT_;
       pose1 = &trans;
       pose2 = &joint;
       break;
@@ -1198,11 +1196,11 @@ HRESULT DensoRobot::ParseRecvParameter(const VARIANT_Ptr& recv, std::vector<doub
 
   // Check receive format
   bool recv_ts, recv_hio, recv_mio, recv_uio, recv_crt;
-  recv_ts = m_recvfmt & RECVFMT_TIME;
-  recv_hio = m_recvfmt & RECVFMT_HANDIO;
-  recv_mio = m_recvfmt & RECVFMT_MINIIO;
-  recv_uio = m_recvfmt & RECVFMT_USERIO;
-  recv_crt = m_recvfmt & RECVFMT_CURRENT;
+  recv_ts = recvfmt_ & RECVFMT_TIME;
+  recv_hio = recvfmt_ & RECVFMT_HANDIO;
+  recv_mio = recvfmt_ & RECVFMT_MINIIO;
+  recv_uio = recvfmt_ & RECVFMT_USERIO;
+  recv_crt = recvfmt_ & RECVFMT_CURRENT;
 
   // Number of arguments
   int num = 1 + recv_ts + recv_hio + recv_mio + recv_uio + recv_crt;
@@ -1349,341 +1347,341 @@ HRESULT DensoRobot::ParseRecvParameter(const VARIANT_Ptr& recv, std::vector<doub
   return hr;
 }
 
-void DensoRobot::Callback_MoveString(const MoveStringGoalConstPtr& goal)
-{
-  HRESULT hr;
-  MoveStringResult res;
+// void DensoRobot::Callback_MoveString(const MoveStringGoalConstPtr& goal)
+// {
+//   HRESULT hr;
+//   MoveStringResult res;
 
-  // Set current action
-  boost::mutex::scoped_lock lockAct(m_mtxAct);
-  if (m_curAct != ACT_NONE)
-  {
-    if (m_curAct != ACT_RESET)
-    {
-      res.HRESULT = E_FAIL;
-      m_actMoveString->setAborted(res);
-    }
-    return;
-  }
-  m_curAct = ACT_MOVESTRING;
-  lockAct.unlock();
+//   // Set current action
+//   boost::mutex::scoped_lock lockAct(mtxAct_);
+//   if (curAct_ != ACT_NONE)
+//   {
+//     if (curAct_ != ACT_RESET)
+//     {
+//       res.HRESULT = E_FAIL;
+//       actMoveString_->setAborted(res);
+//     }
+//     return;
+//   }
+//   curAct_ = ACT_MOVESTRING;
+//   lockAct.unlock();
 
-  VARIANT_Ptr vntPose(new VARIANT());
-  VariantInit(vntPose.get());
-  vntPose->vt = VT_BSTR;
-  vntPose->bstrVal = ConvertStringToBSTR(goal->pose);
+//   VARIANT_Ptr vntPose(new VARIANT());
+//   VariantInit(vntPose.get());
+//   vntPose->vt = VT_BSTR;
+//   vntPose->bstrVal = ConvertStringToBSTR(goal->pose);
 
-  hr = ExecMove(goal->comp, vntPose, goal->option);
+//   hr = ExecMove(goal->comp, vntPose, goal->option);
 
-  // Reset current action
-  m_mtxAct.lock();
-  if (m_curAct == ACT_MOVESTRING)
-  {
-    if (SUCCEEDED(hr))
-    {
-      res.HRESULT = S_OK;
-      m_actMoveString->setSucceeded(res);
-    }
-    else
-    {
-      res.HRESULT = hr;
-      m_actMoveString->setAborted(res);
-    }
-    m_curAct = ACT_NONE;
-  }
-  m_mtxAct.unlock();
-}
+//   // Reset current action
+//   mtxAct_.lock();
+//   if (curAct_ == ACT_MOVESTRING)
+//   {
+//     if (SUCCEEDED(hr))
+//     {
+//       res.HRESULT = S_OK;
+//       actMoveString_->setSucceeded(res);
+//     }
+//     else
+//     {
+//       res.HRESULT = hr;
+//       actMoveString_->setAborted(res);
+//     }
+//     curAct_ = ACT_NONE;
+//   }
+//   mtxAct_.unlock();
+// }
 
-void DensoRobot::Callback_MoveValue(const MoveValueGoalConstPtr& goal)
-{
-  HRESULT hr;
-  MoveValueResult res;
+// void DensoRobot::Callback_MoveValue(const MoveValueGoalConstPtr& goal)
+// {
+//   HRESULT hr;
+//   MoveValueResult res;
 
-  // Set current action
-  boost::mutex::scoped_lock lockAct(m_mtxAct);
-  if (m_curAct != ACT_NONE)
-  {
-    if (m_curAct != ACT_RESET)
-    {
-      res.HRESULT = E_FAIL;
-      m_actMoveValue->setAborted(res);
-    }
-    return;
-  }
-  m_curAct = ACT_MOVEVALUE;
-  lockAct.unlock();
+//   // Set current action
+//   boost::mutex::scoped_lock lockAct(mtxAct_);
+//   if (curAct_ != ACT_NONE)
+//   {
+//     if (curAct_ != ACT_RESET)
+//     {
+//       res.HRESULT = E_FAIL;
+//       actMoveValue_->setAborted(res);
+//     }
+//     return;
+//   }
+//   curAct_ = ACT_MOVEVALUE;
+//   lockAct.unlock();
 
-  VARIANT_Ptr vntPose(new VARIANT());
-  VariantInit(vntPose.get());
-  CreatePoseData(goal->pose, *vntPose.get());
+//   VARIANT_Ptr vntPose(new VARIANT());
+//   VariantInit(vntPose.get());
+//   CreatePoseData(goal->pose, *vntPose.get());
 
-  hr = ExecMove(goal->comp, vntPose, goal->option);
+//   hr = ExecMove(goal->comp, vntPose, goal->option);
 
-  // Reset current action
-  m_mtxAct.lock();
-  if (m_curAct == ACT_MOVEVALUE)
-  {
-    if (SUCCEEDED(hr))
-    {
-      res.HRESULT = S_OK;
-      m_actMoveValue->setSucceeded(res);
-    }
-    else
-    {
-      res.HRESULT = hr;
-      m_actMoveValue->setAborted(res);
-    }
-    m_curAct = ACT_NONE;
-  }
-  m_mtxAct.unlock();
-}
+//   // Reset current action
+//   mtxAct_.lock();
+//   if (curAct_ == ACT_MOVEVALUE)
+//   {
+//     if (SUCCEEDED(hr))
+//     {
+//       res.HRESULT = S_OK;
+//       actMoveValue_->setSucceeded(res);
+//     }
+//     else
+//     {
+//       res.HRESULT = hr;
+//       actMoveValue_->setAborted(res);
+//     }
+//     curAct_ = ACT_NONE;
+//   }
+//   mtxAct_.unlock();
+// }
 
-void DensoRobot::Callback_DriveString(const std::string& name, const DriveStringGoalConstPtr& goal)
-{
-  HRESULT hr;
-  DriveStringResult res;
-  BSTR* pbstr;
+// void DensoRobot::Callback_DriveString(const std::string& name, const DriveStringGoalConstPtr& goal)
+// {
+//   HRESULT hr;
+//   DriveStringResult res;
+//   BSTR* pbstr;
 
-  int act = 0;
-  boost::shared_ptr<SimpleActionServer<DriveStringAction> > actSvr;
+//   int act = 0;
+//   boost::shared_ptr<SimpleActionServer<DriveStringAction> > actSvr;
 
-  if (!name.compare("DriveEx"))
-  {
-    act = ACT_DRIVEEXSTRING;
-    actSvr = m_actDriveExString;
-  }
-  else if (!name.compare("DriveAEx"))
-  {
-    act = ACT_DRIVEAEXSTRING;
-    actSvr = m_actDriveAExString;
-  }
-  else
-    return;
+//   if (!name.compare("DriveEx"))
+//   {
+//     act = ACT_DRIVEEXSTRING;
+//     actSvr = actDriveExString_;
+//   }
+//   else if (!name.compare("DriveAEx"))
+//   {
+//     act = ACT_DRIVEAEXSTRING;
+//     actSvr = actDriveAExString_;
+//   }
+//   else
+//     return;
 
-  // Set current action
-  boost::mutex::scoped_lock lockAct(m_mtxAct);
-  if (m_curAct != ACT_NONE)
-  {
-    if (m_curAct != ACT_RESET)
-    {
-      res.HRESULT = E_FAIL;
-      actSvr->setAborted(res);
-    }
-    return;
-  }
-  m_curAct = act;
-  lockAct.unlock();
+//   // Set current action
+//   boost::mutex::scoped_lock lockAct(mtxAct_);
+//   if (curAct_ != ACT_NONE)
+//   {
+//     if (curAct_ != ACT_RESET)
+//     {
+//       res.HRESULT = E_FAIL;
+//       actSvr->setAborted(res);
+//     }
+//     return;
+//   }
+//   curAct_ = act;
+//   lockAct.unlock();
 
-  VARIANT_Ptr vntOpt(new VARIANT());
-  VariantInit(vntOpt.get());
-  vntOpt->vt = (VT_ARRAY | VT_BSTR);
-  vntOpt->parray = SafeArrayCreateVector(VT_BSTR, 0, 2);
-  SafeArrayAccessData(vntOpt->parray, (void**)&pbstr);
-  pbstr[0] = ConvertStringToBSTR(goal->pose);
-  pbstr[1] = ConvertStringToBSTR(goal->option);
-  SafeArrayUnaccessData(vntOpt->parray);
+//   VARIANT_Ptr vntOpt(new VARIANT());
+//   VariantInit(vntOpt.get());
+//   vntOpt->vt = (VT_ARRAY | VT_BSTR);
+//   vntOpt->parray = SafeArrayCreateVector(VT_BSTR, 0, 2);
+//   SafeArrayAccessData(vntOpt->parray, (void**)&pbstr);
+//   pbstr[0] = ConvertStringToBSTR(goal->pose);
+//   pbstr[1] = ConvertStringToBSTR(goal->option);
+//   SafeArrayUnaccessData(vntOpt->parray);
 
-  hr = ExecDrive(name, vntOpt);
+//   hr = ExecDrive(name, vntOpt);
 
-  // Reset current action
-  m_mtxAct.lock();
-  if (m_curAct == act)
-  {
-    if (SUCCEEDED(hr))
-    {
-      res.HRESULT = S_OK;
-      actSvr->setSucceeded(res);
-    }
-    else
-    {
-      res.HRESULT = hr;
-      actSvr->setAborted(res);
-    }
-    m_curAct = ACT_NONE;
-  }
-  m_mtxAct.unlock();
-}
+//   // Reset current action
+//   mtxAct_.lock();
+//   if (curAct_ == act)
+//   {
+//     if (SUCCEEDED(hr))
+//     {
+//       res.HRESULT = S_OK;
+//       actSvr->setSucceeded(res);
+//     }
+//     else
+//     {
+//       res.HRESULT = hr;
+//       actSvr->setAborted(res);
+//     }
+//     curAct_ = ACT_NONE;
+//   }
+//   mtxAct_.unlock();
+// }
 
-void DensoRobot::Callback_DriveValue(const std::string& name, const DriveValueGoalConstPtr& goal)
-{
-  HRESULT hr;
-  DriveValueResult res;
-  VARIANT *pvntval, *pvntjnt;
+// void DensoRobot::Callback_DriveValue(const std::string& name, const DriveValueGoalConstPtr& goal)
+// {
+//   HRESULT hr;
+//   DriveValueResult res;
+//   VARIANT *pvntval, *pvntjnt;
 
-  int act = 0;
-  boost::shared_ptr<SimpleActionServer<DriveValueAction> > actSvr;
+//   int act = 0;
+//   boost::shared_ptr<SimpleActionServer<DriveValueAction> > actSvr;
 
-  if (!name.compare("DriveEx"))
-  {
-    act = ACT_DRIVEEXVALUE;
-    actSvr = m_actDriveExValue;
-  }
-  else if (!name.compare("DriveAEx"))
-  {
-    act = ACT_DRIVEAEXVALUE;
-    actSvr = m_actDriveAExValue;
-  }
-  else
-    return;
+//   if (!name.compare("DriveEx"))
+//   {
+//     act = ACT_DRIVEEXVALUE;
+//     actSvr = actDriveExValue_;
+//   }
+//   else if (!name.compare("DriveAEx"))
+//   {
+//     act = ACT_DRIVEAEXVALUE;
+//     actSvr = actDriveAExValue_;
+//   }
+//   else
+//     return;
 
-  // Set current action
-  boost::mutex::scoped_lock lockAct(m_mtxAct);
-  if (m_curAct != ACT_NONE)
-  {
-    if (m_curAct != ACT_RESET)
-    {
-      res.HRESULT = E_FAIL;
-      actSvr->setAborted(res);
-    }
-    return;
-  }
-  m_curAct = act;
-  lockAct.unlock();
+//   // Set current action
+//   boost::mutex::scoped_lock lockAct(mtxAct_);
+//   if (curAct_ != ACT_NONE)
+//   {
+//     if (curAct_ != ACT_RESET)
+//     {
+//       res.HRESULT = E_FAIL;
+//       actSvr->setAborted(res);
+//     }
+//     return;
+//   }
+//   curAct_ = act;
+//   lockAct.unlock();
 
-  VARIANT_Ptr vntOpt(new VARIANT());
-  VariantInit(vntOpt.get());
+//   VARIANT_Ptr vntOpt(new VARIANT());
+//   VariantInit(vntOpt.get());
 
-  vntOpt->vt = (VT_ARRAY | VT_VARIANT);
-  vntOpt->parray = SafeArrayCreateVector(VT_VARIANT, 0, 2);
+//   vntOpt->vt = (VT_ARRAY | VT_VARIANT);
+//   vntOpt->parray = SafeArrayCreateVector(VT_VARIANT, 0, 2);
 
-  SafeArrayAccessData(vntOpt->parray, (void**)&pvntval);
+//   SafeArrayAccessData(vntOpt->parray, (void**)&pvntval);
 
-  pvntval[0].vt = (VT_ARRAY | VT_VARIANT);
-  pvntval[0].parray = SafeArrayCreateVector(VT_VARIANT, 0, goal->pose.size());
+//   pvntval[0].vt = (VT_ARRAY | VT_VARIANT);
+//   pvntval[0].parray = SafeArrayCreateVector(VT_VARIANT, 0, goal->pose.size());
 
-  SafeArrayAccessData(pvntval[0].parray, (void**)&pvntjnt);
+//   SafeArrayAccessData(pvntval[0].parray, (void**)&pvntjnt);
 
-  for (int i = 0; i < goal->pose.size(); i++)
-  {
-    PoseData pd;
-    pd.value.push_back(goal->pose.at(i).joint);
-    pd.value.push_back(goal->pose.at(i).value);
-    pd.type = -1;
-    pd.pass = (i == 0) ? goal->pass : 0;
-    CreatePoseData(pd, pvntjnt[i]);
-  }
+//   for (int i = 0; i < goal->pose.size(); i++)
+//   {
+//     PoseData pd;
+//     pd.value.push_back(goal->pose.at(i).joint);
+//     pd.value.push_back(goal->pose.at(i).value);
+//     pd.type = -1;
+//     pd.pass = (i == 0) ? goal->pass : 0;
+//     CreatePoseData(pd, pvntjnt[i]);
+//   }
 
-  SafeArrayUnaccessData(pvntval[0].parray);
+//   SafeArrayUnaccessData(pvntval[0].parray);
 
-  pvntval[1].vt = VT_BSTR;
-  pvntval[1].bstrVal = ConvertStringToBSTR(goal->option);
+//   pvntval[1].vt = VT_BSTR;
+//   pvntval[1].bstrVal = ConvertStringToBSTR(goal->option);
 
-  SafeArrayUnaccessData(vntOpt->parray);
+//   SafeArrayUnaccessData(vntOpt->parray);
 
-  hr = ExecDrive(name, vntOpt);
+//   hr = ExecDrive(name, vntOpt);
 
-  // Reset current action
-  m_mtxAct.lock();
-  if (m_curAct == act)
-  {
-    if (SUCCEEDED(hr))
-    {
-      res.HRESULT = S_OK;
-      actSvr->setSucceeded(res);
-    }
-    else
-    {
-      res.HRESULT = hr;
-      actSvr->setAborted(res);
-    }
-    m_curAct = ACT_NONE;
-  }
-  m_mtxAct.unlock();
-}
+//   // Reset current action
+//   mtxAct_.lock();
+//   if (curAct_ == act)
+//   {
+//     if (SUCCEEDED(hr))
+//     {
+//       res.HRESULT = S_OK;
+//       actSvr->setSucceeded(res);
+//     }
+//     else
+//     {
+//       res.HRESULT = hr;
+//       actSvr->setAborted(res);
+//     }
+//     curAct_ = ACT_NONE;
+//   }
+//   mtxAct_.unlock();
+// }
 
-void DensoRobot::Callback_Speed(const Float32::ConstPtr& msg)
-{
-  ExecSpeed(msg->data);
-}
+// void DensoRobot::Callback_Speed(const Float32::ConstPtr& msg)
+// {
+//   ExecSpeed(msg->data);
+// }
 
-void DensoRobot::Callback_Change(const std::string& name, const Int32::ConstPtr& msg)
-{
-  std::stringstream ss;
-  ss << name << msg->data;
-  ExecChange(ss.str());
-}
+// void DensoRobot::Callback_Change(const std::string& name, const Int32::ConstPtr& msg)
+// {
+//   std::stringstream ss;
+//   ss << name << msg->data;
+//   ExecChange(ss.str());
+// }
 
-void DensoRobot::Callback_Cancel()
-{
-  boost::mutex::scoped_lock lockAct(m_mtxAct);
+// void DensoRobot::Callback_Cancel()
+// {
+//   boost::mutex::scoped_lock lockAct(mtxAct_);
 
-  if (m_curAct > ACT_NONE)
-  {
-    ExecHalt();
+//   if (curAct_ > ACT_NONE)
+//   {
+//     ExecHalt();
 
-    switch (m_curAct)
-    {
-      case ACT_MOVESTRING:
-        m_actMoveString->setPreempted();
-        break;
-      case ACT_MOVEVALUE:
-        m_actMoveValue->setPreempted();
-        break;
-      case ACT_DRIVEEXSTRING:
-        m_actDriveExString->setPreempted();
-        break;
-      case ACT_DRIVEEXVALUE:
-        m_actDriveExValue->setPreempted();
-        break;
-      case ACT_DRIVEAEXSTRING:
-        m_actDriveAExString->setPreempted();
-        break;
-      case ACT_DRIVEAEXVALUE:
-        m_actDriveAExValue->setPreempted();
-        break;
-    }
+//     switch (curAct_)
+//     {
+//       case ACT_MOVESTRING:
+//         actMoveString_->setPreempted();
+//         break;
+//       case ACT_MOVEVALUE:
+//         actMoveValue_->setPreempted();
+//         break;
+//       case ACT_DRIVEEXSTRING:
+//         actDriveExString_->setPreempted();
+//         break;
+//       case ACT_DRIVEEXVALUE:
+//         actDriveExValue_->setPreempted();
+//         break;
+//       case ACT_DRIVEAEXSTRING:
+//         actDriveAExString_->setPreempted();
+//         break;
+//       case ACT_DRIVEAEXVALUE:
+//         actDriveAExValue_->setPreempted();
+//         break;
+//     }
 
-    m_curAct = ACT_NONE;
-  }
-}
+//     curAct_ = ACT_NONE;
+//   }
+// }
 
-void DensoRobot::Action_Feedback()
-{
-  boost::mutex::scoped_lock lockAct(m_mtxAct);
+// void DensoRobot::Action_Feedback()
+// {
+//   boost::mutex::scoped_lock lockAct(mtxAct_);
 
-  if (m_curAct > ACT_NONE)
-  {
-    HRESULT hr;
-    std::vector<double> pose;
+//   if (curAct_ > ACT_NONE)
+//   {
+//     HRESULT hr;
+//     std::vector<double> pose;
 
-    MoveStringFeedback fbMvStr;
-    MoveValueFeedback fbMvVal;
-    DriveStringFeedback fbDrvStr;
-    DriveValueFeedback fbDrvVal;
+//     MoveStringFeedback fbMvStr;
+//     MoveValueFeedback fbMvVal;
+//     DriveStringFeedback fbDrvStr;
+//     DriveValueFeedback fbDrvVal;
 
-    hr = ExecCurJnt(pose);
+//     hr = ExecCurJnt(pose);
 
-    if (SUCCEEDED(hr))
-    {
-      switch (m_curAct)
-      {
-        case ACT_MOVESTRING:
-          fbMvStr.pose = pose;
-          m_actMoveString->publishFeedback(fbMvStr);
-          break;
-        case ACT_MOVEVALUE:
-          fbMvVal.pose = pose;
-          m_actMoveValue->publishFeedback(fbMvVal);
-          break;
-        case ACT_DRIVEEXSTRING:
-          fbDrvStr.pose = pose;
-          m_actDriveExString->publishFeedback(fbDrvStr);
-          break;
-        case ACT_DRIVEEXVALUE:
-          fbDrvVal.pose = pose;
-          m_actDriveExValue->publishFeedback(fbDrvVal);
-          break;
-        case ACT_DRIVEAEXSTRING:
-          fbDrvStr.pose = pose;
-          m_actDriveAExString->publishFeedback(fbDrvStr);
-          break;
-        case ACT_DRIVEAEXVALUE:
-          fbDrvVal.pose = pose;
-          m_actDriveAExValue->publishFeedback(fbDrvVal);
-          break;
-      }
-    }
-  }
-}
+//     if (SUCCEEDED(hr))
+//     {
+//       switch (curAct_)
+//       {
+//         case ACT_MOVESTRING:
+//           fbMvStr.pose = pose;
+//           actMoveString_->publishFeedback(fbMvStr);
+//           break;
+//         case ACT_MOVEVALUE:
+//           fbMvVal.pose = pose;
+//           actMoveValue_->publishFeedback(fbMvVal);
+//           break;
+//         case ACT_DRIVEEXSTRING:
+//           fbDrvStr.pose = pose;
+//           actDriveExString_->publishFeedback(fbDrvStr);
+//           break;
+//         case ACT_DRIVEEXVALUE:
+//           fbDrvVal.pose = pose;
+//           actDriveExValue_->publishFeedback(fbDrvVal);
+//           break;
+//         case ACT_DRIVEAEXSTRING:
+//           fbDrvStr.pose = pose;
+//           actDriveAExString_->publishFeedback(fbDrvStr);
+//           break;
+//         case ACT_DRIVEAEXVALUE:
+//           fbDrvVal.pose = pose;
+//           actDriveAExValue_->publishFeedback(fbDrvVal);
+//           break;
+//       }
+//     }
+//   }
+// }
 
 }  // namespace denso_robot_core
