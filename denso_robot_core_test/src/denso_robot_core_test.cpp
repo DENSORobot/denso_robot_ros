@@ -360,7 +360,7 @@ void DriveString(const std::string& name, float timeout)
   ros::Subscriber sub = nh.subscribe<DriveStringActionFeedback>
     (name + "/feedback", MESSAGE_QUEUE, &Callback_DriveStringFeedback);
 
-  SimpleActionClient<DriveStringAction> acDrvVal(name, true);
+  SimpleActionClient<DriveStringAction> acDrvStr(name, true);
   DriveStringGoal           drvStrGoal;
   DriveStringResultConstPtr drvStrRes;
 
@@ -372,21 +372,21 @@ void DriveString(const std::string& name, float timeout)
 
   boost::thread th(&PrintThread);
 
-  acDrvVal.sendGoal(drvStrGoal);
-  if(!acDrvVal.waitForResult(ros::Duration(timeout))) {
-    acDrvVal.cancelGoal();
+  acDrvStr.sendGoal(drvStrGoal);
+  if(!acDrvStr.waitForResult(ros::Duration(timeout))) {
+    acDrvStr.cancelGoal();
   }
 
   bPrint = true;
   th.join();
 
   while(ros::ok()) {
-    gs = acDrvVal.getState();
+    gs = acDrvStr.getState();
     if(gs.isDone()) break;
     ros::Duration(1).sleep();
   }
 
-  drvStrRes = acDrvVal.getResult();
+  drvStrRes = acDrvStr.getResult();
 
   ROS_INFO("State: %s, Result: %X", gs.toString().c_str(), drvStrRes->HRESULT);
 }
