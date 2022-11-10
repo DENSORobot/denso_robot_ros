@@ -24,10 +24,10 @@
 
 #include "denso_robot_core/denso_controller_rc8.hpp"
 
-namespace denso_robot_core
+namespace denso2
 {
-DensoControllerRC8::DensoControllerRC8(const std::string& name, const int* mode)
-  : DensoController(name, mode)
+DensoControllerRC8::DensoControllerRC8(const std::string& name, const int* mode, std::string addr, int port)
+  : DensoController(name, mode, addr, port)
 {
 }
 
@@ -157,4 +157,4 @@ HRESULT DensoControllerRC8::ExecResetStoState()
   return 0;
 }
 
-}  // namespace denso_robot_core
+}  // namespace denso2

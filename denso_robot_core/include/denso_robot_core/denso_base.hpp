@@ -21,7 +21,7 @@ using namespace tinyxml2;
 #define MESSAGE_QUEUE (1)
 #define BCAP_VAR_DEFAULT_DURATION (1000) /* [ms] */
 
-namespace denso_robot_core
+namespace denso2
 {
 
 typedef std::vector<std::string> Name_Vec;
@@ -127,7 +127,7 @@ protected:
 typedef boost::shared_ptr<DensoBase> DensoBase_Ptr;
 typedef std::vector<DensoBase_Ptr> DensoBase_Vec;
     
-} // namespace denso_robot_core
+} // namespace denso2
 
 
 

@@ -24,7 +24,7 @@
 
 #include "denso_robot_core/denso_robot.hpp"
 
-namespace denso_robot_core
+namespace denso2
 {
 enum
 {
@@ -937,25 +937,25 @@ HRESULT DensoRobot::ChangeMode(int mode)
       if (FAILED(hr))
         return hr;
 
-      memTimeout_ = vecService_[DensoBase::SRV_ACT]->get_Timeout();
-      memRetry_ = vecService_[DensoBase::SRV_ACT]->get_Retry();
+      memTimeout_ = vecService_[DensoBase::SRV_ACT]->get_timeout();
+      memRetry_ = vecService_[DensoBase::SRV_ACT]->get_retry();
       if (mode & DensoRobot::SLVMODE_SYNC_WAIT)
       {
-        vecService_[DensoBase::SRV_ACT]->put_Timeout(this->SLVMODE_TIMEOUT_SYNC);
+        vecService_[DensoBase::SRV_ACT]->set_timeout(this->SLVMODE_TIMEOUT_SYNC);
       }
       else
       {
-        vecService_[DensoBase::SRV_ACT]->put_Timeout(this->SLVMODE_TIMEOUT_ASYNC);
+        vecService_[DensoBase::SRV_ACT]->set_timeout(this->SLVMODE_TIMEOUT_ASYNC);
       }
-      // ROS_INFO("bcap-slave timeout changed to %d msec [mode: 0x%X]", vecService_[DensoBase::SRV_ACT]->get_Timeout(),
+      // ROS_INFO("bcap-slave timeout changed to %d msec [mode: 0x%X]", vecService_[DensoBase::SRV_ACT]->get_timeout(),
               //  mode);
-      vecService_[DensoBase::SRV_ACT]->put_Retry(3);
+      vecService_[DensoBase::SRV_ACT]->set_retry(3);
     }
   }
   else
   {
-    vecService_[DensoBase::SRV_ACT]->put_Timeout(memTimeout_);
-    vecService_[DensoBase::SRV_ACT]->put_Retry(memRetry_);
+    vecService_[DensoBase::SRV_ACT]->set_timeout(memTimeout_);
+    vecService_[DensoBase::SRV_ACT]->set_retry(memRetry_);
 
     hr = ExecSlaveMode("slvChangeMode", mode);
     ExecGiveArm();
@@ -1684,4 +1684,4 @@ HRESULT DensoRobot::ParseRecvParameter(const VARIANT_Ptr& recv, std::vector<doub
 //   }
 // }
 
-}  // namespace denso_robot_core
+}  // namespace denso2

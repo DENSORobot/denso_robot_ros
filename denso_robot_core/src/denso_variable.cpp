@@ -24,7 +24,7 @@
 
 #include "denso_robot_core/denso_variable.hpp"
 
-namespace denso_robot_core
+namespace denso2
 {
 DensoVariable::DensoVariable(DensoBase* parent, Service_Vec& service, Handle_Vec& handle, const std::string& name,
                              const int* mode, int16_t vt, bool Read, bool Write, bool ID, int Duration)
@@ -366,4 +366,4 @@ HRESULT DensoVariable::ExecPutID(const int id)
 //   ExecPutID(msg->data);
 // }
 
-}  // namespace denso_robot_core
+}  // namespace denso2

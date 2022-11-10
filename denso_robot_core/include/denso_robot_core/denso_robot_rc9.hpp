@@ -28,7 +28,7 @@
 #include <boost/thread.hpp>
 #include "denso_robot_core/denso_robot.hpp"
 
-namespace denso_robot_core
+namespace denso2
 {
 class DensoRobotRC9 : public DensoRobot
 {
@@ -40,6 +40,6 @@ public:
 
 typedef boost::shared_ptr<DensoRobotRC9> DensoRobotRC9_Ptr;
 
-}  // namespace denso_robot_core
+}  // namespace denso2
 
 #endif  // DENSO_ROBOT_RC9_H

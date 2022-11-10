@@ -1,6 +1,8 @@
 Please refer to https://wiki.ros.org/denso_robot_ros.
 
 
+`sudo apt install ros-humble-xacro`
+
 ## General details about robot description packages
 
 This description package follows, as much as possible, the recommendations from [ROS-Industrial Consortium about robot support packages](https://wiki.ros.org/Industrial/Tutorials/WorkingWithRosIndustrialRobotSupportPackages).

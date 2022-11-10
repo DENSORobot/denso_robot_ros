@@ -24,7 +24,7 @@
 
 #include "denso_robot_core/denso_controller_rc8_cobotta.hpp"
 
-namespace denso_robot_core
+namespace denso2
 {
 HRESULT DensoControllerRC8Cobotta::AddRobot(XMLElement* xmlElem)
 {
@@ -148,4 +148,4 @@ bool DensoControllerRC8Cobotta::IsCobotta(const std::string& robot_name)
   return false;
 }
 
-}  // namespace denso_robot_core
+}  // namespace denso2

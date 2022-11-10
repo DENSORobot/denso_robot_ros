@@ -28,7 +28,7 @@
 #include "denso_robot_core/denso_controller_rc8.hpp"
 #include "denso_robot_core/denso_robot_rc8_cobotta.hpp"
 
-namespace denso_robot_core
+namespace denso2
 {
 
 class DensoControllerRC8Cobotta : public DensoControllerRC8
@@ -50,6 +50,6 @@ private:
   HRESULT AddRobot(XMLElement* xmlElem);
 
 };
-}  // namespace denso_robot_core
+}  // namespace denso2
 
 #endif  // DENSO_CONTROLLER_RC8_COBOTTA_H

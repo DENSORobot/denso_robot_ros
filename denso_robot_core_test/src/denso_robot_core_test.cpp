@@ -51,7 +51,7 @@
 
 using namespace std_msgs;
 using namespace actionlib;
-using namespace denso_robot_core;
+using namespace denso2;
 
 #define MESSAGE_QUEUE   (100)
 #define DEFAULT_TIMEOUT (0.0)

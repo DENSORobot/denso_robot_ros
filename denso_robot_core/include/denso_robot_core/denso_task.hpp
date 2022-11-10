@@ -28,7 +28,7 @@
 #include "denso_robot_core/denso_base.hpp"
 #include "denso_robot_core/denso_variable.hpp"
 
-namespace denso_robot_core
+namespace denso2
 {
 class DensoTask : public DensoBase
 {
@@ -60,6 +60,6 @@ private:
 typedef boost::shared_ptr<DensoTask> DensoTask_Ptr;
 typedef std::vector<DensoTask_Ptr> DensoTask_Vec;
 
-}  // namespace denso_robot_core
+}  // namespace denso2
 
 #endif  // DENSO_TASK_H

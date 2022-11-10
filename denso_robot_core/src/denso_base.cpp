@@ -26,7 +26,7 @@
 #include "denso_robot_core/denso_base.hpp"
 #include "denso_robot_core/denso_variable.hpp"
 
-namespace denso_robot_core
+namespace denso2
 {
 std::string DensoBase::ConvertBSTRToString(const BSTR bstr)
 {
@@ -272,4 +272,4 @@ HRESULT DensoBase::get_Object(const DensoBase_Vec& vecBase, const std::string& n
   return E_HANDLE;
 }
 
-}  // namespace denso_robot_core
+}  // namespace denso2

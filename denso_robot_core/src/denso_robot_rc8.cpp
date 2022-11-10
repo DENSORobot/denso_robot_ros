@@ -24,7 +24,7 @@
 
 #include "denso_robot_core/denso_robot_rc8.hpp"
 
-namespace denso_robot_core
+namespace denso2
 {
 DensoRobotRC8::DensoRobotRC8(DensoBase* parent, Service_Vec& service, Handle_Vec& handle, const std::string& name,
                              const int* mode)
@@ -36,4 +36,4 @@ DensoRobotRC8::~DensoRobotRC8()
 {
 }
 
-}  // namespace denso_robot_core
+}  // namespace denso2

@@ -53,7 +53,7 @@ typedef boost::interprocess::unique_ptr<VARIANT, variant_deleter> VARIANT_Ptr;
 class BcapService
 {
 public:
-    BcapService();
+    BcapService(std::string addr, int port);
     virtual ~BcapService();
 
     BCAP_SERVICE_PUBLIC 
@@ -72,19 +72,19 @@ public:
     const std::string& get_Type() const;
 
     BCAP_SERVICE_PUBLIC
-    void put_Type(const std::string& type);
+    void set_type(const std::string& type);
 
     BCAP_SERVICE_PUBLIC
-    uint32_t get_Timeout() const;
+    uint32_t get_timeout() const;
 
     BCAP_SERVICE_PUBLIC
-    void put_Timeout(uint32_t value);
+    void set_timeout(uint32_t value);
 
     BCAP_SERVICE_PUBLIC
-    unsigned int get_Retry() const;
+    unsigned int get_retry() const;
 
     BCAP_SERVICE_PUBLIC
-    void put_Retry(unsigned int value);
+    void set_retry(unsigned int value);
 
     BCAP_SERVICE_PUBLIC
     HRESULT CallFunction(BCAP_SERVICE_REQ& req, BCAP_SERVICE_RES& res);

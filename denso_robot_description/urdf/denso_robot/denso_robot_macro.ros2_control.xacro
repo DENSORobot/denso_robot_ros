@@ -1,118 +1,97 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<robot xmlns:xacro="http://wiki.ros.org/xacro">
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro">
 
-  <xacro:macro name="denso_robot_ros2_control" params="
-               name
-               prefix
-               use_mock_hardware:=^|false
-               mock_sensor_commands:=^|false
-               sim_gazebo_classic:=^|false
-               sim_gazebo:=^|false"
-               >
-
+  <xacro:macro name="denso_robot_ros2_control" params="name prefix 
+    sim_gazebo_classic:=^|false 
+    sim_gazebo:=^|false 
+    robot_ip:=^|192.168.0.1 
+    robot_port:=^|5007 
+    send_format 
+    recv_format
+    controller_type:=^|8">
     <ros2_control name="${name}" type="system">
       <hardware>
-        <xacro:if value="${use_mock_hardware}">
-          <plugin>mock_components/GenericSystem</plugin>
-          <param name="mock_sensor_commands">${mock_sensor_commands}</param>
-        </xacro:if>
         <xacro:if value="${sim_gazebo_classic}">
           <plugin>gazebo_ros2_control/GazeboSystem</plugin>
         </xacro:if>
         <xacro:if value="${sim_gazebo}">
           <plugin>ign_ros2_control/IgnitionSystem</plugin>
         </xacro:if>
-        <xacro:unless value="${use_mock_hardware or sim_gazebo_classic or sim_gazebo}">
-          <plugin>robot_hardware_inteface/RobotHardwareInteface</plugin>
+        <xacro:unless value="${sim_gazebo_classic or sim_gazebo}">
+          <plugin>denso_hw/denso_hw</plugin>
+          <param name="robot_ip">${robot_ip}</param>
+          <param name="robot_port">${robot_port}</param>
+          <param name="send_format">${send_format}</param>
+          <param name="recv_format">${recv_format}</param>
+          <param name="controller_type">${controller_type}</param>
         </xacro:unless>
       </hardware>
       <joint name="${prefix}joint1">
-        <command_interface name="position">     <!-- Add/Remove interfaces as needed -->
-          <param name="min">-1</param>
-          <param name="max">1</param>
+        <command_interface name="position">     
+          <param name="min">${radians(-170)}</param>
+          <param name="max">${radians(170)}</param>
         </command_interface>
-        <state_interface name="position">
-          <param name="initial_value">0.0</param>
-        <state_interface/>
+        <state_interface name="position"/>
         <state_interface name="velocity"/>
-        <state_interface name="acceleration"/>
+        <state_interface name="effort"/>
       </joint>
       <joint name="${prefix}joint2">
-        <command_interface name="position">     <!-- Add/Remove interfaces as needed -->
-          <param name="min">-1</param>
-          <param name="max">1</param>
+        <command_interface name="position">     
+          <param name="min">${radians(-100)}</param>
+          <param name="max">${radians(135)}</param>
         </command_interface>
-        <state_interface name="position">
-          <param name="initial_value">0.0</param>
-        <state_interface/>
+        <state_interface name="position"/>
         <state_interface name="velocity"/>
-        <state_interface name="acceleration"/>
+        <state_interface name="effort"/>
       </joint>
       <joint name="${prefix}joint3">
-        <command_interface name="position">     <!-- Add/Remove interfaces as needed -->
-          <param name="min">-1</param>
-          <param name="max">1</param>
+        <command_interface name="position">     
+          <param name="min">${radians(-136)}</param>
+          <param name="max">${radians(153)}</param>
         </command_interface>
-        <state_interface name="position">
-          <param name="initial_value">0.0</param>
-        <state_interface/>
+        <state_interface name="position"/>
         <state_interface name="velocity"/>
-        <state_interface name="acceleration"/>
+        <state_interface name="effort"/>
       </joint>
       <joint name="${prefix}joint4">
-        <command_interface name="position">     <!-- Add/Remove interfaces as needed -->
-          <param name="min">-1</param>
-          <param name="max">1</param>
+        <command_interface name="position">     
+          <param name="min">${radians(-270)}</param>
+          <param name="max">${radians(270)}</param>
         </command_interface>
-        <state_interface name="position">
-          <param name="initial_value">0.0</param>
-        <state_interface/>
+        <state_interface name="position"/>
         <state_interface name="velocity"/>
-        <state_interface name="acceleration"/>
+        <state_interface name="effort"/>
       </joint>
       <joint name="${prefix}joint5">
-        <command_interface name="position">     <!-- Add/Remove interfaces as needed -->
-          <param name="min">-1</param>
-          <param name="max">1</param>
+        <command_interface name="position">     
+          <param name="min">${radians(-120)}</param>
+          <param name="max">${radians(120)}</param>
         </command_interface>
-        <state_interface name="position">
-          <param name="initial_value">0.0</param>
-        <state_interface/>
+        <state_interface name="position"/>
         <state_interface name="velocity"/>
-        <state_interface name="acceleration"/>
+        <state_interface name="effort"/>
       </joint>
       <joint name="${prefix}joint6">
-        <command_interface name="position">     <!-- Add/Remove interfaces as needed -->
-          <param name="min">-1</param>
-          <param name="max">1</param>
+        <command_interface name="position">     
+          <param name="min">${radians(-360)}</param>
+          <param name="max">${radians(360)}</param>
         </command_interface>
-        <state_interface name="position">
-          <param name="initial_value">0.0</param>
-        <state_interface/>
+        <state_interface name="position"/>
         <state_interface name="velocity"/>
-        <state_interface name="acceleration"/>
+        <state_interface name="effort"/>
       </joint>
-      <sensor name="tcp_fts_sensor">            <!-- Remove/change sensors as needed -->
-        <state_interface name="fx"/>
-        <state_interface name="fy"/>
-        <state_interface name="fz"/>
-        <state_interface name="tx"/>
-        <state_interface name="ty"/>
-        <state_interface name="tz"/>
-        <param name="frame_id">tool0</param>    <!-- Change sensors as needed -->
-        <param name="min_fx">-100</param>
-        <param name="max_fx">100</param>
-        <param name="min_fy">-100</param>
-        <param name="max_fy">100</param>
-        <param name="min_fz">-200</param>
-        <param name="max_fz">200</param>
-        <param name="min_tx">-10</param>
-        <param name="max_tx">10</param>
-        <param name="min_ty">-10</param>
-        <param name="max_ty">10</param>
-        <param name="min_tz">-15</param>
-        <param name="max_tz">15</param>
-      </sensor>
+
+      <!-- Transmission -->
+      <transmission name="transmission">
+        <plugin>transmission_interface/SimpleTransmission</plugin>
+        <joint name="joint1" role="revolute"/>
+        <joint name="joint2" role="revolute"/>
+        <joint name="joint3" role="revolute"/>
+        <joint name="joint4" role="revolute"/>
+        <joint name="joint5" role="revolute"/>
+        <joint name="joint6" role="revolute"/>
+      </transmission>
+
     </ros2_control>
 
   </xacro:macro>

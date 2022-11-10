@@ -8,9 +8,9 @@
 #include <thread>
 namespace bcap_service {
 
-BcapService::BcapService()
-  : type_("tcp"), addr_("192.168.0.1"),
-    port_(5007), timeout_(3000), retry_(5), wait_(0),
+BcapService::BcapService(std::string addr, int port)
+  : type_("tcp"), addr_(addr),
+    port_(port), timeout_(3000), retry_(5), wait_(0),
     fd_(0), wdt_(400), invoke_(180000)
 {
 
@@ -88,14 +88,14 @@ const std::string& BcapService::get_Type() const
   return type_;
 }
 
-void BcapService::put_Type(const std::string& type)
+void BcapService::set_type(const std::string& type)
 {
   if(fd_ == 0) {
     type_ = type;
   }
 }
 
-uint32_t BcapService::get_Timeout() const
+uint32_t BcapService::get_timeout() const
 {
   uint32_t value = 0;
   if(FAILED(bCap_GetTimeout(fd_, &value))) {
@@ -104,14 +104,14 @@ uint32_t BcapService::get_Timeout() const
   return value;
 }
 
-void BcapService::put_Timeout(uint32_t value)
+void BcapService::set_timeout(uint32_t value)
 {
   if(SUCCEEDED(bCap_SetTimeout(fd_, value))) {
     timeout_ = value;
   }
 }
 
-unsigned int BcapService::get_Retry() const
+unsigned int BcapService::get_retry() const
 {
   unsigned int value = 0;
   if(FAILED(bCap_GetRetry(fd_, &value))) {
@@ -120,7 +120,7 @@ unsigned int BcapService::get_Retry() const
   return value;
 }
 
-void BcapService::put_Retry(unsigned int value)
+void BcapService::set_retry(unsigned int value)
 {
   if(SUCCEEDED(bCap_SetRetry(fd_, value))) {
     retry_ = value;

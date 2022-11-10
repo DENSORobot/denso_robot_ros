@@ -24,10 +24,10 @@
 
 #include "denso_robot_core/denso_controller_rc9.hpp"
 
-namespace denso_robot_core
+namespace denso2
 {
-DensoControllerRC9::DensoControllerRC9(const std::string& name, const int* mode)
-  : DensoController(name, mode)
+DensoControllerRC9::DensoControllerRC9(const std::string& name, const int* mode, std::string addr, int port)
+  : DensoController(name, mode, addr, port)
 {
 }
 
@@ -177,4 +177,4 @@ HRESULT DensoControllerRC9::ExecResetStoState()
   return vecService_[DensoBase::SRV_WATCH]->ExecFunction(ID_CONTROLLER_EXECUTE, vntArgs, vntRet);
 }
 
-}  // namespace denso_robot_core
+}  // namespace denso2

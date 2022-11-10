@@ -28,7 +28,7 @@
 #include "denso_robot_core/denso_base.hpp"
 #include "denso_robot_core/denso_variable.hpp"
 
-namespace denso_robot_core
+namespace denso2
 {
 
 const int DEFAULT_MIN_USERIO_OFFSET = 128;
@@ -256,6 +256,6 @@ private:
 typedef boost::shared_ptr<DensoRobot> DensoRobot_Ptr;
 typedef std::vector<DensoRobot_Ptr> DensoRobot_Vec;
 
-}  // namespace denso_robot_core
+}  // namespace denso2
 
 #endif  // DENSO_ROBOT_H

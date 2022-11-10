@@ -31,7 +31,7 @@
 #include "denso_robot_core/denso_variable.hpp"
 #include "denso_robot_core/visibility_control.h"
 
-namespace denso_robot_core
+namespace denso2
 {
 
 // using namespace bcap_service;
@@ -70,7 +70,7 @@ public:
   // }
 
 protected:
-  DensoController(const std::string& name, const int* mode);
+  DensoController(const std::string& name, const int* mode, std::string addr, int port);
   virtual HRESULT AddController() = 0;
   virtual HRESULT AddRobot(XMLElement* xmlElem) = 0;
   virtual HRESULT AddTask(XMLElement* xmlElem);
@@ -85,6 +85,6 @@ protected:
 
 typedef boost::shared_ptr<DensoController> DensoController_Ptr;
 
-}  // namespace denso_robot_core
+}  // namespace denso2
 
 #endif  // DENSO_CONTROLLER_H

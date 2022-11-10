@@ -4,13 +4,17 @@
   <!-- Use this if parameters are set from the launch file, otherwise delete -->
   <xacro:arg name="prefix" default="" />
 
-  <xacro:arg name="use_mock_hardware" default="false" />
-  <xacro:arg name="mock_sensor_commands" default="false" />
   <xacro:arg name="sim_gazebo_classic" default="false" />
   <xacro:arg name="sim_gazebo" default="false" />
   <xacro:arg name="simulation_controllers" default="" />
+  <xacro:arg name="robot_ip" default="192.168.0.1" />
+  <xacro:arg name="robot_port" default="5900"/>
+  <xacro:arg name="send_format" default="288"/>
+  <xacro:arg name="recv_format" default="292"/>
 
+  <!-- Import Denso Robot Model -->
   <xacro:include filename="$(find denso_robot_description)/urdf/denso_robot/denso_robot_macro.xacro"/>
+  <!-- Import ROS2 Control -->
   <xacro:include filename="$(find denso_robot_description)/urdf/denso_robot/denso_robot_macro.ros2_control.xacro"/>
 
   <!-- create link fixed to the "world" -->
@@ -22,24 +26,13 @@
     <origin xyz="0 0 0" rpy="0 0 0" />          <!-- position robot in the world -->
   </xacro:denso_robot>
 
-  <xacro:denso_robot_ros2_control
-    name="denso_robot"
-    prefix="$(arg prefix)"
-    use_mock_hardware="$(arg use_mock_hardware)"
-    mock_sensor_commands="$(arg mock_sensor_commands)"
-    sim_gazebo_classic="$(arg sim_gazebo_classic)"
-    sim_gazebo="$(arg sim_gazebo)"/>
-
-  <xacro:if value="$(arg sim_gazebo_classic)">
-    <!-- Gazebo plugins -->
-    <gazebo reference="world">
-    </gazebo>
-    <gazebo>
-      <plugin filename="libgazebo_ros2_control.so" name="gazebo_ros2_control">
-        <parameters>$(arg simulation_controllers)</parameters>
-      </plugin>
-    </gazebo>
-  </xacro:if>
+  <xacro:denso_robot_ros2_control name="$(arg prefix)denso_control" 
+    prefix="$(arg prefix)" 
+    sim_gazebo="$(arg sim_gazebo)" 
+    robot_ip="$(arg robot_ip)" 
+    robot_port="$(arg robot_port)" 
+    send_format="$(arg send_format)" 
+    recv_format="$(arg recv_format)" />
 
   <xacro:if value="$(arg sim_gazebo)">
     <!-- Gazebo plugins -->

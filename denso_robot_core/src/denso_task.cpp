@@ -24,7 +24,7 @@
 
 #include "denso_robot_core/denso_task.hpp"
 
-namespace denso_robot_core
+namespace denso2
 {
 DensoTask::DensoTask(DensoBase* parent, Service_Vec& service, Handle_Vec& handle, const std::string& name,
                      const int* mode)
@@ -125,4 +125,4 @@ HRESULT DensoTask::AddVariable(XMLElement* xmlElem)
   return hr;
 }
 
-}  // namespace denso_robot_core
+}  // namespace denso2

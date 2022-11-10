@@ -27,7 +27,7 @@
 
 #include "denso_robot_core/denso_controller.hpp"
 
-namespace denso_robot_core
+namespace denso2
 {
 class DensoRobotCore
 {
@@ -35,7 +35,7 @@ public:
   DensoRobotCore();
   virtual ~DensoRobotCore();
 
-  HRESULT Initialize();
+  HRESULT Initialize(int ctrl_type, std::string addr, int port);
 
   void Start();
   void Stop();
@@ -59,6 +59,6 @@ private:
 
 typedef boost::shared_ptr<DensoRobotCore> DensoRobotCore_Ptr;
 
-}  // namespace denso_robot_core
+}  // namespace denso2
 
 #endif  // DENSO_ROBOT_CORE_H

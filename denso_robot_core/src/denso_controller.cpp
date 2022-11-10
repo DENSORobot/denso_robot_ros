@@ -25,22 +25,22 @@
 #include "denso_robot_core/denso_controller.hpp"
 #include "boost/make_shared.hpp"
 
-namespace denso_robot_core
+namespace denso2
 {
-DensoController::DensoController(const std::string& name, const int* mode)
+DensoController::DensoController(const std::string& name, const int* mode, std::string addr, int port)
   : DensoBase(name, mode)
 {
   for (int srvs = DensoBase::SRV_MIN; srvs <= DensoBase::SRV_MAX; srvs++)
   {
-    BcapService_Ptr service = boost::make_shared<bcap_service::BcapService>();
+    BcapService_Ptr service = boost::make_shared<bcap_service::BcapService>(addr, port);
     // service->parseParams();
     switch (srvs)
     {
       case DensoBase::SRV_ACT:
-        service->put_Type("udp");
+        service->set_type("udp");
         break;
       default:
-        service->put_Type("tcp");
+        service->set_type("tcp");
         break;
     }
     vecService_.push_back(service);
@@ -484,4 +484,4 @@ HRESULT DensoController::ExecGetErrorDescription(HRESULT error_code, std::string
   return hr;
 }
 
-}  // namespace denso_robot_core
+}  // namespace denso2

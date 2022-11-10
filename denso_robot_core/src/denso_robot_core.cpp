@@ -55,9 +55,9 @@
 //   }
 // }
 
-namespace denso_robot_core
+namespace denso2
 {
-DensoRobotCore::DensoRobotCore() : ctrlType_(0), mode_(0), quit_(false)
+DensoRobotCore::DensoRobotCore() : ctrlType_(8), mode_(0), quit_(false)
 {
   ctrl_.reset();
 }
@@ -66,12 +66,12 @@ DensoRobotCore::~DensoRobotCore()
 {
 }
 
-HRESULT DensoRobotCore::Initialize()
+HRESULT DensoRobotCore::Initialize(int ctrl_type, std::string addr, int port)
 {
   std::string name, filename;
   float ctrl_cycle_msec;
   std::string robot_name;
-
+  ctrlType_ = ctrl_type;
   // if (!node.getParam("controller_name", name))
   // {
   //   name = "";
@@ -101,15 +101,15 @@ HRESULT DensoRobotCore::Initialize()
     case 8:
       if (DensoControllerRC8Cobotta::IsCobotta(robot_name))
       {
-        ctrl_ = boost::make_shared<DensoControllerRC8Cobotta>(name, &mode_);
+        ctrl_ = boost::make_shared<DensoControllerRC8Cobotta>(name, &mode_, addr, port);
       }
       else
       {
-        ctrl_ = boost::make_shared<DensoControllerRC8>(name, &mode_);
+        ctrl_ = boost::make_shared<DensoControllerRC8>(name, &mode_, addr, port);
       }
       break;
     case 9:
-      ctrl_ = boost::make_shared<DensoControllerRC9>(name, &mode_);
+      ctrl_ = boost::make_shared<DensoControllerRC9>(name, &mode_, addr, port);
       break;
     default:
       // ROS_ERROR("Invalid argument value [controller_type]");
@@ -170,4 +170,4 @@ HRESULT DensoRobotCore::ChangeMode(int mode, bool service)
   return hr;
 }
 
-}  // namespace denso_robot_core
+}  // namespace denso2

@@ -28,12 +28,12 @@
 #include "denso_robot_core/denso_controller.hpp"
 #include "denso_robot_core/denso_robot_rc9.hpp"
 
-namespace denso_robot_core
+namespace denso2
 {
 class DensoControllerRC9 : public DensoController
 {
 public:
-  DensoControllerRC9(const std::string& name, const int* mode);
+  DensoControllerRC9(const std::string& name, const int* mode, std::string addr, int port);
   virtual ~DensoControllerRC9();
 
   HRESULT get_Robot(int index, DensoRobotRC9_Ptr* robot);
@@ -47,6 +47,6 @@ private:
 
 typedef boost::shared_ptr<DensoControllerRC9> DensoControllerRC9_Ptr;
 
-}  // namespace denso_robot_core
+}  // namespace denso2
 
 #endif  // DENSO_CONTROLLER_RC9_H

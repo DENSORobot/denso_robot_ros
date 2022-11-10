@@ -24,7 +24,7 @@
 
 #include "denso_robot_core/denso_robot_rc8_cobotta.hpp"
 
-namespace denso_robot_core
+namespace denso2
 {
 
 /**
@@ -152,4 +152,4 @@ HRESULT DensoRobotRC8Cobotta::ExecAutoCal()
 
   return vecService_[DensoBase::SRV_ACT]->ExecFunction(ID_ROBOT_EXECUTE, vntArgs, vntRet);
 }
-}  // namespace denso_robot_core
+}  // namespace denso2
