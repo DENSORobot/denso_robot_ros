@@ -18,7 +18,6 @@ BcapService::BcapService(std::string addr, int port)
 
 BcapService::~BcapService()
 {
-  StopService();
   Disconnect();
 }
 

@@ -13,8 +13,9 @@
 // Custom include
 #include "bcap_core/bcap_funcid.h"
 #include "bcap_service/bcap_service.hpp"
-#include "denso_robot_core/tinyxml2.h"
+// #include "denso_robot_core/tinyxml2.h"
 #include "denso_robot_core/visibility_control.h"
+#include <tinyxml2.h>
 
 using namespace tinyxml2;
 

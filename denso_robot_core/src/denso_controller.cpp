@@ -24,6 +24,7 @@
 
 #include "denso_robot_core/denso_controller.hpp"
 #include "boost/make_shared.hpp"
+#include <iostream>
 
 namespace denso2
 {
@@ -57,21 +58,20 @@ HRESULT DensoController::InitializeBCAP(const std::string& filename)
   XMLError ret;
   XMLDocument xmlDoc;
   XMLElement *xmlCtrl, *xmlRob, *xmlTsk;
-
   for (int srvs = DensoBase::SRV_MIN; srvs <= DensoBase::SRV_MAX; srvs++)
   {
     hr = vecService_[srvs]->Connect();
     if (FAILED(hr))
       return hr;
   }
-
   ret = xmlDoc.LoadFile(filename.c_str());
   if (ret != XML_SUCCESS)
     return E_FAIL;
 
   hr = AddController();
-  if (FAILED(hr))
+  if (FAILED(hr)){
     return hr;
+  }
 
   xmlCtrl = xmlDoc.FirstChildElement(DensoController::XML_CTRL_NAME);
   if (xmlCtrl == NULL)
@@ -94,7 +94,6 @@ HRESULT DensoController::InitializeBCAP(const std::string& filename)
     return E_FAIL;
 
   hr = AddTask(xmlTsk);
-
   return hr;
 }
 

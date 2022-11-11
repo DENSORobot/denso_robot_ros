@@ -7,8 +7,9 @@
     robot_ip:=^|192.168.0.1 
     robot_port:=^|5007 
     send_format 
-    recv_format
-    controller_type:=^|8">
+    recv_format 
+    controller_type:=^|8 
+    config_file ">
     <ros2_control name="${name}" type="system">
       <hardware>
         <xacro:if value="${sim_gazebo_classic}">
@@ -24,6 +25,7 @@
           <param name="send_format">${send_format}</param>
           <param name="recv_format">${recv_format}</param>
           <param name="controller_type">${controller_type}</param>
+          <param name="config_file">${config_file}</param>
         </xacro:unless>
       </hardware>
       <joint name="${prefix}joint1">

@@ -83,6 +83,7 @@ private:
     int recvfmt_;
 
     std::vector<int> type_;
+    std::string name_;
     
     boost::mutex mtxMode_;
 

@@ -65,9 +65,6 @@ public:
     BCAP_SERVICE_PUBLIC 
     HRESULT StartService();
 
-    BCAP_SERVICE_PUBLIC 
-    HRESULT StopService();
-
     BCAP_SERVICE_PUBLIC
     const std::string& get_Type() const;
 

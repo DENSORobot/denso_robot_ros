@@ -107,6 +107,8 @@ bool denso_hw::denso_init()
     sendfmt_ = stoi(info_.hardware_parameters["send_format"]);
     recvfmt_ = stoi(info_.hardware_parameters["recv_format"]);
     int ctrl_type = stoi(info_.hardware_parameters["controller_type"]);
+    std::string config_file = info_.hardware_parameters["config_file"];
+    name_ = "";
 
     RCLCPP_INFO(rclcpp::get_logger(this->get_name()), "Denso joints size is %zx, transmission size is %zx", num_joints_, info_.transmissions[0].joints.size());
     for (size_t i = 0; i < num_joints_; i++)
@@ -121,14 +123,14 @@ bool denso_hw::denso_init()
     denso_ctrl_.reset();
     denso_robot_.reset();
     denso_var_.reset();
-
-    HRESULT hr = denso_core_->Initialize(ctrl_type, ip_, port_);
+    HRESULT hr = denso_core_->Initialize(ctrl_type, ip_, port_, config_file);
     if (FAILED(hr))
     {
         RCLCPP_ERROR(rclcpp::get_logger(this->get_name()),"Failed to connect real controller. (%X)", hr);
         return false;
     }
 
+    RCLCPP_INFO(rclcpp::get_logger(this->get_name()), "Denso hw Initializing...  1");
     // Get the controller ptr
     denso_ctrl_ = denso_core_->get_Controller();
 
@@ -141,6 +143,7 @@ bool denso_hw::denso_init()
         return false;
     }
     denso_robot_ = pRob;
+    RCLCPP_INFO(rclcpp::get_logger(this->get_name()), "Denso hw Initializing...  2");
 
     hr = CheckRobotType();
     if (FAILED(hr))
@@ -148,7 +151,8 @@ bool denso_hw::denso_init()
         RCLCPP_ERROR(rclcpp::get_logger(this->get_name()),"Invaild Robot Type.");
         return false;
     }
-    
+    RCLCPP_INFO(rclcpp::get_logger(this->get_name()), "Denso hw Initializing...  3");
+
     denso_robot_->ChangeArmGroup(armGroup);
 
     hr = denso_ctrl_->AddVariable("@ERROR_CODE");
@@ -157,6 +161,7 @@ bool denso_hw::denso_init()
         printErrorDescription(hr, "Failed to add @ERROR_CODE object");
         return false;
     }
+    RCLCPP_INFO(rclcpp::get_logger(this->get_name()), "Denso hw Initializing...  4");
 
     hr = denso_ctrl_->get_Variable("@ERROR_CODE", &denso_var_);
     if (FAILED(hr))
@@ -224,7 +229,7 @@ hardware_interface::CallbackReturn denso_hw::on_configure(
         rclcpp::get_logger(this->get_name()), "Configuring ...please wait...");
     if(!denso_init()){
         RCLCPP_FATAL(
-            rclcpp::get_logger(this->get_name()), "Can not connect to Denso Robot");
+            rclcpp::get_logger(this->get_name()), "Configuration Failure! Please check your connection.");
         return hardware_interface::CallbackReturn::ERROR;
     }
     RCLCPP_INFO(rclcpp::get_logger(this->get_name()), "Successfully configured!");
@@ -289,8 +294,7 @@ denso_hw::export_command_interfaces()
 hardware_interface::CallbackReturn denso_hw::on_activate(
   const rclcpp_lifecycle::State & /*previous_state*/)
 {
-    RCLCPP_INFO(
-        rclcpp::get_logger(this->get_name()), "Starting... please wait...");
+    RCLCPP_INFO(rclcpp::get_logger(this->get_name()), "Starting... please wait...");
 
     // state init
     HRESULT hr;
@@ -299,6 +303,7 @@ hardware_interface::CallbackReturn denso_hw::on_activate(
     {
         DensoVariable_Ptr pVar;
         hr = denso_robot_->get_Variable("@SERVO_ON", &pVar);
+
         if (SUCCEEDED(hr))
         {
             VARIANT_Ptr vntVal(new VARIANT());
@@ -316,6 +321,7 @@ hardware_interface::CallbackReturn denso_hw::on_activate(
     }
 
     int recvfmt_temp = recvfmt_; // check the format
+    RCLCPP_INFO(rclcpp::get_logger(this->get_name()), "Chaning the robot mode... 1");
     switch (recvfmt_ & DensoRobot::RECVFMT_POSE)
     {
         case DensoRobot::RECVFMT_POSE_J:
@@ -331,11 +337,14 @@ hardware_interface::CallbackReturn denso_hw::on_activate(
         default:
             recvfmt_temp = DensoRobot::RECVFMT_POSE_J;
     }
+    RCLCPP_INFO(rclcpp::get_logger(this->get_name()), "Chaning the robot mode... 2");
     if (recvfmt_temp != recvfmt_)
     {
+        RCLCPP_INFO(rclcpp::get_logger(this->get_name()), "Chaning the robot mode... 3");
         recvfmt_ = ((recvfmt_ & ~DensoRobot::RECVFMT_POSE) | recvfmt_temp);
         RCLCPP_WARN(rclcpp::get_logger(this->get_name()), "Changed recv_format to %d to contain joint",recvfmt_);
     }
+    RCLCPP_INFO(rclcpp::get_logger(this->get_name()), "Chaning the robot mode... 4");
     denso_robot_->set_SendFormat(sendfmt_);
     denso_robot_->set_RecvFormat(recvfmt_);
 
@@ -376,7 +385,6 @@ hardware_interface::return_type denso_hw::read(
         const rclcpp::Time & time, const rclcpp::Duration & period)
 {
     boost::mutex::scoped_lock lockMode(mtxMode_);
-
     if (denso_core_->get_Mode() == DensoRobot::SLVMODE_NONE)
     {
         HRESULT hr = denso_robot_->ExecCurJnt(hw_joints_);
@@ -385,22 +393,26 @@ hardware_interface::return_type denso_hw::read(
             RCLCPP_ERROR(rclcpp::get_logger(this->get_name()), "Failed to get current joint. (%X)", hr);
         }
     }
-    
     for (size_t i = 0; i < num_joints_; i++)
     {
-        switch (type_[i])
+        switch (joint_type_[i])
         {
         case 0:  // prismatic
+        {
             hw_positions_[i] = MM2M(hw_joints_[i]);
             break;
+        }
         case 1:  // revolute
+        {
             hw_positions_[i] = DEG2RAD(hw_joints_[i]);
             break;
+        }
         case -1:  // fixed
         default:
             hw_positions_[i] = 0.0;
             break;
         }
+        hw_commands_positions_[i] = hw_positions_[i];
     }
     return hardware_interface::return_type::OK;
 }
@@ -417,17 +429,23 @@ hardware_interface::return_type denso_hw::write(
         int bits = 0x0000;
         for (size_t i = 0; i < num_joints_; i++)
         {
-            switch (type_[i])
+            switch (joint_type_[i])
             {
             case 0: // prismatic
+            {
                 pose[i] = M2MM(hw_commands_positions_[i]);
                 break;
+            }
             case 1: // revolute
+            {
                 pose[i] = RAD2DEG(hw_commands_positions_[i]);
                 break;
+            }
             case -1: //fixed
+            {
                 pose[i] = 0.0;
                 break;
+            }
             }
         bits |= (1 << i);
         }
@@ -451,7 +469,41 @@ hardware_interface::return_type denso_hw::write(
             }
         }
     }
+
+    // RCLCPP_INFO(rclcpp::get_logger(this->get_name()),"Position cmd is [%f,%f,%f,%f,%f,%f]", hw_commands_positions_[0], hw_commands_positions_[1], 
+    //     hw_commands_positions_[2], hw_commands_positions_[3], hw_commands_positions_[4], hw_commands_positions_[5]);
+
+    
     return hardware_interface::return_type::OK;
+}
+
+HRESULT denso_hw::CheckRobotType()
+{
+  DensoVariable_Ptr pVar;
+  VARIANT_Ptr vntVal(new VARIANT());
+  std::string strTypeName = "@TYPE_NAME";
+
+  HRESULT hr = denso_robot_->AddVariable(strTypeName);
+  if (FAILED(hr))
+  {
+    printErrorDescription(hr, "Failed to add @TYPE_NAME");
+    return hr;
+  }
+  denso_robot_->get_Variable(strTypeName, &pVar);
+  hr = pVar->ExecGetValue(vntVal);
+  if (FAILED(hr))
+  {
+    printErrorDescription(hr, "Failed to get @TYPE_NAME");
+    return hr;
+  }
+  strTypeName = DensoBase::ConvertBSTRToString(vntVal->bstrVal);
+  if (strncmp(name_.c_str(), strTypeName.c_str(),
+              (name_.length() < strTypeName.length()) ? name_.length() : strTypeName.length()))
+  {
+    return E_FAIL;
+  }
+
+  return 0;
 }
 
 bool denso_hw::hasError()

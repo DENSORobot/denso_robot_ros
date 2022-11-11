@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Controller>
+  <Robot>
+    <!-- Current position and angle -->
+    <Variable vt="8197" read="true" duration="8">@CURRENT_POSITION</Variable>
+    <Variable vt="8197" read="true" duration="8">@CURRENT_ANGLE</Variable>
+    <!--<Variable vt="8197" read="true" duration="1">@HIGH_CURRENT_POSITION</Variable>-->
+    <!--<Variable vt="8197" read="true" duration="1">@HIGH_CURRENT_ANGLE</Variable>-->
+    <!-- Servo status -->
+    <Variable vt="11" read="true" write="true" duration="1000">@SERVO_ON</Variable>
+    <!-- Speed -->
+    <Variable vt="4" read="true" write="false" duration="10000">@SPEED</Variable>
+    <Variable vt="4" read="true" write="false" duration="10000">@ACCEL</Variable>
+    <Variable vt="4" read="true" write="false" duration="10000">@DECEL</Variable>
+    <Variable vt="4" read="true" write="true"  duration="10000">@EXTSPEED</Variable>
+  </Robot>
+  <Task>
+    <!-- Task status -->
+    <Variable vt="3" read="true" write="false" duration="10000">@STATUS</Variable>
+    <!-- Start and stop -->
+    <Variable vt="3" read="false" write="true">@START</Variable>
+    <Variable vt="3" read="false" write="true">@STOP</Variable>
+  </Task>
+  <!-- Global variables -->
+  <Variable vt="3"    read="true" write="true" id="true" duration="10000">I*</Variable>
+  <Variable vt="4"    read="true" write="true" id="true" duration="10000">F*</Variable>
+  <Variable vt="5"    read="true" write="true" id="true" duration="10000">D*</Variable>
+  <Variable vt="8"    read="true" write="true" id="true" duration="10000">S*</Variable>
+  <Variable vt="11"   read="true" write="true" id="true" duration="10000">IO*</Variable>
+  <Variable vt="8196" read="true" write="true" id="true" duration="10000">V*</Variable>
+  <Variable vt="8196" read="true" write="true" id="true" duration="10000">P*</Variable>
+  <Variable vt="8196" read="true" write="true" id="true" duration="10000">J*</Variable>
+  <Variable vt="8196" read="true" write="true" id="true" duration="10000">T*</Variable>
+  <!-- System variables -->
+  <Variable vt="3"  read="true" write="false" duration="1000">@MODE</Variable>
+  <Variable vt="11" read="true" write="true"  duration="1000">@LOCK</Variable>
+  <Variable vt="3"  read="true" write="true"  duration="1000">@ERROR_CODE</Variable>
+  <Variable vt="11" read="true" write="false" duration="1000">@EMERGENCY_STOP</Variable>
+</Controller>

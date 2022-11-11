@@ -7,10 +7,11 @@
   <xacro:arg name="sim_gazebo_classic" default="false" />
   <xacro:arg name="sim_gazebo" default="false" />
   <xacro:arg name="simulation_controllers" default="" />
-  <xacro:arg name="robot_ip" default="192.168.0.1" />
-  <xacro:arg name="robot_port" default="5900"/>
+  <xacro:arg name="robot_ip" default="192.168.0.13" />
+  <xacro:arg name="robot_port" default="5007"/>
   <xacro:arg name="send_format" default="288"/>
   <xacro:arg name="recv_format" default="292"/>
+  <xacro:arg name="config_file" default=""/>
 
   <!-- Import Denso Robot Model -->
   <xacro:include filename="$(find denso_robot_description)/urdf/denso_robot/denso_robot_macro.xacro"/>
@@ -32,7 +33,8 @@
     robot_ip="$(arg robot_ip)" 
     robot_port="$(arg robot_port)" 
     send_format="$(arg send_format)" 
-    recv_format="$(arg recv_format)" />
+    recv_format="$(arg recv_format)" 
+    config_file="$(arg config_file)"/>
 
   <xacro:if value="$(arg sim_gazebo)">
     <!-- Gazebo plugins -->

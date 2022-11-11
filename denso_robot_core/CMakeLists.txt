@@ -25,7 +25,6 @@ add_library(
   src/denso_robot_rc9.cpp
   src/denso_task.cpp
   src/denso_variable.cpp
-  src/tinyxml2.cpp
 )
 target_include_directories(
   ${PROJECT_NAME}
@@ -66,6 +65,11 @@ install(
 install(
   DIRECTORY include/
   DESTINATION include
+)
+
+install(
+  DIRECTORY config
+  DESTINATION share/${PROJECT_NAME}
 )
 
 ament_package()

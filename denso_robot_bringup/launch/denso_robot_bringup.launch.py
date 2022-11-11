@@ -21,6 +21,9 @@ from launch.substitutions import Command, FindExecutable, LaunchConfiguration, P
 from launch_ros.actions import Node
 from launch_ros.substitutions import FindPackageShare
 
+from ament_index_python.packages import get_package_share_directory
+
+
 
 def generate_launch_description():
     # Declare arguments
@@ -85,16 +88,33 @@ def generate_launch_description():
             description="Start RViz2 automatically with this launch file.",
         )
     )
-
+    declared_arguments.append(
+        DeclareLaunchArgument(
+            "denso_config_package",
+            default_value="denso_robot_core",
+            description="Denso Controller package.",
+        )
+    )
+    declared_arguments.append(
+        DeclareLaunchArgument(
+            "denso_config_file",
+            default_value="config.xml",
+            description="Control cmd for denso.",
+        )
+    )
     # Initialize Arguments
     runtime_config_package = LaunchConfiguration("runtime_config_package")
     controllers_file = LaunchConfiguration("controllers_file")
     description_package = LaunchConfiguration("description_package")
     description_file = LaunchConfiguration("description_file")
+    denso_config_package = LaunchConfiguration("denso_config_package")
+    denso_config_file = LaunchConfiguration("denso_config_file")
     prefix = LaunchConfiguration("prefix")
     use_gazebo = LaunchConfiguration("use_gazebo")
     robot_controller = LaunchConfiguration("robot_controller")
     start_rviz = LaunchConfiguration("start_rviz")
+
+    # Get control file 
 
     # Get URDF via xacro
     robot_description_content = Command(
@@ -102,11 +122,19 @@ def generate_launch_description():
             PathJoinSubstitution([FindExecutable(name="xacro")]),
             " ",
             PathJoinSubstitution(
-                [FindPackageShare(description_package), "urdf", "denso_robot.urdf.xacro"]
+                [FindPackageShare(description_package), "urdf", description_file]
             ),
             " ",
             "prefix:=",
             prefix,
+            " ",
+            "use_gazebo:=",
+            use_gazebo,
+            " ",
+            "config_file:=",
+            PathJoinSubstitution(
+                [FindPackageShare(denso_config_package), "config", denso_config_file]
+            ),
             " ",
         ]
     )

@@ -42,13 +42,6 @@ HRESULT DensoControllerRC8::AddController()
 
   HRESULT hr = E_FAIL;
   int srvs, argc;
-
-  // if (duration_ != ros::Duration(0.008))
-  // {
-  //   ROS_ERROR("Invalid argument value [bcap_slave_control_cycle_msec]");
-  //   return E_INVALIDARG;
-  // }
-
   for (srvs = DensoBase::SRV_MIN; srvs <= DensoBase::SRV_MAX; srvs++)
   {
     std::stringstream ss;

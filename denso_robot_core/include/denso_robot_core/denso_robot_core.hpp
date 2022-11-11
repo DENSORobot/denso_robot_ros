@@ -35,7 +35,7 @@ public:
   DensoRobotCore();
   virtual ~DensoRobotCore();
 
-  HRESULT Initialize(int ctrl_type, std::string addr, int port);
+  HRESULT Initialize(int ctrl_type, std::string addr, int port, std::string file_name);
 
   void Start();
   void Stop();

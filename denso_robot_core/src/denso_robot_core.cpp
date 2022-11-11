@@ -28,6 +28,8 @@
 #include "denso_robot_core/denso_controller_rc9.hpp"
 #include <boost/thread.hpp>
 
+#include <iostream>
+
 // int main(int argc, char** argv)
 // {
 //   ros::init(argc, argv, "denso_robot_core");
@@ -66,12 +68,14 @@ DensoRobotCore::~DensoRobotCore()
 {
 }
 
-HRESULT DensoRobotCore::Initialize(int ctrl_type, std::string addr, int port)
+HRESULT DensoRobotCore::Initialize(int ctrl_type, std::string addr, int port, std::string file_name)
 {
   std::string name, filename;
   float ctrl_cycle_msec;
   std::string robot_name;
   ctrlType_ = ctrl_type;
+  filename = file_name;
+  name = "";
   // if (!node.getParam("controller_name", name))
   // {
   //   name = "";
@@ -95,7 +99,6 @@ HRESULT DensoRobotCore::Initialize(int ctrl_type, std::string addr, int port)
   // {
   //   return E_FAIL;
   // }
-
   switch (ctrlType_)
   {
     case 8:
@@ -115,8 +118,8 @@ HRESULT DensoRobotCore::Initialize(int ctrl_type, std::string addr, int port)
       // ROS_ERROR("Invalid argument value [controller_type]");
       return E_INVALIDARG;
   }
-
-  return ctrl_->InitializeBCAP(filename);
+  HRESULT hr = ctrl_->InitializeBCAP(filename);
+  return 0;
 }
 
 void DensoRobotCore::Start()
