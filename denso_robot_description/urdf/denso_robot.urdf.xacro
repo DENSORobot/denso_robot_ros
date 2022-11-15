@@ -7,7 +7,7 @@
   <xacro:arg name="sim_gazebo_classic" default="false" />
   <xacro:arg name="sim_gazebo" default="false" />
   <xacro:arg name="simulation_controllers" default="" />
-  <xacro:arg name="robot_ip" default="192.168.0.13" />
+  <xacro:arg name="robot_ip" default="192.168.0.1" />
   <xacro:arg name="robot_port" default="5007"/>
   <xacro:arg name="send_format" default="288"/>
   <xacro:arg name="recv_format" default="292"/>

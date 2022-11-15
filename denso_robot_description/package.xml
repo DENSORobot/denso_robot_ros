@@ -3,9 +3,10 @@
 <package format="3">
   <name>denso_robot_description</name>
   <version>0.0.0</version>
-  <description>TODO: Package description</description>
-  <maintainer email="373556662@qq.com">dayuan</maintainer>
-  <license>TODO: License declaration</license>
+  <description>Denso Robot urdf description Package</description>
+  <maintainer email="d.chen@srd.mech.tohoku.ac.jp">Dayuan Chen</maintainer>
+  <license>MIT</license>
+  <author email="fa-support@denso-wave.com">DENSO WAVE INCORPORATED</author>
 
   <buildtool_depend>ament_cmake</buildtool_depend>
 

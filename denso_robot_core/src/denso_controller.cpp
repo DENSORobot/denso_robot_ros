@@ -24,7 +24,6 @@
 
 #include "denso_robot_core/denso_controller.hpp"
 #include "boost/make_shared.hpp"
-#include <iostream>
 
 namespace denso2
 {

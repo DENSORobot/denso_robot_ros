@@ -28,35 +28,6 @@
 #include "denso_robot_core/denso_controller_rc9.hpp"
 #include <boost/thread.hpp>
 
-#include <iostream>
-
-// int main(int argc, char** argv)
-// {
-//   ros::init(argc, argv, "denso_robot_core");
-
-//   HRESULT hr;
-
-//   denso_robot_core::DensoRobotCore engine;
-
-//   hr = engine.Initialize();
-//   if (FAILED(hr))
-//   {
-//     ROS_ERROR("Failed to initialize. (%X)", hr);
-//     return 1;
-//   }
-//   else
-//   {
-//     boost::thread t(boost::bind(&denso_robot_core::DensoRobotCore::Start, &engine));
-
-//     ros::spin();
-
-//     engine.Stop();
-//     t.join();
-
-//     return 0;
-//   }
-// }
-
 namespace denso2
 {
 DensoRobotCore::DensoRobotCore() : ctrlType_(8), mode_(0), quit_(false)
@@ -76,29 +47,6 @@ HRESULT DensoRobotCore::Initialize(int ctrl_type, std::string addr, int port, st
   ctrlType_ = ctrl_type;
   filename = file_name;
   name = "";
-  // if (!node.getParam("controller_name", name))
-  // {
-  //   name = "";
-  // }
-
-  // if (!node.getParam("controller_type", ctrlType_))
-  // {
-  //   return E_FAIL;
-  // }
-
-  // if (!node.getParam("config_file", filename))
-  // {
-  //   return E_FAIL;
-  // }
-
-  // if (!node.getParam("bcap_slave_control_cycle_msec", ctrl_cycle_msec))
-  // {
-  //   return E_FAIL;
-  // }
-  // if (!node.getParam("robot_name", robot_name))
-  // {
-  //   return E_FAIL;
-  // }
   switch (ctrlType_)
   {
     case 8:
@@ -124,16 +72,8 @@ HRESULT DensoRobotCore::Initialize(int ctrl_type, std::string addr, int port, st
 
 void DensoRobotCore::Start()
 {
-
   quit_ = false;
   ctrl_->StartService();
-
-  // while (!quit_ && ros::ok())
-  // {
-  //   ros::spinOnce();
-  //   ctrl_->Update();
-  //   ros::Rate(1000).sleep();
-  // }
 }
 
 void DensoRobotCore::Stop()
@@ -166,7 +106,6 @@ HRESULT DensoRobotCore::ChangeMode(int mode, bool service)
 
   if ((mode_ == 0) && service)
   {
-    // ros::NodeHandle nd;
     ctrl_->StartService();
   }
 

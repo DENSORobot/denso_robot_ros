@@ -76,6 +76,21 @@ def generate_launch_description():
     )
     declared_arguments.append(
         DeclareLaunchArgument(
+            "robot_ip",
+            default_value="192.168.0.13",
+            description="The Denso Controller IP Address. Default is 192.168.0.1. \
+                You can change it to control multy robots.",
+        )
+    )
+    declared_arguments.append(
+        DeclareLaunchArgument(
+            "robot_port",
+            default_value="5007",
+            description="The Denso Controller Port. Default is 5007.",
+        )
+    )
+    declared_arguments.append(
+        DeclareLaunchArgument(
             "robot_controller",
             default_value="forward_position_controller",
             description="Robot controller to start.",
@@ -110,6 +125,8 @@ def generate_launch_description():
     denso_config_package = LaunchConfiguration("denso_config_package")
     denso_config_file = LaunchConfiguration("denso_config_file")
     prefix = LaunchConfiguration("prefix")
+    robot_ip = LaunchConfiguration("robot_ip")
+    robot_port = LaunchConfiguration("robot_port")
     use_gazebo = LaunchConfiguration("use_gazebo")
     robot_controller = LaunchConfiguration("robot_controller")
     start_rviz = LaunchConfiguration("start_rviz")
@@ -131,6 +148,12 @@ def generate_launch_description():
             "use_gazebo:=",
             use_gazebo,
             " ",
+            "robot_ip:=",
+            robot_ip,
+            " "
+            "robot_port:=",
+            robot_port,
+            " "
             "config_file:=",
             PathJoinSubstitution(
                 [FindPackageShare(denso_config_package), "config", denso_config_file]

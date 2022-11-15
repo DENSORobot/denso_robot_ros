@@ -24,8 +24,6 @@
 namespace denso2
 {
 
-// const uint8_t denso_hw::num_joints_ = 6;
-
 /*
  * @brief: Hardware Interface Initial
 */
@@ -469,10 +467,6 @@ hardware_interface::return_type denso_hw::write(
             }
         }
     }
-
-    // RCLCPP_INFO(rclcpp::get_logger(this->get_name()),"Position cmd is [%f,%f,%f,%f,%f,%f]", hw_commands_positions_[0], hw_commands_positions_[1], 
-    //     hw_commands_positions_[2], hw_commands_positions_[3], hw_commands_positions_[4], hw_commands_positions_[5]);
-
     
     return hardware_interface::return_type::OK;
 }

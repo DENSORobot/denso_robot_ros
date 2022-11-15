@@ -45,78 +45,18 @@ HRESULT DensoVariable::StartService()
     return S_FALSE;
   }
 
-  // Message name
-  // std::string tmpName = parent_->RosName();
-  // if (tmpName != "")
-  //   tmpName.append("/");
-  // tmpName.append(DensoBase::RosName());
-
   if (bRead_)
   {
     switch (m_vt)
     {
-      // case VT_I4:
-      //   m_pubValue = node.advertise<Int32>(tmpName + NAME_READ, MESSAGE_QUEUE);
-      //   break;
-      // case VT_R4:
-      //   m_pubValue = node.advertise<Float32>(tmpName + NAME_READ, MESSAGE_QUEUE);
-      //   break;
-      // case VT_R8:
-      //   m_pubValue = node.advertise<Float64>(tmpName + NAME_READ, MESSAGE_QUEUE);
-      //   break;
-      // case VT_BSTR:
-      //   m_pubValue = node.advertise<String>(tmpName + NAME_READ, MESSAGE_QUEUE);
-      //   break;
-      // case VT_BOOL:
-      //   m_pubValue = node.advertise<Bool>(tmpName + NAME_READ, MESSAGE_QUEUE);
-      //   break;
-      // case (VT_ARRAY | VT_R4):
-      //   m_pubValue = node.advertise<Float32MultiArray>(tmpName + NAME_READ, MESSAGE_QUEUE);
-      //   break;
-      // case (VT_ARRAY | VT_R8):
-      //   m_pubValue = node.advertise<Float64MultiArray>(tmpName + NAME_READ, MESSAGE_QUEUE);
-      //   break;
-      // default:
-      //   return E_FAIL;
+     
     }
   }
 
   if (bWrite_)
   {
-    // switch (m_vt)
-    // {
-    //   case VT_I4:
-    //     m_subValue = node.subscribe<Int32>(tmpName + NAME_WRITE, MESSAGE_QUEUE, &DensoVariable::Callback_I32, this);
-    //     break;
-    //   case VT_R4:
-    //     m_subValue = node.subscribe<Float32>(tmpName + NAME_WRITE, MESSAGE_QUEUE, &DensoVariable::Callback_F32, this);
-    //     break;
-    //   case VT_R8:
-    //     m_subValue = node.subscribe<Float64>(tmpName + NAME_WRITE, MESSAGE_QUEUE, &DensoVariable::Callback_F64, this);
-    //     break;
-    //   case VT_BSTR:
-    //     m_subValue = node.subscribe<String>(tmpName + NAME_WRITE, MESSAGE_QUEUE, &DensoVariable::Callback_String, this);
-    //     break;
-    //   case VT_BOOL:
-    //     m_subValue = node.subscribe<Bool>(tmpName + NAME_WRITE, MESSAGE_QUEUE, &DensoVariable::Callback_Bool, this);
-    //     break;
-    //   case (VT_ARRAY | VT_R4):
-    //     m_subValue = node.subscribe<Float32MultiArray>(tmpName + NAME_WRITE, MESSAGE_QUEUE,
-    //                                                    &DensoVariable::Callback_F32Array, this);
-    //     break;
-    //   case (VT_ARRAY | VT_R8):
-    //     m_subValue = node.subscribe<Float64MultiArray>(tmpName + NAME_WRITE, MESSAGE_QUEUE,
-    //                                                    &DensoVariable::Callback_F64Array, this);
-    //     break;
-    //   default:
-    //     return E_FAIL;
-    // }
+    
   }
-
-  // if (bID_)
-  // {
-  //   m_subID = node.subscribe<Int32>(tmpName + NAME_ID, MESSAGE_QUEUE, &DensoVariable::Callback_ID, this);
-  // }
 
   serving_ = true;
 
@@ -129,9 +69,6 @@ HRESULT DensoVariable::StopService()
   serving_ = false;
   mtxSrv_.unlock();
 
-  // pubValue_.shutdown();
-  // subValue_.shutdown();
-  // subID_.shutdown();
   return S_OK;
 }
 
@@ -157,9 +94,7 @@ bool DensoVariable::Update()
     float* pfltval;
     double* pdblval;
 
-    // ros::Time pubTimeCur = ros::Time::now();
 
-    // if (pubTimeCur - m_pubTimePrev > m_Duration)
     {
       VARIANT_Ptr vntRet(new VARIANT());
       VariantInit(vntRet.get());
@@ -173,23 +108,18 @@ bool DensoVariable::Update()
           {
             case VT_I4:
               varI = vntRet->lVal;
-              // m_pubValue.publish(varI);
               break;
             case VT_R4:
               varF = vntRet->fltVal;
-              // m_pubValue.publish(varF);
               break;
             case VT_R8:
               varD = vntRet->dblVal;
-              // m_pubValue.publish(varD);
               break;
             case VT_BSTR:
               varS = ConvertBSTRToString(vntRet->bstrVal);
-              // m_pubValue.publish(varS);
               break;
             case VT_BOOL:
               varIO = (vntRet->boolVal != VARIANT_FALSE) ? true : false;
-              // m_pubValue.publish(varIO);
               break;
             case (VT_ARRAY | VT_R4):
               num = vntRet->parray->rgsabound->cElements;
@@ -197,7 +127,6 @@ bool DensoVariable::Update()
               varFArray.resize(num);
               std::copy(pfltval, &pfltval[num], varFArray.begin());
               SafeArrayUnaccessData(vntRet->parray);
-              // m_pubValue.publish(varFArray);
               break;
             case (VT_ARRAY | VT_R8):
               num = vntRet->parray->rgsabound->cElements;
@@ -205,7 +134,6 @@ bool DensoVariable::Update()
               varDArray.resize(num);
               std::copy(pdblval, &pdblval[num], varDArray.begin());
               SafeArrayUnaccessData(vntRet->parray);
-              // m_pubValue.publish(varDArray);
               break;
           }
         }
@@ -285,85 +213,4 @@ HRESULT DensoVariable::ExecPutID(const int id)
 
   return hr;
 }
-
-// void DensoVariable::Callback_I32(const Int32::ConstPtr& msg)
-// {
-//   VARIANT_Ptr vntVal(new VARIANT());
-//   vntVal->vt = VT_I4;
-//   vntVal->lVal = msg->data;
-
-//   ExecPutValue(vntVal);
-// }
-
-// void DensoVariable::Callback_F32(const Float32::ConstPtr& msg)
-// {
-//   VARIANT_Ptr vntVal(new VARIANT());
-//   vntVal->vt = VT_R4;
-//   vntVal->fltVal = msg->data;
-
-//   ExecPutValue(vntVal);
-// }
-
-// void DensoVariable::Callback_F64(const Float64::ConstPtr& msg)
-// {
-//   VARIANT_Ptr vntVal(new VARIANT());
-//   vntVal->vt = VT_R8;
-//   vntVal->dblVal = msg->data;
-
-//   ExecPutValue(vntVal);
-// }
-
-// void DensoVariable::Callback_String(const String::ConstPtr& msg)
-// {
-//   VARIANT_Ptr vntVal(new VARIANT());
-//   vntVal->vt = VT_BSTR;
-//   vntVal->bstrVal = ConvertStringToBSTR(msg->data);
-
-//   ExecPutValue(vntVal);
-// }
-
-// void DensoVariable::Callback_Bool(const Bool::ConstPtr& msg)
-// {
-//   VARIANT_Ptr vntVal(new VARIANT());
-//   vntVal->vt = VT_BOOL;
-//   vntVal->boolVal = (msg->data != 0) ? VARIANT_TRUE : VARIANT_FALSE;
-
-//   ExecPutValue(vntVal);
-// }
-
-// void DensoVariable::Callback_F32Array(const Float32MultiArray::ConstPtr& msg)
-// {
-//   VARIANT_Ptr vntVal(new VARIANT());
-//   float* pval;
-
-//   vntVal->vt = (VT_ARRAY | VT_R4);
-//   vntVal->parray = SafeArrayCreateVector(VT_R4, 0, msg->data.size());
-
-//   SafeArrayAccessData(vntVal->parray, (void**)&pval);
-//   std::copy(msg->data.begin(), msg->data.end(), pval);
-//   SafeArrayUnaccessData(vntVal->parray);
-
-//   ExecPutValue(vntVal);
-// }
-
-// void DensoVariable::Callback_F64Array(const Float64MultiArray::ConstPtr& msg)
-// {
-//   VARIANT_Ptr vntVal(new VARIANT());
-//   double* pval;
-
-//   vntVal->vt = (VT_ARRAY | VT_R8);
-//   vntVal->parray = SafeArrayCreateVector(VT_R8, 0, msg->data.size());
-
-//   SafeArrayAccessData(vntVal->parray, (void**)&pval);
-//   std::copy(msg->data.begin(), msg->data.end(), pval);
-//   SafeArrayUnaccessData(vntVal->parray);
-
-//   ExecPutValue(vntVal);
-// }
-
-// void DensoVariable::Callback_ID(const Int32::ConstPtr& msg)
-// {
-//   ExecPutID(msg->data);
-// }
-
 }  // namespace denso2
