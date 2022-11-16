@@ -31,6 +31,14 @@ This is because the version update of the Gazebo....
 
 ### 4. Launch the Gazebo Robot & Enjoy
 
+![Gazebo](./docs/gazebo.png)
+
+### 5. Control Robot
+You can control the robot by publish the command to `/forward_position_controller/commands`
+
+For example:
+
+`ros2 topic pub --once /forward_position_controller/commands std_msgs/msg/Float64MultiArray "{layout: {}, data: [0,0,1.574,0,0,0]}"`
 
 ## Update Log
 
