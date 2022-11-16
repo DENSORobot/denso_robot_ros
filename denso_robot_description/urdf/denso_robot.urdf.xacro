@@ -5,7 +5,7 @@
   <xacro:arg name="prefix" default="" />
 
   <xacro:arg name="sim_gazebo_classic" default="false" />
-  <xacro:arg name="sim_gazebo" default="false" />
+  <xacro:arg name="sim_gazebo" default="true" />
   <xacro:arg name="simulation_controllers" default="" />
   <xacro:arg name="robot_ip" default="192.168.0.1" />
   <xacro:arg name="robot_port" default="5007"/>
@@ -37,13 +37,10 @@
     config_file="$(arg config_file)"/>
 
   <xacro:if value="$(arg sim_gazebo)">
-    <!-- Gazebo plugins -->
-    <gazebo reference="world">
-    </gazebo>
     <gazebo>
-      <plugin filename="libign_ros2_control-system.so" name="ign_ros2_control::IgnitionROS2ControlPlugin">
-        <parameters>$(arg simulation_controllers)</parameters>
-        <controller_manager_node_name>$(arg prefix)controller_manager</controller_manager_node_name>
+      <!-- Joint state publisher -->
+      <plugin filename="gz_ros2_control-system" name="gz_ros2_control::GazeboSimROS2ControlPlugin">
+        <parameters>$(find denso_robot_bringup)/config/denso_robot_gazebo_controllers.yaml</parameters>
       </plugin>
     </gazebo>
   </xacro:if>

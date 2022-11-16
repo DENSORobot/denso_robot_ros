@@ -3,7 +3,7 @@
 
   <xacro:macro name="denso_robot_ros2_control" params="name prefix 
     sim_gazebo_classic:=^|false 
-    sim_gazebo:=^|false 
+    sim_gazebo:=^|true 
     robot_ip:=^|192.168.0.1 
     robot_port:=^|5007 
     send_format 
@@ -16,7 +16,7 @@
           <plugin>gazebo_ros2_control/GazeboSystem</plugin>
         </xacro:if>
         <xacro:if value="${sim_gazebo}">
-          <plugin>ign_ros2_control/IgnitionSystem</plugin>
+          <plugin>gz_ros2_control/GazeboSimSystem</plugin>
         </xacro:if>
         <xacro:unless value="${sim_gazebo_classic or sim_gazebo}">
           <plugin>denso_hw/denso_hw</plugin>

@@ -151,7 +151,8 @@
       <parent link="${prefix}base_link" />
       <child link="${prefix}link1" />
       <axis xyz="0 0 1" />
-      <limit effort="0" lower="${radians(-170)}" upper="${radians(170)}" velocity="${radians(360)}" />
+      <limit effort="1000" lower="${radians(-170)}" upper="${radians(170)}" velocity="${radians(360)}" />
+      <dynamics damping="0.7" friction="0.0"/>
     </joint>
     <!-- joint 2 -->
     <joint name="${prefix}joint2" type="revolute">
@@ -159,7 +160,8 @@
       <parent link="${prefix}link1" />
       <child link="${prefix}link2" />
       <axis xyz="0 1 0" />
-      <limit effort="0" lower="${radians(-100)}" upper="${radians(135)}" velocity="${radians(300)}" />
+      <limit effort="1000" lower="${radians(-100)}" upper="${radians(135)}" velocity="${radians(300)}" />
+      <dynamics damping="0.7" friction="0.0"/>
     </joint>
     <!-- joint 3 -->
     <joint name="${prefix}joint3" type="revolute">
@@ -167,7 +169,8 @@
       <parent link="${prefix}link2" />
       <child link="${prefix}link3" />
       <axis xyz="0 1 0" />
-      <limit effort="0" lower="${radians(-136)}" upper="${radians(153)}" velocity="${radians(408)}" />
+      <limit effort="1000" lower="${radians(-136)}" upper="${radians(153)}" velocity="${radians(408)}" />
+      <dynamics damping="0.7" friction="0.0"/>
     </joint>
     <!-- joint 4 -->
     <joint name="${prefix}joint4" type="revolute">
@@ -175,7 +178,8 @@
       <parent link="${prefix}link3" />
       <child link="${prefix}link4" />
       <axis xyz="0 0 1" />
-      <limit effort="0" lower="${radians(-270)}" upper="${radians(270)}" velocity="${radians(540)}" />
+      <limit effort="1000" lower="${radians(-270)}" upper="${radians(270)}" velocity="${radians(540)}" />
+      <dynamics damping="0.7" friction="0.0"/>
     </joint>
     <!-- joint 5 -->
     <joint name="${prefix}joint5" type="revolute">
@@ -183,7 +187,8 @@
       <parent link="${prefix}link4" />
       <child link="${prefix}link5" />
       <axis xyz="0 1 0" />
-      <limit effort="0" lower="${radians(-120)}" upper="${radians(120)}" velocity="${radians(540)}" />
+      <limit effort="1000" lower="${radians(-120)}" upper="${radians(120)}" velocity="${radians(540)}" />
+      <dynamics damping="0.7" friction="0.0"/>
     </joint>
     <!-- joint 6 -->
     <joint name="${prefix}joint6" type="revolute">
@@ -191,7 +196,8 @@
       <parent link="${prefix}link5" />
       <child link="${prefix}link6" />
       <axis xyz="0 0 1" />
-      <limit effort="0" lower="${radians(-360)}" upper="${radians(360)}" velocity="${radians(864)}" />
+      <limit effort="1000" lower="${radians(-360)}" upper="${radians(360)}" velocity="${radians(864)}" />
+      <dynamics damping="0.7" friction="0.0"/>
     </joint>
 
     <!-- tool frame - fixed frame -->

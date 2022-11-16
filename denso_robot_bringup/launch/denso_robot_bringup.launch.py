@@ -11,19 +11,21 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+import os
 
 from launch import LaunchDescription
-from launch.actions import DeclareLaunchArgument, RegisterEventHandler
+from launch.actions import DeclareLaunchArgument, RegisterEventHandler, IncludeLaunchDescription
 from launch.conditions import IfCondition
 from launch.event_handlers import OnProcessExit
-from launch.substitutions import Command, FindExecutable, LaunchConfiguration, PathJoinSubstitution
+from launch.substitutions import Command, FindExecutable, LaunchConfiguration, PathJoinSubstitution, PythonExpression
+from launch.launch_description_sources import PythonLaunchDescriptionSource
 
 from launch_ros.actions import Node
 from launch_ros.substitutions import FindPackageShare
 
 from ament_index_python.packages import get_package_share_directory
 
-
+import xacro
 
 def generate_launch_description():
     # Declare arguments
@@ -69,7 +71,7 @@ def generate_launch_description():
     )
     declared_arguments.append(
         DeclareLaunchArgument(
-            "use_gazebo",
+            "sim_gazebo",
             default_value="false",
             description="Start robot in Gazebo simulation.",
         )
@@ -127,11 +129,9 @@ def generate_launch_description():
     prefix = LaunchConfiguration("prefix")
     robot_ip = LaunchConfiguration("robot_ip")
     robot_port = LaunchConfiguration("robot_port")
-    use_gazebo = LaunchConfiguration("use_gazebo")
+    sim_gazebo = LaunchConfiguration("sim_gazebo")
     robot_controller = LaunchConfiguration("robot_controller")
     start_rviz = LaunchConfiguration("start_rviz")
-
-    # Get control file 
 
     # Get URDF via xacro
     robot_description_content = Command(
@@ -145,8 +145,8 @@ def generate_launch_description():
             "prefix:=",
             prefix,
             " ",
-            "use_gazebo:=",
-            use_gazebo,
+            "sim_gazebo:=",
+            sim_gazebo,
             " ",
             "robot_ip:=",
             robot_ip,
@@ -179,7 +179,9 @@ def generate_launch_description():
         executable="ros2_control_node",
         parameters=[robot_description, robot_controllers],
         output="both",
+        condition=IfCondition(PythonExpression(["'", sim_gazebo, "' == 'false'"])),
     )
+
     robot_state_pub_node = Node(
         package="robot_state_publisher",
         executable="robot_state_publisher",
@@ -207,6 +209,33 @@ def generate_launch_description():
         arguments=[robot_controller, "-c", "/controller_manager"],
     )
 
+    # Gazebo
+    gz_ros2_control_demos_path = os.path.join(
+        get_package_share_directory('denso_robot_description'))
+
+    xacro_file = os.path.join(gz_ros2_control_demos_path, "urdf", "denso_robot.urdf.xacro")
+
+    doc = xacro.parse(open(xacro_file))
+    xacro.process_doc(doc)
+
+    gazebo_node = IncludeLaunchDescription(
+            PythonLaunchDescriptionSource(
+                [os.path.join(get_package_share_directory('ros_gz_sim'),
+                              'launch', 'gz_sim.launch.py')]),
+            launch_arguments=[('gz_args', [' -r -v 4 empty.sdf'])],
+            condition=IfCondition(sim_gazebo),
+    )
+
+    gz_spawn_entity = Node(
+        package='ros_gz_sim',
+        executable='create',
+        output='screen',
+        arguments=['-string', doc.toxml(),
+                   '-name', 'Denso',
+                   '-allow_renaming', 'true'],
+        condition=IfCondition(sim_gazebo),
+    )
+
     # Delay rviz start after `joint_state_broadcaster`
     delay_rviz_after_joint_state_broadcaster_spawner = RegisterEventHandler(
         event_handler=OnProcessExit(
@@ -229,6 +258,9 @@ def generate_launch_description():
         joint_state_broadcaster_spawner,
         delay_rviz_after_joint_state_broadcaster_spawner,
         delay_robot_controller_spawner_after_joint_state_broadcaster_spawner,
+        # For Gazebo
+        gazebo_node,
+        gz_spawn_entity,
     ]
 
     return LaunchDescription(declared_arguments + nodes)
