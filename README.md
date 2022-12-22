@@ -33,6 +33,14 @@ This is because the version update of the Gazebo....
 
 ![Gazebo](./docs/gazebo.png)
 
+`ros2 launch denso_robot_bringup denso_robot_bringup.launch.py sim_gazebo:=true robot_controller:=forward_position_controller`
+
+> Option Luanch Moveit
+
+`ros2 launch denso_robot_bringup denso_robot_bringup.launch.py sim_gazebo:=true robot_controller:=trajectory_controller`
+
+`ros2 launch denso_robot_moveit_config denso_robot_moveit.launch.py use_sim_time:=true`
+
 ### 5. Control Robot
 You can control the robot by publish the command to `/forward_position_controller/commands`
 

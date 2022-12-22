@@ -86,12 +86,12 @@
       <!-- Transmission -->
       <transmission name="transmission">
         <plugin>transmission_interface/SimpleTransmission</plugin>
-        <joint name="joint1" role="revolute"/>
-        <joint name="joint2" role="revolute"/>
-        <joint name="joint3" role="revolute"/>
-        <joint name="joint4" role="revolute"/>
-        <joint name="joint5" role="revolute"/>
-        <joint name="joint6" role="revolute"/>
+        <joint name="${prefix}joint1" role="revolute"/>
+        <joint name="${prefix}joint2" role="revolute"/>
+        <joint name="${prefix}joint3" role="revolute"/>
+        <joint name="${prefix}joint4" role="revolute"/>
+        <joint name="${prefix}joint5" role="revolute"/>
+        <joint name="${prefix}joint6" role="revolute"/>
       </transmission>
 
     </ros2_control>

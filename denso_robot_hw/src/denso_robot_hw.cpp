@@ -458,8 +458,6 @@ hardware_interface::return_type denso_hw::write(
         }
         else if (FAILED(hr) && (hr != DensoRobot::E_BUF_FULL))
         {
-            int error_count = 0;
-
             printErrorDescription(hr, "Failed to write");
             if (!hasError())
             {
