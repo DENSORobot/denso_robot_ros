@@ -23,7 +23,7 @@
           <plugin>fake_components/GenericSystem</plugin>
           <param name="fake_sensor_commands">${fake_sensor_commands}</param>
           <param name="state_following_offset">0.0</param>
-        <!-- </xacro:if> -->
+        </xacro:if>
         <xacro:unless value="${use_fake_hardware or sim_gazebo_classic or sim_gazebo}">
           <plugin>denso_hw/denso_hw</plugin>
           <param name="robot_ip">${robot_ip}</param>
