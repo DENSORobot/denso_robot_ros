@@ -17,19 +17,24 @@ If you want to use gazebo. You must install gazebo by manully source build metho
 ### 1. Install Gazebo
 Following as [Gazebo Official Install](https://gazebosim.org/docs/garden/install_ubuntu_src)
 
-### 2. Install Gazebo Ros Plugin
+### 2. Install the Gazebo Ros2 Packages
+Following as [Gazebo Ros2 ros package](https://github.com/gazebosim/ros_gz/tree/ros2#from-source)
+
+Note: You should config your environment variable as `export GZ_VERSION=garden` before the colcon.
+
+### 3. Install Gazebo Ros2 Control Plugin
 Clone the [gz_ros2_control package](https://github.com/ros-controls/gz_ros2_control)
 
 Check out to the `ahcorde/rename/ign_to_gz` branch.
 
 This is because the version update of the Gazebo....
 
-### 3. Source the Gazebo ws then export the Gazebo model environment variables
+### 4. Source the Gazebo ws then export the Gazebo model environment variables
 `export GZ_SIM_RESOURCE_PATH=/home/xx/xx_ws/install/denso_description/share/`
 
 ! Please replace the "xx" to your real path.
 
-### 4. Launch the Gazebo Robot & Enjoy
+### 5. Launch the Gazebo Robot & Enjoy
 
 ![Gazebo](./docs/gazebo.png)
 
@@ -41,7 +46,7 @@ This is because the version update of the Gazebo....
 
 `ros2 launch denso_robot_moveit_config denso_robot_moveit.launch.py use_sim_time:=true`
 
-### 5. Control Robot
+### 6. Control Robot
 You can control the robot by publish the command to `/forward_position_controller/commands`
 
 For example:
