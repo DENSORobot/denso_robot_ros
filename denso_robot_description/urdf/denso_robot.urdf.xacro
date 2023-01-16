@@ -3,22 +3,19 @@
 
   <!-- Use this if parameters are set from the launch file, otherwise delete -->
   <xacro:arg name="prefix" default="" />
+  <!-- Simulation parameters -->
+  <xacro:arg name="use_fake_hardware" default="false" />
+  <xacro:arg name="fake_sensor_commands" default="false" />
+  <xacro:arg name="sim_gazebo_classic" default="false" />
+  <xacro:arg name="sim_gazebo" default="true" />
 
+  <!-- Real Robot -->
   <xacro:arg name="robot_ip" default="192.168.0.1" />
   <xacro:arg name="robot_port" default="5007"/>
   <xacro:arg name="send_format" default="288"/>
   <xacro:arg name="recv_format" default="292"/>
   <xacro:arg name="config_file" default=""/>
 
-  <!-- Simulation parameters -->
-  <xacro:arg name="use_fake_hardware" default="false" />
-  <xacro:arg name="fake_sensor_commands" default="false" />
-  <xacro:arg name="sim_gazebo_classic" default="false" />
-  <xacro:arg name="sim_gazebo" default="true" />
-  <!-- initial position for simulations (Fake Hardware, Gazebo, Ignition) -->
-  <xacro:arg name="initial_positions_file" default="$(find denso_robot_description)/config/initial_positions.yaml"/>
-  <!-- convert to property to use substitution in function -->
-  <xacro:property name="initial_positions_file" default="$(arg initial_positions_file)"/>
 
   <!-- Import Denso Robot Model -->
   <xacro:include filename="$(find denso_robot_description)/urdf/denso_robot/denso_robot_macro.xacro"/>
