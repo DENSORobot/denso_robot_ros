@@ -23,6 +23,7 @@
  */
 
 #include "denso_robot_core/denso_robot.hpp"
+#include <iostream>
 
 namespace denso2
 {
@@ -927,14 +928,15 @@ HRESULT DensoRobot::ChangeMode(int mode)
       {
         return hr;
       }
+      std::cout << "Taking arm..." << std::endl;
       hr = ExecTakeArm();
       if (FAILED(hr))
         return hr;
-
+      std::cout << "Changing mode..." << std::endl;
       hr = ExecSlaveMode("slvChangeMode", mode);
       if (FAILED(hr))
         return hr;
-
+      std::cout << "Mode changed." << std::endl;
       memTimeout_ = vecService_[DensoBase::SRV_ACT]->get_timeout();
       memRetry_ = vecService_[DensoBase::SRV_ACT]->get_retry();
       if (mode & DensoRobot::SLVMODE_SYNC_WAIT)

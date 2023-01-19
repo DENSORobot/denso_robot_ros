@@ -178,6 +178,7 @@ def generate_launch_description():
         package="controller_manager",
         executable="ros2_control_node",
         parameters=[robot_description, robot_controllers],
+        prefix=['stdbuf -o L'],
         output="both",
         condition=IfCondition(PythonExpression(["'", sim_gazebo, "' == 'false'"])),
     )

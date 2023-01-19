@@ -346,6 +346,7 @@ hardware_interface::CallbackReturn denso_hw::on_activate(
     denso_robot_->set_SendFormat(sendfmt_);
     denso_robot_->set_RecvFormat(recvfmt_);
 
+    // TODO: When the timeout occur, please comment follow code and recomplie! I don't know why and how to automatically reset the robot.
     hr = ChangeModeWithClearError(DensoRobot::SLVMODE_SYNC_WAIT | DensoRobot::SLVMODE_POSE_J);
     if (FAILED(hr))
     {
@@ -419,8 +420,9 @@ hardware_interface::return_type denso_hw::write(
         const rclcpp::Time & time, const rclcpp::Duration & period)
 {
     boost::mutex::scoped_lock lockMode(mtxMode_);
-
-    if (denso_core_->get_Mode() != DensoRobot::SLVMODE_NONE)
+    int denso_mode = denso_core_->get_Mode();
+    // RCLCPP_INFO(rclcpp::get_logger(this->get_name()), "denso_mode: %d", denso_mode);
+    if (denso_mode != DensoRobot::SLVMODE_NONE)
     {
         std::vector<double> pose;
         pose.resize(num_joints_);
@@ -459,12 +461,30 @@ hardware_interface::return_type denso_hw::write(
         else if (FAILED(hr) && (hr != DensoRobot::E_BUF_FULL))
         {
             printErrorDescription(hr, "Failed to write");
-            if (!hasError())
+            if (hasError())
             {
+                HRESULT hr = ChangeModeWithClearError(DensoRobot::SLVMODE_NONE);
+                if (FAILED(hr))
+                {
+                    printErrorDescription(hr, "Failed to change to slave mode");
+                    RCLCPP_FATAL(
+                        rclcpp::get_logger(this->get_name()), "Failed to change to slave mode");
+                }
                 return hardware_interface::return_type::ERROR;
             }
         }
     }
+    // else{
+    //     HRESULT hr = ChangeModeWithClearError(DensoRobot::SLVMODE_SYNC_WAIT | DensoRobot::SLVMODE_POSE_J);
+    //     if (FAILED(hr))
+    //     {
+    //         printErrorDescription(hr, "Failed to change to slave mode");
+    //         RCLCPP_FATAL(
+    //             rclcpp::get_logger(this->get_name()), "Failed to change to slave mode");
+    //         // return hardware_interface::CallbackReturn::ERROR;
+    //     }
+    //     RCLCPP_INFO(rclcpp::get_logger(this->get_name()), "denso_mode is SLVMODE_NONE");
+    // }
     
     return hardware_interface::return_type::OK;
 }
@@ -518,7 +538,7 @@ HRESULT denso_hw::ChangeModeWithClearError(int mode)
     {
         // Clear Error
         HRESULT hres = denso_ctrl_->ExecClearError();
-        if (FAILED(hr))
+        if (FAILED(hres))
         {
             printErrorDescription(hres, "Failed to clear error");
         }
