@@ -1,0 +1,25 @@
+moveit_setup_assistant_config:
+  urdf:
+    package: denso_robot_description
+    relative_path: urdf/denso_robot.urdf.xacro
+  srdf:
+    relative_path: config/denso_robot.srdf
+  package_settings:
+    author_name: Dayuan
+    author_email: d.chen@srd.mech.tohoku.ac.jp
+    generated_timestamp: 1671683203
+  control_xacro:
+    command:
+      - position
+    state:
+      - position
+      - velocity
+  modified_urdf:
+    xacros:
+      - control_xacro
+  control_xacro:
+    command:
+      - position
+    state:
+      - position
+      - velocity

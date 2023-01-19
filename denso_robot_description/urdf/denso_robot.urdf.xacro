@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<robot xmlns:xacro="http://wiki.ros.org/xacro" name="denso_robot">
+
+  <!-- Use this if parameters are set from the launch file, otherwise delete -->
+  <xacro:arg name="prefix" default="" />
+  <!-- Simulation parameters -->
+  <xacro:arg name="use_fake_hardware" default="false" />
+  <xacro:arg name="fake_sensor_commands" default="false" />
+  <xacro:arg name="sim_gazebo_classic" default="false" />
+  <xacro:arg name="sim_gazebo" default="true" />
+
+  <!-- Real Robot -->
+  <xacro:arg name="robot_ip" default="192.168.0.1" />
+  <xacro:arg name="robot_port" default="5007"/>
+  <xacro:arg name="send_format" default="288"/>
+  <xacro:arg name="recv_format" default="292"/>
+  <xacro:arg name="config_file" default=""/>
+
+
+  <!-- Import Denso Robot Model -->
+  <xacro:include filename="$(find denso_robot_description)/urdf/denso_robot/denso_robot_macro.xacro"/>
+  <!-- Import ROS2 Control -->
+  <xacro:include filename="$(find denso_robot_description)/urdf/denso_robot/denso_robot_macro.ros2_control.xacro"/>
+
+  <!-- create link fixed to the "world" -->
+  <link name="world" />
+
+  <!-- Load robot's macro with parameters -->
+  <!-- set prefix if multiple robots are used -->
+  <xacro:denso_robot prefix="$(arg prefix)" parent="world" >
+    <origin xyz="0 0 0" rpy="0 0 0" />          <!-- position robot in the world -->
+  </xacro:denso_robot>
+
+  <xacro:denso_robot_ros2_control name="$(arg prefix)denso_control" 
+    prefix="$(arg prefix)" 
+    sim_gazebo="$(arg sim_gazebo)" 
+    robot_ip="$(arg robot_ip)" 
+    robot_port="$(arg robot_port)" 
+    send_format="$(arg send_format)" 
+    recv_format="$(arg recv_format)" 
+    config_file="$(arg config_file)"
+    use_fake_hardware="$(arg use_fake_hardware)"
+    fake_sensor_commands="$(arg fake_sensor_commands)"/>
+
+  <xacro:if value="$(arg sim_gazebo)">
+    <gazebo>
+      <!-- Joint state publisher -->
+      <plugin filename="gz_ros2_control-system" name="gz_ros2_control::GazeboSimROS2ControlPlugin">
+        <parameters>$(find denso_robot_bringup)/config/denso_robot_gazebo_controllers.yaml</parameters>
+      </plugin>
+    </gazebo>
+  </xacro:if>
+
+</robot>

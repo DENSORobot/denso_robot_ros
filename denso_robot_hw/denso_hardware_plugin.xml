@@ -1,0 +1,10 @@
+<library path="denso_robot_hw">
+    <class  name = "denso_hw/denso_hw"
+            type = "denso2::denso_hw"
+            base_class_type = "hardware_interface::SystemInterface"
+    >
+        <description>
+            ROS2 hardware interface for denso robot.
+        </description>
+    </class>
+</library>

@@ -35,16 +35,16 @@
 #include <termios.h>
 #include <unistd.h>
 #else
-#include "dn_additional.h"
+#include "bcap_core/dn_additional.h"
 #endif
 
-#include "dn_common.h"
-#include "dn_device.h"
-#include "dn_udp.h"
-#include "dn_com.h"
-#include "dn_thread.h"
-#include "dn_robotalk.h"
-#include "dn_tpcomm.h"
+#include "bcap_core/dn_common.h"
+#include "bcap_core/dn_device.h"
+#include "bcap_core/dn_udp.h"
+#include "bcap_core/dn_com.h"
+#include "bcap_core/dn_thread.h"
+#include "bcap_core/dn_robotalk.h"
+#include "bcap_core/TPComm/dn_tpcomm.h"
 
 #ifndef _DEBUG
 #define _DEBUG (0)

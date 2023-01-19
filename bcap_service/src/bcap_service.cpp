@@ -1,253 +1,145 @@
-/**
- * Software License Agreement (MIT License)
- *
- * @copyright Copyright (c) 2015 DENSO WAVE INCORPORATED
- *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is
- * furnished to do so, subject to the following conditions:
- *
- * The above copyright notice and this permission notice shall be included in
- * all copies or substantial portions of the Software.
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
- * THE SOFTWARE.
- */
-
-#include <stdlib.h>
-#include <sstream>
-#include "bcap_service/bcap_service.h"
+#include "bcap_service/bcap_service.hpp"
 #include "bcap_core/bcap_funcid.h"
 #include "bcap_core/bCAPClient/bcap_client.h"
 #include "bcap_core/RACString/rac_string.h"
-
-int main(int argc, char** argv)
-{
-  ros::init(argc, argv, "bcap_service");
-
-  HRESULT hr;
-  ros::NodeHandle node;
-
-  bcap_service::BCAPService bcapsrv;
-
-  bcapsrv.parseParams();
-
-  hr = bcapsrv.Connect();
-  if(FAILED(hr)) {
-    ROS_ERROR("Failed to connect. (%X)", hr);
-    return 1;
-  } else {
-    bcapsrv.StartService(node);
-
-    ros::spin();
-
-    bcapsrv.StopService();
-    bcapsrv.Disconnect();
-    return 0;
-  }
-}
-
+#include <stdlib.h>
+#include <sstream>
+#include <chrono>
+#include <thread>
 namespace bcap_service {
 
-BCAPService::BCAPService()
-  : m_type(""), m_addr(""),
-    m_port(0), m_timeout(0), m_retry(0), m_wait(0),
-    m_fd(0), m_wdt(0), m_invoke(0)
+BcapService::BcapService(std::string addr, int port)
+  : type_("tcp"), addr_(addr),
+    port_(port), timeout_(3000), retry_(5), wait_(0),
+    fd_(0), wdt_(400), invoke_(180000)
 {
 
 }
 
-BCAPService::~BCAPService()
+BcapService::~BcapService()
 {
-  StopService();
   Disconnect();
 }
 
-void BCAPService::parseParams()
+HRESULT BcapService::Connect()
 {
-  ros::NodeHandle node;
-
-  if(!node.getParam("conn_type", m_type))
-  {
-    m_type = "tcp";
-  }
-
-  if(!node.getParam("ip_address", m_addr))
-  {
-    m_addr = "192.168.0.1";
-  }
-
-  if(!node.getParam("port_number", m_port))
-  {
-    m_port = 5007;
-  }
-
-  if(!node.getParam("timeout", m_timeout))
-  {
-    m_timeout = 3000;
-  }
-
-  if(!node.getParam("retry_count", m_retry))
-  {
-    m_retry = 5;
-  }
-
-  if(!node.getParam("wait_time", m_wait))
-  {
-    m_wait = 0;
-  }
-
-  if(!node.getParam("watchdog_timer", m_wdt))
-  {
-    m_wdt = 400;
-  }
-
-  if(!node.getParam("invoke_timeout", m_invoke))
-  {
-    m_invoke = 180000;
-  }
+    HRESULT hr;
+    std::stringstream  ss1;
+    std::wstringstream ss2;
+    sleep(wait_);
+    ss1 << type_ << ":" << addr_ << ":" << port_;
+    hr = bCap_Open_Client(ss1.str().c_str(), timeout_, retry_, &fd_);
+    if(SUCCEEDED(hr)) {
+        ss2 << L",WDT=" << wdt_ << L",InvokeTimeout=" << invoke_;
+        BSTR bstrOption = SysAllocString(ss2.str().c_str());
+        hr = bCap_ServiceStart(fd_, bstrOption);
+        SysFreeString(bstrOption);
+    }
+    return hr;
 }
 
-HRESULT BCAPService::Connect()
+HRESULT BcapService::Disconnect()
 {
-  HRESULT hr;
-  std::stringstream  ss1;
-  std::wstringstream ss2;
-
-  ros::Duration(m_wait).sleep();
-
-  ss1 << m_type << ":" << m_addr << ":" << m_port;
-  hr = bCap_Open_Client(ss1.str().c_str(), m_timeout, m_retry, &m_fd);
-  if(SUCCEEDED(hr)) {
-    ss2 << L",WDT=" << m_wdt << L",InvokeTimeout=" << m_invoke;
-    BSTR bstrOption = SysAllocString(ss2.str().c_str());
-    hr = bCap_ServiceStart(m_fd, bstrOption);
-    SysFreeString(bstrOption);
-  }
-
-  return hr;
-}
-
-HRESULT BCAPService::Disconnect()
-{
-  if(m_fd > 0) {
+  if(fd_ > 0) {
     KeyHandle_Vec::iterator it;
-    for(it = m_vecKH.begin(); it != m_vecKH.end(); it++) {
+    for(it = vecKH_.begin(); it != vecKH_.end(); it++) {
       switch(it->first){
         case ID_CONTROLLER_DISCONNECT:
-          bCap_ControllerDisconnect(m_fd, &it->second);
+          bCap_ControllerDisconnect(fd_, &it->second);
           break;
         case ID_EXTENSION_RELEASE:
-          bCap_ExtensionRelease(m_fd, &it->second);
+          bCap_ExtensionRelease(fd_, &it->second);
           break;
         case ID_FILE_RELEASE:
-          bCap_FileRelease(m_fd, &it->second);
+          bCap_FileRelease(fd_, &it->second);
           break;
         case ID_ROBOT_RELEASE:
-          bCap_RobotRelease(m_fd, &it->second);
+          bCap_RobotRelease(fd_, &it->second);
           break;
         case ID_TASK_RELEASE:
-          bCap_TaskRelease(m_fd, &it->second);
+          bCap_TaskRelease(fd_, &it->second);
           break;
         case ID_VARIABLE_RELEASE:
-          bCap_VariableRelease(m_fd, &it->second);
+          bCap_VariableRelease(fd_, &it->second);
           break;
         case ID_COMMAND_RELEASE:
-          bCap_CommandRelease(m_fd, &it->second);
+          bCap_CommandRelease(fd_, &it->second);
           break;
         case ID_MESSAGE_RELEASE:
-          bCap_MessageRelease(m_fd, &it->second);
+          bCap_MessageRelease(fd_, &it->second);
           break;
       }
     }
 
-    m_vecKH.clear();
+    vecKH_.clear();
 
-    bCap_ServiceStop(m_fd);
+    bCap_ServiceStop(fd_);
 
-    bCap_Close_Client(&m_fd);
+    bCap_Close_Client(&fd_);
   }
 
   return S_OK;
 }
 
-HRESULT BCAPService::StartService(ros::NodeHandle& node)
+
+const std::string& BcapService::get_Type() const
 {
-  m_svr = node.advertiseService("bcap_service", &BCAPService::CallFunction, this);
-  return S_OK;
+  return type_;
 }
 
-HRESULT BCAPService::StopService()
+void BcapService::set_type(const std::string& type)
 {
-  m_svr.shutdown();
-  return S_OK;
-}
-
-const std::string& BCAPService::get_Type() const
-{
-  return m_type;
-}
-
-void BCAPService::put_Type(const std::string& type)
-{
-  if(m_fd == 0) {
-    m_type = type;
+  if(fd_ == 0) {
+    type_ = type;
   }
 }
 
-uint32_t BCAPService::get_Timeout() const
+uint32_t BcapService::get_timeout() const
 {
   uint32_t value = 0;
-  if(FAILED(bCap_GetTimeout(m_fd, &value))) {
-    value = m_timeout;
+  if(FAILED(bCap_GetTimeout(fd_, &value))) {
+    value = timeout_;
   }
   return value;
 }
 
-void BCAPService::put_Timeout(uint32_t value)
+void BcapService::set_timeout(uint32_t value)
 {
-  if(SUCCEEDED(bCap_SetTimeout(m_fd, value))) {
-    m_timeout = value;
+  if(SUCCEEDED(bCap_SetTimeout(fd_, value))) {
+    timeout_ = value;
   }
 }
 
-unsigned int BCAPService::get_Retry() const
+unsigned int BcapService::get_retry() const
 {
   unsigned int value = 0;
-  if(FAILED(bCap_GetRetry(m_fd, &value))) {
-    value = m_retry;
+  if(FAILED(bCap_GetRetry(fd_, &value))) {
+    value = retry_;
   }
   return value;
 }
 
-void BCAPService::put_Retry(unsigned int value)
+void BcapService::set_retry(unsigned int value)
 {
-  if(SUCCEEDED(bCap_SetRetry(m_fd, value))) {
-    m_retry = value;
+  if(SUCCEEDED(bCap_SetRetry(fd_, value))) {
+    retry_ = value;
   }
 }
 
-bool BCAPService::CallFunction(bcap::Request &req, bcap::Response &res)
+HRESULT BcapService::CallFunction(BCAP_SERVICE_REQ& req, BCAP_SERVICE_RES& res)
 {
   HRESULT     hr = S_OK;
   char      *chRet = NULL;
   VARIANT_Vec vntArgs;
   VARIANT_Ptr vntRet(new VARIANT());
+
   VariantInit(vntRet.get());
 
-  for(int i = 0; i < req.vntArgs.size(); i++) {
+  for(size_t i = 0; i < req.vntreq.size(); i++) {
     VARIANT_Ptr vntTmp(new VARIANT());
     VariantInit(vntTmp.get());
     hr = ConvertRacStr2Variant(
-        req.vntArgs[i].vt, req.vntArgs[i].value.c_str(),
+        req.vntreq[i].vt, req.vntreq[i].value.c_str(),
         vntTmp.get());
     if(FAILED(hr)) goto err_proc;
     vntArgs.push_back(*vntTmp.get());
@@ -259,9 +151,9 @@ bool BCAPService::CallFunction(bcap::Request &req, bcap::Response &res)
   hr = ConvertVariant2RacStr(*vntRet.get(), &chRet);
   if(FAILED(hr)) goto err_proc;
 
-  res.HRESULT = S_OK;
-  res.vntRet.vt = vntRet->vt;
-  res.vntRet.value = chRet;
+  res.result = S_OK;
+  res.vntres.vt = vntRet->vt;
+  res.vntres.value = chRet;
 
   free(chRet);
 
@@ -269,14 +161,14 @@ post_proc:
   return true;
 
 err_proc:
-  res.HRESULT = hr;
-  res.vntRet.vt = VT_EMPTY;
-  res.vntRet.value = "";
+  res.result = hr;
+  res.vntres.vt = VT_EMPTY;
+  res.vntres.value = "";
 
   goto post_proc;
 }
 
-HRESULT BCAPService::ExecFunction(
+HRESULT BcapService::ExecFunction(
     int32_t func_id, VARIANT_Vec& vntArgs,
     VARIANT_Ptr& vntRet)
 {
@@ -288,704 +180,704 @@ HRESULT BCAPService::ExecFunction(
       // Controller
       case ID_CONTROLLER_CONNECT:
         vntRet->vt = VT_UI4;
-        hr = bCap_ControllerConnect(m_fd,
+        hr = bCap_ControllerConnect(fd_,
                 vntArgs.at(0).bstrVal, vntArgs.at(1).bstrVal, vntArgs.at(2).bstrVal, vntArgs.at(3).bstrVal,
                 &vntRet->ulVal);
         tmpKH.first = ID_CONTROLLER_DISCONNECT;
         break;
       case ID_CONTROLLER_DISCONNECT:
         tmpKH.second = vntArgs.at(0).ulVal;
-        hr = bCap_ControllerDisconnect(m_fd,
+        hr = bCap_ControllerDisconnect(fd_,
                 &vntArgs.at(0).ulVal);
         break;
       case ID_CONTROLLER_GETEXTENSION:
         vntRet->vt = VT_UI4;
-        hr = bCap_ControllerGetExtension(m_fd,
+        hr = bCap_ControllerGetExtension(fd_,
                 vntArgs.at(0).ulVal, vntArgs.at(1).bstrVal, vntArgs.at(2).bstrVal,
                 &vntRet->ulVal);
         tmpKH.first = ID_EXTENSION_RELEASE;
         break;
       case ID_CONTROLLER_GETFILE:
         vntRet->vt = VT_UI4;
-        hr = bCap_ControllerGetFile(m_fd,
+        hr = bCap_ControllerGetFile(fd_,
                 vntArgs.at(0).ulVal, vntArgs.at(1).bstrVal, vntArgs.at(2).bstrVal,
                 &vntRet->ulVal);
         tmpKH.first = ID_FILE_RELEASE;
         break;
       case ID_CONTROLLER_GETROBOT:
         vntRet->vt = VT_UI4;
-        hr = bCap_ControllerGetRobot(m_fd,
+        hr = bCap_ControllerGetRobot(fd_,
                 vntArgs.at(0).ulVal, vntArgs.at(1).bstrVal, vntArgs.at(2).bstrVal,
                 &vntRet->ulVal);
         tmpKH.first = ID_ROBOT_RELEASE;
         break;
       case ID_CONTROLLER_GETTASK:
         vntRet->vt = VT_UI4;
-        hr = bCap_ControllerGetTask(m_fd,
+        hr = bCap_ControllerGetTask(fd_,
                 vntArgs.at(0).ulVal, vntArgs.at(1).bstrVal, vntArgs.at(2).bstrVal,
                 &vntRet->ulVal);
         tmpKH.first = ID_TASK_RELEASE;
         break;
       case ID_CONTROLLER_GETVARIABLE:
         vntRet->vt = VT_UI4;
-        hr = bCap_ControllerGetVariable(m_fd,
+        hr = bCap_ControllerGetVariable(fd_,
                 vntArgs.at(0).ulVal, vntArgs.at(1).bstrVal, vntArgs.at(2).bstrVal,
                 &vntRet->ulVal);
         tmpKH.first = ID_VARIABLE_RELEASE;
         break;
       case ID_CONTROLLER_GETCOMMAND:
         vntRet->vt = VT_UI4;
-        hr = bCap_ControllerGetCommand(m_fd,
+        hr = bCap_ControllerGetCommand(fd_,
                 vntArgs.at(0).ulVal, vntArgs.at(1).bstrVal, vntArgs.at(2).bstrVal,
                 &vntRet->ulVal);
         tmpKH.first = ID_COMMAND_RELEASE;
         break;
       case ID_CONTROLLER_GETEXTENSIONNAMES:
-        hr = bCap_ControllerGetExtensionNames(m_fd,
+        hr = bCap_ControllerGetExtensionNames(fd_,
                 vntArgs.at(0).ulVal, vntArgs.at(1).bstrVal,
                 vntRet.get());
         break;
       case ID_CONTROLLER_GETFILENAMES:
-        hr = bCap_ControllerGetFileNames(m_fd,
+        hr = bCap_ControllerGetFileNames(fd_,
                 vntArgs.at(0).ulVal, vntArgs.at(1).bstrVal,
                 vntRet.get());
         break;
       case ID_CONTROLLER_GETROBOTNAMES:
-        hr = bCap_ControllerGetRobotNames(m_fd,
+        hr = bCap_ControllerGetRobotNames(fd_,
                 vntArgs.at(0).ulVal, vntArgs.at(1).bstrVal,
                 vntRet.get());
         break;
       case ID_CONTROLLER_GETTASKNAMES:
-        hr = bCap_ControllerGetTaskNames(m_fd,
+        hr = bCap_ControllerGetTaskNames(fd_,
                 vntArgs.at(0).ulVal, vntArgs.at(1).bstrVal,
                 vntRet.get());
         break;
       case ID_CONTROLLER_GETVARIABLENAMES:
-        hr = bCap_ControllerGetVariableNames(m_fd,
+        hr = bCap_ControllerGetVariableNames(fd_,
                 vntArgs.at(0).ulVal, vntArgs.at(1).bstrVal,
                 vntRet.get());
         break;
       case ID_CONTROLLER_GETCOMMANDNAMES:
-        hr = bCap_ControllerGetCommandNames(m_fd,
+        hr = bCap_ControllerGetCommandNames(fd_,
                 vntArgs.at(0).ulVal, vntArgs.at(1).bstrVal,
                 vntRet.get());
         break;
       case ID_CONTROLLER_EXECUTE:
-        hr = bCap_ControllerExecute(m_fd,
+        hr = bCap_ControllerExecute(fd_,
                 vntArgs.at(0).ulVal, vntArgs.at(1).bstrVal, vntArgs.at(2),
                 vntRet.get());
         break;
       case ID_CONTROLLER_GETMESSAGE:
         vntRet->vt = VT_UI4;
-        hr = bCap_ControllerGetMessage(m_fd,
+        hr = bCap_ControllerGetMessage(fd_,
                 vntArgs.at(0).ulVal,
                 &vntRet->ulVal);
         tmpKH.first = ID_MESSAGE_RELEASE;
         break;
       case ID_CONTROLLER_GETATTRIBUTE:
         vntRet->vt = VT_I4;
-        hr = bCap_ControllerGetAttribute(m_fd,
+        hr = bCap_ControllerGetAttribute(fd_,
                 vntArgs.at(0).ulVal,
                 &vntRet->lVal);
         break;
       case ID_CONTROLLER_GETHELP:
         vntRet->vt = VT_BSTR;
-        hr = bCap_ControllerGetHelp(m_fd,
+        hr = bCap_ControllerGetHelp(fd_,
                 vntArgs.at(0).ulVal,
                 &vntRet->bstrVal);
         break;
       case ID_CONTROLLER_GETNAME:
         vntRet->vt = VT_BSTR;
-        hr = bCap_ControllerGetName(m_fd,
+        hr = bCap_ControllerGetName(fd_,
                 vntArgs.at(0).ulVal,
                 &vntRet->bstrVal);
         break;
       case ID_CONTROLLER_GETTAG:
-        hr = bCap_ControllerGetTag(m_fd,
+        hr = bCap_ControllerGetTag(fd_,
                 vntArgs.at(0).ulVal,
                 vntRet.get());
         break;
       case ID_CONTROLLER_PUTTAG:
-        hr = bCap_ControllerPutTag(m_fd,
+        hr = bCap_ControllerPutTag(fd_,
                 vntArgs.at(0).ulVal, vntArgs.at(1));
         break;
       case ID_CONTROLLER_GETID:
-        hr = bCap_ControllerGetID(m_fd,
+        hr = bCap_ControllerGetID(fd_,
                 vntArgs.at(0).ulVal,
                 vntRet.get());
         break;
       case ID_CONTROLLER_PUTID:
-        hr = bCap_ControllerPutID(m_fd,
+        hr = bCap_ControllerPutID(fd_,
                 vntArgs.at(0).ulVal, vntArgs.at(1));
         break;
       // Extension
       case ID_EXTENSION_GETVARIABLE:
         vntRet->vt = VT_UI4;
-        hr = bCap_ExtensionGetVariable(m_fd,
+        hr = bCap_ExtensionGetVariable(fd_,
                 vntArgs.at(0).ulVal, vntArgs.at(1).bstrVal, vntArgs.at(2).bstrVal,
                 &vntRet->ulVal);
         tmpKH.first = ID_VARIABLE_RELEASE;
         break;
       case ID_EXTENSION_GETVARIABLENAMES:
-        hr = bCap_ExtensionGetVariableNames(m_fd,
+        hr = bCap_ExtensionGetVariableNames(fd_,
                 vntArgs.at(0).ulVal, vntArgs.at(1).bstrVal,
                 vntRet.get());
         break;
       case ID_EXTENSION_EXECUTE:
-        hr = bCap_ExtensionExecute(m_fd,
+        hr = bCap_ExtensionExecute(fd_,
                 vntArgs.at(0).ulVal, vntArgs.at(1).bstrVal, vntArgs.at(2),
                 vntRet.get());
         break;
       case ID_EXTENSION_GETATTRIBUTE:
         vntRet->vt = VT_I4;
-        hr = bCap_ExtensionGetAttribute(m_fd,
+        hr = bCap_ExtensionGetAttribute(fd_,
                 vntArgs.at(0).ulVal,
                 &vntRet->lVal);
         break;
       case ID_EXTENSION_GETHELP:
         vntRet->vt = VT_BSTR;
-        hr = bCap_ExtensionGetHelp(m_fd,
+        hr = bCap_ExtensionGetHelp(fd_,
                 vntArgs.at(0).ulVal,
                 &vntRet->bstrVal);
         break;
       case ID_EXTENSION_GETNAME:
         vntRet->vt = VT_BSTR;
-        hr = bCap_ExtensionGetName(m_fd,
+        hr = bCap_ExtensionGetName(fd_,
                 vntArgs.at(0).ulVal,
                 &vntRet->bstrVal);
         break;
       case ID_EXTENSION_GETTAG:
-        hr = bCap_ExtensionGetTag(m_fd,
+        hr = bCap_ExtensionGetTag(fd_,
                 vntArgs.at(0).ulVal,
                 vntRet.get());
         break;
       case ID_EXTENSION_PUTTAG:
-        hr = bCap_ExtensionPutTag(m_fd,
+        hr = bCap_ExtensionPutTag(fd_,
                 vntArgs.at(0).ulVal, vntArgs.at(1));
         break;
       case ID_EXTENSION_GETID:
-        hr = bCap_ExtensionGetID(m_fd,
+        hr = bCap_ExtensionGetID(fd_,
                 vntArgs.at(0).ulVal,
                 vntRet.get());
         break;
       case ID_EXTENSION_PUTID:
-        hr = bCap_ExtensionPutID(m_fd,
+        hr = bCap_ExtensionPutID(fd_,
                 vntArgs.at(0).ulVal, vntArgs.at(1));
         break;
       case ID_EXTENSION_RELEASE:
         tmpKH.second = vntArgs.at(0).ulVal;
-        hr = bCap_ExtensionRelease(m_fd,
+        hr = bCap_ExtensionRelease(fd_,
                 &vntArgs.at(0).ulVal);
         break;
       // File
       case ID_FILE_GETFILE:
         vntRet->vt = VT_UI4;
-        hr = bCap_FileGetFile(m_fd,
+        hr = bCap_FileGetFile(fd_,
                 vntArgs.at(0).ulVal, vntArgs.at(1).bstrVal, vntArgs.at(2).bstrVal,
                 &vntRet->ulVal);
         tmpKH.first = ID_FILE_RELEASE;
         break;
       case ID_FILE_GETVARIABLE:
         vntRet->vt = VT_UI4;
-        hr = bCap_FileGetVariable(m_fd,
+        hr = bCap_FileGetVariable(fd_,
                 vntArgs.at(0).ulVal, vntArgs.at(1).bstrVal, vntArgs.at(2).bstrVal,
                 &vntRet->ulVal);
         tmpKH.first = ID_VARIABLE_RELEASE;
         break;
       case ID_FILE_GETFILENAMES:
-        hr = bCap_FileGetFileNames(m_fd,
+        hr = bCap_FileGetFileNames(fd_,
                 vntArgs.at(0).ulVal, vntArgs.at(1).bstrVal,
                 vntRet.get());
         break;
       case ID_FILE_GETVARIABLENAMES:
-        hr = bCap_FileGetVariableNames(m_fd,
+        hr = bCap_FileGetVariableNames(fd_,
                 vntArgs.at(0).ulVal, vntArgs.at(1).bstrVal,
                 vntRet.get());
         break;
       case ID_FILE_EXECUTE:
-        hr = bCap_FileExecute(m_fd,
+        hr = bCap_FileExecute(fd_,
                 vntArgs.at(0).ulVal, vntArgs.at(1).bstrVal, vntArgs.at(2),
                 vntRet.get());
         break;
       case ID_FILE_COPY:
-        hr = bCap_FileCopy(m_fd,
+        hr = bCap_FileCopy(fd_,
                 vntArgs.at(0).ulVal, vntArgs.at(1).bstrVal, vntArgs.at(2).bstrVal);
         break;
       case ID_FILE_DELETE:
-        hr = bCap_FileDelete(m_fd,
+        hr = bCap_FileDelete(fd_,
                 vntArgs.at(0).ulVal, vntArgs.at(1).bstrVal);
         break;
       case ID_FILE_MOVE:
-        hr = bCap_FileMove(m_fd,
+        hr = bCap_FileMove(fd_,
                 vntArgs.at(0).ulVal, vntArgs.at(1).bstrVal, vntArgs.at(2).bstrVal);
         break;
       case ID_FILE_RUN:
         vntRet->vt = VT_BSTR;
-        hr = bCap_FileRun(m_fd,
+        hr = bCap_FileRun(fd_,
                 vntArgs.at(0).ulVal, vntArgs.at(1).bstrVal,
                 &vntRet->bstrVal);
         break;
       case ID_FILE_GETDATECREATED:
-        hr = bCap_FileGetDateCreated(m_fd,
+        hr = bCap_FileGetDateCreated(fd_,
                 vntArgs.at(0).ulVal,
                 vntRet.get());
         break;
       case ID_FILE_GETDATELASTACCESSED:
-        hr = bCap_FileGetDateLastAccessed(m_fd,
+        hr = bCap_FileGetDateLastAccessed(fd_,
                 vntArgs.at(0).ulVal,
                 vntRet.get());
         break;
       case ID_FILE_GETDATELASTMODIFIED:
-        hr = bCap_FileGetDateLastModified(m_fd,
+        hr = bCap_FileGetDateLastModified(fd_,
                 vntArgs.at(0).ulVal,
                 vntRet.get());
         break;
       case ID_FILE_GETPATH:
         vntRet->vt = VT_BSTR;
-        hr = bCap_FileGetPath(m_fd,
+        hr = bCap_FileGetPath(fd_,
                 vntArgs.at(0).ulVal,
                 &vntRet->bstrVal);
         break;
       case ID_FILE_GETSIZE:
         vntRet->vt = VT_I4;
-        hr = bCap_FileGetSize(m_fd,
+        hr = bCap_FileGetSize(fd_,
                 vntArgs.at(0).ulVal,
                 &vntRet->lVal);
         break;
       case ID_FILE_GETTYPE:
         vntRet->vt = VT_BSTR;
-        hr = bCap_FileGetType(m_fd,
+        hr = bCap_FileGetType(fd_,
                 vntArgs.at(0).ulVal,
                 &vntRet->bstrVal);
         break;
       case ID_FILE_GETVALUE:
-        hr = bCap_FileGetValue(m_fd,
+        hr = bCap_FileGetValue(fd_,
                 vntArgs.at(0).ulVal,
                 vntRet.get());
         break;
       case ID_FILE_PUTVALUE:
-        hr = bCap_FilePutValue(m_fd,
+        hr = bCap_FilePutValue(fd_,
                 vntArgs.at(0).ulVal, vntArgs.at(1));
         break;
       case ID_FILE_GETATTRIBUTE:
         vntRet->vt = VT_I4;
-        hr = bCap_FileGetAttribute(m_fd,
+        hr = bCap_FileGetAttribute(fd_,
                 vntArgs.at(0).ulVal,
                 &vntRet->lVal);
         break;
       case ID_FILE_GETHELP:
         vntRet->vt = VT_BSTR;
-        hr = bCap_FileGetHelp(m_fd,
+        hr = bCap_FileGetHelp(fd_,
                 vntArgs.at(0).ulVal,
                 &vntRet->bstrVal);
         break;
       case ID_FILE_GETNAME:
         vntRet->vt = VT_BSTR;
-        hr = bCap_FileGetName(m_fd,
+        hr = bCap_FileGetName(fd_,
                 vntArgs.at(0).ulVal,
                 &vntRet->bstrVal);
         break;
       case ID_FILE_GETTAG:
-        hr = bCap_FileGetTag(m_fd,
+        hr = bCap_FileGetTag(fd_,
                 vntArgs.at(0).ulVal,
                 vntRet.get());
         break;
       case ID_FILE_PUTTAG:
-        hr = bCap_FilePutTag(m_fd,
+        hr = bCap_FilePutTag(fd_,
                 vntArgs.at(0).ulVal, vntArgs.at(1));
         break;
       case ID_FILE_GETID:
-        hr = bCap_FileGetID(m_fd,
+        hr = bCap_FileGetID(fd_,
                 vntArgs.at(0).ulVal,
                 vntRet.get());
         break;
       case ID_FILE_PUTID:
-        hr = bCap_FilePutID(m_fd,
+        hr = bCap_FilePutID(fd_,
                 vntArgs.at(0).ulVal, vntArgs.at(1));
         break;
       case ID_FILE_RELEASE:
         tmpKH.second = vntArgs.at(0).ulVal;
-        hr = bCap_FileRelease(m_fd,
+        hr = bCap_FileRelease(fd_,
                 &vntArgs.at(0).ulVal);
         break;
       // Robot
       case ID_ROBOT_GETVARIABLE:
         vntRet->vt = VT_UI4;
-        hr = bCap_RobotGetVariable(m_fd,
+        hr = bCap_RobotGetVariable(fd_,
                 vntArgs.at(0).ulVal, vntArgs.at(1).bstrVal, vntArgs.at(2).bstrVal,
                 &vntRet->ulVal);
         tmpKH.first = ID_VARIABLE_RELEASE;
         break;
       case ID_ROBOT_GETVARIABLENAMES:
-        hr = bCap_RobotGetVariableNames(m_fd,
+        hr = bCap_RobotGetVariableNames(fd_,
                 vntArgs.at(0).ulVal, vntArgs.at(1).bstrVal,
                 vntRet.get());
         break;
       case ID_ROBOT_EXECUTE:
-        hr = bCap_RobotExecute(m_fd,
+        hr = bCap_RobotExecute(fd_,
                 vntArgs.at(0).ulVal, vntArgs.at(1).bstrVal, vntArgs.at(2),
                 vntRet.get());
         break;
       case ID_ROBOT_ACCELERATE:
-        hr = bCap_RobotAccelerate(m_fd,
+        hr = bCap_RobotAccelerate(fd_,
                 vntArgs.at(0).ulVal, vntArgs.at(1).lVal, vntArgs.at(2).fltVal, vntArgs.at(3).fltVal);
         break;
       case ID_ROBOT_CHANGE:
-        hr = bCap_RobotChange(m_fd,
+        hr = bCap_RobotChange(fd_,
                 vntArgs.at(0).ulVal, vntArgs.at(1).bstrVal);
         break;
       case ID_ROBOT_CHUCK:
-        hr = bCap_RobotChuck(m_fd,
+        hr = bCap_RobotChuck(fd_,
                 vntArgs.at(0).ulVal, vntArgs.at(1).bstrVal);
         break;
       case ID_ROBOT_DRIVE:
-        hr = bCap_RobotDrive(m_fd,
+        hr = bCap_RobotDrive(fd_,
                 vntArgs.at(0).ulVal, vntArgs.at(1).lVal, vntArgs.at(2).fltVal, vntArgs.at(3).bstrVal);
         break;
       case ID_ROBOT_GOHOME:
-        hr = bCap_RobotGoHome(m_fd,
+        hr = bCap_RobotGoHome(fd_,
                 vntArgs.at(0).ulVal);
         break;
       case ID_ROBOT_HALT:
-        hr = bCap_RobotHalt(m_fd,
+        hr = bCap_RobotHalt(fd_,
                 vntArgs.at(0).ulVal, vntArgs.at(1).bstrVal);
         break;
       case ID_ROBOT_HOLD:
-        hr = bCap_RobotHold(m_fd,
+        hr = bCap_RobotHold(fd_,
                 vntArgs.at(0).ulVal, vntArgs.at(1).bstrVal);
         break;
       case ID_ROBOT_MOVE:
-        hr = bCap_RobotMove(m_fd,
+        hr = bCap_RobotMove(fd_,
                 vntArgs.at(0).ulVal, vntArgs.at(1).lVal, vntArgs.at(2), vntArgs.at(3).bstrVal);
         break;
       case ID_ROBOT_ROTATE:
-        hr = bCap_RobotRotate(m_fd,
+        hr = bCap_RobotRotate(fd_,
                 vntArgs.at(0).ulVal, vntArgs.at(1), vntArgs.at(2).fltVal, vntArgs.at(3), vntArgs.at(4).bstrVal);
         break;
       case ID_ROBOT_SPEED:
-        hr = bCap_RobotSpeed(m_fd,
+        hr = bCap_RobotSpeed(fd_,
                 vntArgs.at(0).ulVal, vntArgs.at(1).lVal, vntArgs.at(2).fltVal);
         break;
       case ID_ROBOT_UNCHUCK:
-        hr = bCap_RobotUnchuck(m_fd,
+        hr = bCap_RobotUnchuck(fd_,
                 vntArgs.at(0).ulVal, vntArgs.at(1).bstrVal);
         break;
       case ID_ROBOT_UNHOLD:
-        hr = bCap_RobotUnhold(m_fd,
+        hr = bCap_RobotUnhold(fd_,
                 vntArgs.at(0).ulVal, vntArgs.at(1).bstrVal);
         break;
       case ID_ROBOT_GETATTRIBUTE:
         vntRet->vt = VT_I4;
-        hr = bCap_RobotGetAttribute(m_fd,
+        hr = bCap_RobotGetAttribute(fd_,
                 vntArgs.at(0).ulVal,
                 &vntRet->lVal);
         break;
       case ID_ROBOT_GETHELP:
         vntRet->vt = VT_BSTR;
-        hr = bCap_RobotGetHelp(m_fd,
+        hr = bCap_RobotGetHelp(fd_,
                 vntArgs.at(0).ulVal,
                 &vntRet->bstrVal);
         break;
       case ID_ROBOT_GETNAME:
         vntRet->vt = VT_BSTR;
-        hr = bCap_RobotGetName(m_fd,
+        hr = bCap_RobotGetName(fd_,
                 vntArgs.at(0).ulVal,
                 &vntRet->bstrVal);
         break;
       case ID_ROBOT_GETTAG:
-        hr = bCap_RobotGetTag(m_fd,
+        hr = bCap_RobotGetTag(fd_,
                 vntArgs.at(0).ulVal,
                 vntRet.get());
         break;
       case ID_ROBOT_PUTTAG:
-        hr = bCap_RobotPutTag(m_fd,
+        hr = bCap_RobotPutTag(fd_,
                 vntArgs.at(0).ulVal, vntArgs.at(1));
         break;
       case ID_ROBOT_GETID:
-        hr = bCap_RobotGetID(m_fd,
+        hr = bCap_RobotGetID(fd_,
                 vntArgs.at(0).ulVal,
                 vntRet.get());
         break;
       case ID_ROBOT_PUTID:
-        hr = bCap_RobotPutID(m_fd,
+        hr = bCap_RobotPutID(fd_,
                 vntArgs.at(0).ulVal, vntArgs.at(1));
         break;
       case ID_ROBOT_RELEASE:
         tmpKH.second = vntArgs.at(0).ulVal;
-        hr = bCap_RobotRelease(m_fd,
+        hr = bCap_RobotRelease(fd_,
                 &vntArgs.at(0).ulVal);
         break;
       // Task
       case ID_TASK_GETVARIABLE:
         vntRet->vt = VT_UI4;
-        hr = bCap_TaskGetVariable(m_fd,
+        hr = bCap_TaskGetVariable(fd_,
                 vntArgs.at(0).ulVal, vntArgs.at(1).bstrVal, vntArgs.at(2).bstrVal,
                 &vntRet->ulVal);
         tmpKH.first = ID_VARIABLE_RELEASE;
         break;
       case ID_TASK_GETVARIABLENAMES:
-        hr = bCap_TaskGetVariableNames(m_fd,
+        hr = bCap_TaskGetVariableNames(fd_,
                 vntArgs.at(0).ulVal, vntArgs.at(1).bstrVal,
                 vntRet.get());
         break;
       case ID_TASK_EXECUTE:
-        hr = bCap_TaskExecute(m_fd,
+        hr = bCap_TaskExecute(fd_,
                 vntArgs.at(0).ulVal, vntArgs.at(1).bstrVal, vntArgs.at(2),
                 vntRet.get());
         break;
       case ID_TASK_START:
-        hr = bCap_TaskStart(m_fd,
+        hr = bCap_TaskStart(fd_,
                 vntArgs.at(0).ulVal, vntArgs.at(1).lVal, vntArgs.at(2).bstrVal);
         break;
       case ID_TASK_STOP:
-        hr = bCap_TaskStop(m_fd,
+        hr = bCap_TaskStop(fd_,
                 vntArgs.at(0).ulVal, vntArgs.at(1).lVal, vntArgs.at(2).bstrVal);
         break;
       case ID_TASK_DELETE:
-        hr = bCap_TaskDelete(m_fd,
+        hr = bCap_TaskDelete(fd_,
                 vntArgs.at(0).ulVal, vntArgs.at(1).bstrVal);
         break;
       case ID_TASK_GETFILENAME:
         vntRet->vt = VT_BSTR;
-        hr = bCap_TaskGetFileName(m_fd,
+        hr = bCap_TaskGetFileName(fd_,
                 vntArgs.at(0).ulVal,
                 &vntRet->bstrVal);
         break;
       case ID_TASK_GETATTRIBUTE:
         vntRet->vt = VT_I4;
-        hr = bCap_TaskGetAttribute(m_fd,
+        hr = bCap_TaskGetAttribute(fd_,
                 vntArgs.at(0).ulVal,
                 &vntRet->lVal);
         break;
       case ID_TASK_GETHELP:
         vntRet->vt = VT_BSTR;
-        hr = bCap_TaskGetHelp(m_fd,
+        hr = bCap_TaskGetHelp(fd_,
                 vntArgs.at(0).ulVal,
                 &vntRet->bstrVal);
         break;
       case ID_TASK_GETNAME:
         vntRet->vt = VT_BSTR;
-        hr = bCap_TaskGetName(m_fd,
+        hr = bCap_TaskGetName(fd_,
                 vntArgs.at(0).ulVal,
                 &vntRet->bstrVal);
         break;
       case ID_TASK_GETTAG:
-        hr = bCap_TaskGetTag(m_fd,
+        hr = bCap_TaskGetTag(fd_,
                 vntArgs.at(0).ulVal,
                 vntRet.get());
         break;
       case ID_TASK_PUTTAG:
-        hr = bCap_TaskPutTag(m_fd,
+        hr = bCap_TaskPutTag(fd_,
                 vntArgs.at(0).ulVal, vntArgs.at(1));
         break;
       case ID_TASK_GETID:
-        hr = bCap_TaskGetID(m_fd,
+        hr = bCap_TaskGetID(fd_,
                 vntArgs.at(0).ulVal,
                 vntRet.get());
         break;
       case ID_TASK_PUTID:
-        hr = bCap_TaskPutID(m_fd,
+        hr = bCap_TaskPutID(fd_,
                 vntArgs.at(0).ulVal, vntArgs.at(1));
         break;
       case ID_TASK_RELEASE:
         tmpKH.second = vntArgs.at(0).ulVal;
-        hr = bCap_TaskRelease(m_fd,
+        hr = bCap_TaskRelease(fd_,
                 &vntArgs.at(0).ulVal);
         break;
       // Variable
       case ID_VARIABLE_GETDATETIME:
-        hr = bCap_VariableGetDateTime(m_fd,
+        hr = bCap_VariableGetDateTime(fd_,
                 vntArgs.at(0).ulVal,
                 vntRet.get());
         break;
       case ID_VARIABLE_GETVALUE:
-        hr = bCap_VariableGetValue(m_fd,
+        hr = bCap_VariableGetValue(fd_,
                 vntArgs.at(0).ulVal,
                 vntRet.get());
         break;
       case ID_VARIABLE_PUTVALUE:
-        hr = bCap_VariablePutValue(m_fd,
+        hr = bCap_VariablePutValue(fd_,
                 vntArgs.at(0).ulVal, vntArgs.at(1));
         break;
       case ID_VARIABLE_GETATTRIBUTE:
         vntRet->vt = VT_I4;
-        hr = bCap_VariableGetAttribute(m_fd,
+        hr = bCap_VariableGetAttribute(fd_,
                 vntArgs.at(0).ulVal,
                 &vntRet->lVal);
         break;
       case ID_VARIABLE_GETHELP:
         vntRet->vt = VT_BSTR;
-        hr = bCap_VariableGetHelp(m_fd,
+        hr = bCap_VariableGetHelp(fd_,
                 vntArgs.at(0).ulVal,
                 &vntRet->bstrVal);
         break;
       case ID_VARIABLE_GETNAME:
         vntRet->vt = VT_BSTR;
-        hr = bCap_VariableGetName(m_fd,
+        hr = bCap_VariableGetName(fd_,
                 vntArgs.at(0).ulVal,
                 &vntRet->bstrVal);
         break;
       case ID_VARIABLE_GETTAG:
-        hr = bCap_VariableGetTag(m_fd,
+        hr = bCap_VariableGetTag(fd_,
                 vntArgs.at(0).ulVal,
                 vntRet.get());
         break;
       case ID_VARIABLE_PUTTAG:
-        hr = bCap_VariablePutTag(m_fd,
+        hr = bCap_VariablePutTag(fd_,
                 vntArgs.at(0).ulVal, vntArgs.at(1));
         break;
       case ID_VARIABLE_GETID:
-        hr = bCap_VariableGetID(m_fd,
+        hr = bCap_VariableGetID(fd_,
                 vntArgs.at(0).ulVal,
                 vntRet.get());
         break;
       case ID_VARIABLE_PUTID:
-        hr = bCap_VariablePutID(m_fd,
+        hr = bCap_VariablePutID(fd_,
                 vntArgs.at(0).ulVal, vntArgs.at(1));
         break;
       case ID_VARIABLE_GETMICROSECOND:
         vntRet->vt = VT_I4;
-        hr = bCap_VariableGetMicrosecond(m_fd,
+        hr = bCap_VariableGetMicrosecond(fd_,
                 vntArgs.at(0).ulVal,
                 &vntRet->lVal);
         break;
       case ID_VARIABLE_RELEASE:
         tmpKH.second = vntArgs.at(0).ulVal;
-        hr = bCap_VariableRelease(m_fd,
+        hr = bCap_VariableRelease(fd_,
                 &vntArgs.at(0).ulVal);
         break;
       // Command
       case ID_COMMAND_EXECUTE:
-        hr = bCap_CommandExecute(m_fd,
+        hr = bCap_CommandExecute(fd_,
                 vntArgs.at(0).ulVal, vntArgs.at(1).lVal,
                 vntRet.get());
         break;
       case ID_COMMAND_CANCEL:
-        hr = bCap_CommandCancel(m_fd,
+        hr = bCap_CommandCancel(fd_,
                 vntArgs.at(0).ulVal);
         break;
       case ID_COMMAND_GETTIMEOUT:
         vntRet->vt = VT_I4;
-        hr = bCap_CommandGetTimeout(m_fd,
+        hr = bCap_CommandGetTimeout(fd_,
                 vntArgs.at(0).ulVal,
                 &vntRet->lVal);
         break;
       case ID_COMMAND_PUTTIMEOUT:
-        hr = bCap_CommandPutTimeout(m_fd,
+        hr = bCap_CommandPutTimeout(fd_,
                 vntArgs.at(0).ulVal, vntArgs.at(1).lVal);
         break;
       case ID_COMMAND_GETSTATE:
         vntRet->vt = VT_I4;
-        hr = bCap_CommandGetState(m_fd,
+        hr = bCap_CommandGetState(fd_,
                 vntArgs.at(0).ulVal,
                 &vntRet->lVal);
         break;
       case ID_COMMAND_GETPARAMETERS:
-        hr = bCap_CommandGetParameters(m_fd,
+        hr = bCap_CommandGetParameters(fd_,
                 vntArgs.at(0).ulVal,
                 vntRet.get());
         break;
       case ID_COMMAND_PUTPARAMETERS:
-        hr = bCap_CommandPutParameters(m_fd,
+        hr = bCap_CommandPutParameters(fd_,
                 vntArgs.at(0).ulVal, vntArgs.at(1));
         break;
       case ID_COMMAND_GETRESULT:
-        hr = bCap_CommandGetResult(m_fd,
+        hr = bCap_CommandGetResult(fd_,
                 vntArgs.at(0).ulVal,
                 vntRet.get());
         break;
       case ID_COMMAND_GETATTRIBUTE:
         vntRet->vt = VT_I4;
-        hr = bCap_CommandGetAttribute(m_fd,
+        hr = bCap_CommandGetAttribute(fd_,
                 vntArgs.at(0).ulVal,
                 &vntRet->lVal);
         break;
       case ID_COMMAND_GETHELP:
         vntRet->vt = VT_BSTR;
-        hr = bCap_CommandGetHelp(m_fd,
+        hr = bCap_CommandGetHelp(fd_,
                 vntArgs.at(0).ulVal,
                 &vntRet->bstrVal);
         break;
       case ID_COMMAND_GETNAME:
         vntRet->vt = VT_BSTR;
-        hr = bCap_CommandGetName(m_fd,
+        hr = bCap_CommandGetName(fd_,
                 vntArgs.at(0).ulVal,
                 &vntRet->bstrVal);
         break;
       case ID_COMMAND_GETTAG:
-        hr = bCap_CommandGetTag(m_fd,
+        hr = bCap_CommandGetTag(fd_,
                 vntArgs.at(0).ulVal,
                 vntRet.get());
         break;
       case ID_COMMAND_PUTTAG:
-        hr = bCap_CommandPutTag(m_fd,
+        hr = bCap_CommandPutTag(fd_,
                 vntArgs.at(0).ulVal, vntArgs.at(1));
         break;
       case ID_COMMAND_GETID:
-        hr = bCap_CommandGetID(m_fd,
+        hr = bCap_CommandGetID(fd_,
                 vntArgs.at(0).ulVal,
                 vntRet.get());
         break;
       case ID_COMMAND_PUTID:
-        hr = bCap_CommandPutID(m_fd,
+        hr = bCap_CommandPutID(fd_,
                 vntArgs.at(0).ulVal, vntArgs.at(1));
         break;
       case ID_COMMAND_RELEASE:
         tmpKH.second = vntArgs.at(0).ulVal;
-        hr = bCap_CommandRelease(m_fd,
+        hr = bCap_CommandRelease(fd_,
                 &vntArgs.at(0).ulVal);
         break;
       case ID_MESSAGE_REPLY:
-        hr = bCap_MessageReply(m_fd,
+        hr = bCap_MessageReply(fd_,
                 vntArgs.at(0).ulVal, vntArgs.at(1));
         break;
       case ID_MESSAGE_CLEAR:
-        hr = bCap_MessageClear(m_fd,
+        hr = bCap_MessageClear(fd_,
                 vntArgs.at(0).ulVal);
         break;
       case ID_MESSAGE_GETDATETIME:
-        hr = bCap_MessageGetDateTime(m_fd,
+        hr = bCap_MessageGetDateTime(fd_,
                 vntArgs.at(0).ulVal,
                 vntRet.get());
         break;
       case ID_MESSAGE_GETDESCRIPTION:
         vntRet->vt = VT_BSTR;
-        hr = bCap_MessageGetDescription(m_fd,
+        hr = bCap_MessageGetDescription(fd_,
                 vntArgs.at(0).ulVal,
                 &vntRet->bstrVal);
         break;
       case ID_MESSAGE_GETDESTINATION:
         vntRet->vt = VT_BSTR;
-        hr = bCap_MessageGetDestination(m_fd,
+        hr = bCap_MessageGetDestination(fd_,
                 vntArgs.at(0).ulVal,
                 &vntRet->bstrVal);
         break;
       case ID_MESSAGE_GETNUMBER:
         vntRet->vt = VT_I4;
-        hr = bCap_MessageGetNumber(m_fd,
+        hr = bCap_MessageGetNumber(fd_,
                 vntArgs.at(0).ulVal,
                 &vntRet->lVal);
         break;
       case ID_MESSAGE_GETSERIALNUMBER:
         vntRet->vt = VT_I4;
-        hr = bCap_MessageGetSerialNumber(m_fd,
+        hr = bCap_MessageGetSerialNumber(fd_,
                 vntArgs.at(0).ulVal,
                 &vntRet->lVal);
         break;
       case ID_MESSAGE_GETSOURCE:
         vntRet->vt = VT_BSTR;
-        hr = bCap_MessageGetSource(m_fd,
+        hr = bCap_MessageGetSource(fd_,
                 vntArgs.at(0).ulVal,
                 &vntRet->bstrVal);
         break;
       case ID_MESSAGE_GETVALUE:
-        hr = bCap_MessageGetValue(m_fd,
+        hr = bCap_MessageGetValue(fd_,
                 vntArgs.at(0).ulVal,
                 vntRet.get());
         break;
       case ID_MESSAGE_RELEASE:
         tmpKH.second = vntArgs.at(0).ulVal;
-        hr = bCap_MessageRelease(m_fd,
+        hr = bCap_MessageRelease(fd_,
                 &vntArgs.at(0).ulVal);
         break;
     }
@@ -996,15 +888,15 @@ HRESULT BCAPService::ExecFunction(
   if(hr == S_OK) {
     if(tmpKH.first > 0) {
       tmpKH.second = vntRet->ulVal;
-      m_vecKH.push_back(tmpKH);
+      vecKH_.push_back(tmpKH);
     }
     else if(tmpKH.second > 0) {
       KeyHandle_Vec::iterator it;
-      for(it = m_vecKH.begin(); it != m_vecKH.end(); it++) {
+      for(it = vecKH_.begin(); it != vecKH_.end(); it++) {
         if((func_id == it->first)
            && (tmpKH.second == it->second))
         {
-          m_vecKH.erase(it);
+          vecKH_.erase(it);
           break;
         }
       }

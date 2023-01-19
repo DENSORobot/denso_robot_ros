@@ -31,8 +31,8 @@
 #include <windows.h>
 #endif
 
-#include "dn_common.h"
-#include "rac_string.h"
+#include "bcap_core/dn_common.h"
+#include "bcap_core/RACString/rac_string.h"
 
 /**
  * @fn            int SplitRacStr(const char* chSrc, char** chSplit)

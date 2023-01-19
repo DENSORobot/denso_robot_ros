@@ -2,6 +2,11 @@
 Changelog for package denso_robot_ros
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+4.0.0 (2022-10-17)
+------------------
+* Transplant to the ROS2
+* Contributors: Dayuan Chen
+
 3.2.0 (2021-06-02)
 ------------------
 

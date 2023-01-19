@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 2.8.11)
+cmake_minimum_required(VERSION 3.5)
 project(bcap_core)
 
 if(NOT CMAKE_BUILD_TYPE)
@@ -10,7 +10,6 @@ endif(NOT CMAKE_BUILD_TYPE)
 ###########
 ## Build ##
 ###########
-
 # Options
 option  (_DN_USE_VARIANT_API "Use VARIANT API" ON)
 option  (_DN_USE_BSTR_API    "Use BSTR API"    ON)
@@ -37,19 +36,16 @@ if(WIN32)
   endif(${CMAKE_SIZEOF_VOID_P} EQUAL 8)
 else(WIN32) # Linux
   # Search catkin
-  find_package(catkin QUIET)
-  if(catkin_FOUND)
+  find_package(ament_cmake REQUIRED)
+  
+  if(ament_cmake_FOUND)
     option  (_USE_CATKIN "Use catkin for installation" ON)
     if(_USE_CATKIN)
-    catkin_package(
-      INCLUDE_DIRS include include/${PROJECT_NAME}
-      LIBRARIES bcap_client bcap_server tpcomm rac_string
-    )
     message (STATUS "_USE_CATKIN=${_USE_CATKIN}")
     endif(_USE_CATKIN)
-  else(catkin_FOUND)
+  else(ament_cmake_FOUND)
     message(STATUS "catkin was not found. Build without catkin.")
-  endif(catkin_FOUND)
+  endif(ament_cmake_FOUND)
 
 endif(WIN32)
 
@@ -62,8 +58,8 @@ if(MSVC)
     set(_VS_VER "" CACHE INTERNAL "")
   endif("${CMAKE_GENERATOR}" MATCHES "Visual Studio ([0-9]?[0-9])")
 else(MSVC) # Not use visual studio
-  option  (_USE_LINUX_API      "Use Linux API"   ON)
-  message (STATUS "_USE_LINUX_API=${_USE_LINUX_API}")
+option  (_USE_LINUX_API      "Use Linux API"   ON)
+message (STATUS "_USE_LINUX_API=${_USE_LINUX_API}")
 endif(MSVC)
 
 option (BUILD_SHARED_LIBS "Build as a shared library" OFF)
@@ -109,7 +105,7 @@ endif(MSVC AND "${_VS_VER}" MATCHES "v([0-9]?[0-9])")
 
 
 # bcap_client library
-add_library(bcap_client
+add_library(bcap_client SHARED
   src/bCAPClient/bcap_client.c
   src/bcap_common.c
   src/dn_com.c
@@ -121,8 +117,10 @@ add_library(bcap_client
   src/dn_udp.c
 )
 
-target_include_directories(bcap_client PUBLIC
-  include/${PROJECT_NAME}/bCAPClient
+target_include_directories(bcap_client
+  PUBLIC
+  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+  $<INSTALL_INTERFACE:include>
 )
 
 if(_USE_LINUX_API)
@@ -132,7 +130,7 @@ if(_USE_LINUX_API)
 endif(_USE_LINUX_API)
 
 # bcap_server library
-add_library(bcap_server
+add_library(bcap_server SHARED
   src/bCAPServer/bcap_server.c
   src/bcap_common.c
   src/dn_com.c
@@ -144,8 +142,10 @@ add_library(bcap_server
   src/dn_udp.c
 )
 
-target_include_directories(bcap_server PUBLIC
-  include/${PROJECT_NAME}/bCAPServer
+target_include_directories(bcap_server
+  PUBLIC
+  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+  $<INSTALL_INTERFACE:include>
 )
 
 if(_USE_LINUX_API)
@@ -155,17 +155,19 @@ if(_USE_LINUX_API)
 endif(_USE_LINUX_API)
 
 # rac_string library
-add_library(rac_string
+add_library(rac_string SHARED
   src/RACString/rac_string.c
   src/dn_common.c
 )
 
-target_include_directories(rac_string PUBLIC
-  include/${PROJECT_NAME}/RACString
+target_include_directories(rac_string
+  PUBLIC
+  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+  $<INSTALL_INTERFACE:include>
 )
 
 # tpcomm library
-add_library(tpcomm
+add_library(tpcomm SHARED
   src/TPComm/dn_tpcomm.c
   src/dn_com.c
   src/dn_common.c
@@ -176,8 +178,10 @@ add_library(tpcomm
   src/dn_udp.c
 )
 
-target_include_directories(tpcomm PUBLIC
-  include/${PROJECT_NAME}/TPComm
+target_include_directories(tpcomm
+  PUBLIC
+  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+  $<INSTALL_INTERFACE:include>
 )
 
 if(_USE_LINUX_API)
@@ -191,18 +195,31 @@ endif(_USE_LINUX_API)
 #############
 
 if(_USE_CATKIN)
-  # libraries
-  install(TARGETS bcap_client bcap_server rac_string tpcomm
-    ARCHIVE DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
-    LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
-    RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
-  )
+# libraries
+install(TARGETS bcap_client bcap_server rac_string tpcomm
+  ARCHIVE DESTINATION lib
+  LIBRARY DESTINATION lib
+  RUNTIME DESTINATION lib/{${PROJECT_NAME}}
+  INCLUDES DESTIONATION include
+)
 
-  # headers
-  install(DIRECTORY include/${PROJECT_NAME}/
-    DESTINATION ${CATKIN_PACKAGE_INCLUDE_DESTINATION}
-    FILES_MATCHING PATTERN "*.h"
-  )
+# headers
+install(DIRECTORY include/
+  DESTINATION include
+  FILES_MATCHING PATTERN "*.h"
+)
+
+ament_export_include_directories(
+  include
+)
+ament_export_libraries(
+  bcap_client 
+  bcap_server 
+  rac_string 
+  tpcomm
+)
+
+ament_package()
 
 else(_USE_CATKIN)
   # libraries

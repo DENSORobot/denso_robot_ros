@@ -22,9 +22,9 @@
  * THE SOFTWARE.
  */
 
-#include "denso_robot_core/denso_robot_rc9.h"
+#include "denso_robot_core/denso_robot_rc9.hpp"
 
-namespace denso_robot_core
+namespace denso2
 {
 DensoRobotRC9::DensoRobotRC9(DensoBase* parent, Service_Vec& service, Handle_Vec& handle, const std::string& name,
                              const int* mode)
@@ -36,4 +36,4 @@ DensoRobotRC9::~DensoRobotRC9()
 {
 }
 
-}  // namespace denso_robot_core
+}  // namespace denso2

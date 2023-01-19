@@ -45,7 +45,7 @@ public:
     typedef VariantAllocator<U> other;
   };
 
-  pointer allocate(size_type num, const void* hint = 0)
+  pointer allocate(size_type num)
   {
     return (pointer)( ::operator new(num * sizeof(T)));
   }

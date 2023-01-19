@@ -1,26 +1,32 @@
 <?xml version="1.0"?>
 <package>
   <name>denso_robot_ros</name>
-  <version>3.2.0</version>
+  <version>4.0.0</version>
   <description>The denso robot ros stack constains libraries, configuration files, and ROS nodes for controlling a DENSO robot from ROS.</description>
   <maintainer email="fa-support@denso-wave.com">DENSO WAVE INCORPORATED</maintainer>
   <license>MIT</license>
   <url type="website">http://ros.org/wiki/denso_robot_ros</url>
   <author email="fa-support@denso-wave.com">DENSO WAVE INCORPORATED</author>
+  
+  <buildtool_depend>ament_cmake</buildtool_depend>
 
-  <buildtool_depend>catkin</buildtool_depend>
+  <test_depend>ament_lint_auto</test_depend>
+  <test_depend>ament_lint_common</test_depend>
+
   <run_depend>bcap_core</run_depend>
   <run_depend>bcap_service</run_depend>
-  <run_depend>bcap_service_test</run_depend>
+  <run_depend>denso_msgs</run_depend>
+  <!-- <run_depend>bcap_service_test</run_depend>
   <run_depend>denso_robot_bringup</run_depend>
   <run_depend>denso_robot_control</run_depend>
   <run_depend>denso_robot_core</run_depend>
   <run_depend>denso_robot_core_test</run_depend>
   <run_depend>denso_robot_descriptions</run_depend>
   <run_depend>denso_robot_gazebo</run_depend>
-  <run_depend>denso_robot_moveit_config</run_depend>
+  <run_depend>denso_robot_moveit_config</run_depend> -->
+
 
   <export>
-    <metapackage />
+    <build_type>ament_cmake</build_type>
   </export>
 </package>

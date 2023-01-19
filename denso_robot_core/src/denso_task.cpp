@@ -22,9 +22,9 @@
  * THE SOFTWARE.
  */
 
-#include "denso_robot_core/denso_task.h"
+#include "denso_robot_core/denso_task.hpp"
 
-namespace denso_robot_core
+namespace denso2
 {
 DensoTask::DensoTask(DensoBase* parent, Service_Vec& service, Handle_Vec& handle, const std::string& name,
                      const int* mode)
@@ -41,27 +41,27 @@ HRESULT DensoTask::InitializeBCAP(XMLElement* xmlElem)
   return AddVariable(xmlElem);
 }
 
-HRESULT DensoTask::StartService(ros::NodeHandle& node)
+HRESULT DensoTask::StartService()
 {
   DensoVariable_Vec::iterator itVar;
-  for (itVar = m_vecVar.begin(); itVar != m_vecVar.end(); itVar++)
+  for (itVar = vecVar_.begin(); itVar != vecVar_.end(); itVar++)
   {
-    (*itVar)->StartService(node);
+    (*itVar)->StartService();
   }
 
-  m_serving = true;
+  serving_ = true;
 
   return S_OK;
 }
 
 HRESULT DensoTask::StopService()
 {
-  m_mtxSrv.lock();
-  m_serving = false;
-  m_mtxSrv.unlock();
+  mtxSrv_.lock();
+  serving_ = false;
+  mtxSrv_.unlock();
 
   DensoVariable_Vec::iterator itVar;
-  for (itVar = m_vecVar.begin(); itVar != m_vecVar.end(); itVar++)
+  for (itVar = vecVar_.begin(); itVar != vecVar_.end(); itVar++)
   {
     (*itVar)->StopService();
   }
@@ -71,12 +71,12 @@ HRESULT DensoTask::StopService()
 
 bool DensoTask::Update()
 {
-  boost::mutex::scoped_lock lockSrv(m_mtxSrv);
-  if (!m_serving)
+  boost::mutex::scoped_lock lockSrv(mtxSrv_);
+  if (!serving_)
     return false;
 
   DensoVariable_Vec::iterator itVar;
-  for (itVar = m_vecVar.begin(); itVar != m_vecVar.end(); itVar++)
+  for (itVar = vecVar_.begin(); itVar != vecVar_.end(); itVar++)
   {
     (*itVar)->Update();
   }
@@ -92,7 +92,7 @@ HRESULT DensoTask::get_Variable(const std::string& name, DensoVariable_Ptr* var)
   }
 
   DensoBase_Vec vecBase;
-  vecBase.insert(vecBase.end(), m_vecVar.begin(), m_vecVar.end());
+  vecBase.insert(vecBase.end(), vecVar_.begin(), vecVar_.end());
 
   DensoBase_Ptr pBase;
   HRESULT hr = DensoBase::get_Object(vecBase, name, &pBase);
@@ -106,7 +106,7 @@ HRESULT DensoTask::get_Variable(const std::string& name, DensoVariable_Ptr* var)
 
 HRESULT DensoTask::AddVariable(const std::string& name)
 {
-  return DensoBase::AddVariable(ID_TASK_GETVARIABLE, name, m_vecVar);
+  return DensoBase::AddVariable(ID_TASK_GETVARIABLE, name, vecVar_);
 }
 
 HRESULT DensoTask::AddVariable(XMLElement* xmlElem)
@@ -117,7 +117,7 @@ HRESULT DensoTask::AddVariable(XMLElement* xmlElem)
   for (xmlVar = xmlElem->FirstChildElement(DensoVariable::XML_VARIABLE_NAME); xmlVar != NULL;
        xmlVar = xmlVar->NextSiblingElement(DensoVariable::XML_VARIABLE_NAME))
   {
-    hr = DensoBase::AddVariable(ID_TASK_GETVARIABLE, xmlVar, m_vecVar);
+    hr = DensoBase::AddVariable(ID_TASK_GETVARIABLE, xmlVar, vecVar_);
     if (FAILED(hr))
       break;
   }
@@ -125,4 +125,4 @@ HRESULT DensoTask::AddVariable(XMLElement* xmlElem)
   return hr;
 }
 
-}  // namespace denso_robot_core
+}  // namespace denso2

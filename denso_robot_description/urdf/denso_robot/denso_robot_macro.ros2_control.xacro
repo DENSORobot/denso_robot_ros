@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+  <xacro:macro name="denso_robot_ros2_control" params="name prefix 
+    use_fake_hardware:=^|false fake_sensor_commands:=^|false
+    sim_gazebo_classic:=^|false 
+    sim_gazebo:=^|true 
+    robot_ip:=^|192.168.0.1 
+    robot_port:=^|5007 
+    send_format 
+    recv_format 
+    controller_type:=^|8 
+    config_file ">
+    <ros2_control name="${name}" type="system">
+      <hardware>
+        <xacro:if value="${sim_gazebo_classic}">
+          <plugin>gazebo_ros2_control/GazeboSystem</plugin>
+        </xacro:if>
+        <xacro:if value="${sim_gazebo}">
+          <plugin>gz_ros2_control/GazeboSimSystem</plugin>
+        </xacro:if>
+        <xacro:if value="${use_fake_hardware}">
+          <plugin>fake_components/GenericSystem</plugin>
+          <param name="fake_sensor_commands">${fake_sensor_commands}</param>
+          <param name="state_following_offset">0.0</param>
+        </xacro:if>
+        <xacro:unless value="${use_fake_hardware or sim_gazebo_classic or sim_gazebo}">
+          <plugin>denso_hw/denso_hw</plugin>
+          <param name="robot_ip">${robot_ip}</param>
+          <param name="robot_port">${robot_port}</param>
+          <param name="send_format">${send_format}</param>
+          <param name="recv_format">${recv_format}</param>
+          <param name="controller_type">${controller_type}</param>
+          <param name="config_file">${config_file}</param>
+        </xacro:unless>
+      </hardware>
+      <joint name="${prefix}joint1">
+        <command_interface name="position">     
+          <param name="min">${radians(-170)}</param>
+          <param name="max">${radians(170)}</param>
+        </command_interface>
+        <state_interface name="position">
+          <!-- initial position for the FakeSystem and simulation -->
+          <param name="initial_value">0.0</param>
+        </state_interface>/>
+        <state_interface name="velocity"/>
+        <state_interface name="effort"/>
+      </joint>
+      <joint name="${prefix}joint2">
+        <command_interface name="position">     
+          <param name="min">${radians(-100)}</param>
+          <param name="max">${radians(135)}</param>
+        </command_interface>
+        <state_interface name="position">
+          <!-- initial position for the FakeSystem and simulation -->
+          <param name="initial_value">0.0</param>
+        </state_interface>/>
+        <state_interface name="velocity"/>
+        <state_interface name="effort"/>
+      </joint>
+      <joint name="${prefix}joint3">
+        <command_interface name="position">     
+          <param name="min">${radians(-136)}</param>
+          <param name="max">${radians(153)}</param>
+        </command_interface>
+        <state_interface name="position">
+          <!-- initial position for the FakeSystem and simulation -->
+          <param name="initial_value">1.5708</param>
+        </state_interface>/>
+        <state_interface name="velocity"/>
+        <state_interface name="effort"/>
+      </joint>
+      <joint name="${prefix}joint4">
+        <command_interface name="position">     
+          <param name="min">${radians(-270)}</param>
+          <param name="max">${radians(270)}</param>
+        </command_interface>
+        <state_interface name="position">
+          <!-- initial position for the FakeSystem and simulation -->
+          <param name="initial_value">0.0</param>
+        </state_interface>/>
+        <state_interface name="velocity"/>
+        <state_interface name="effort"/>
+      </joint>
+      <joint name="${prefix}joint5">
+        <command_interface name="position">     
+          <param name="min">${radians(-120)}</param>
+          <param name="max">${radians(120)}</param>
+        </command_interface>
+        <state_interface name="position">
+          <!-- initial position for the FakeSystem and simulation -->
+          <param name="initial_value">0.0</param>
+        </state_interface>/>
+        <state_interface name="velocity"/>
+        <state_interface name="effort"/>
+      </joint>
+      <joint name="${prefix}joint6">
+        <command_interface name="position">     
+          <param name="min">${radians(-360)}</param>
+          <param name="max">${radians(360)}</param>
+        </command_interface>
+        <state_interface name="position">
+          <!-- initial position for the FakeSystem and simulation -->
+          <param name="initial_value">0.0</param>
+        </state_interface>/>
+        <state_interface name="velocity"/>
+        <state_interface name="effort"/>
+      </joint>
+
+      <!-- Transmission -->
+      <transmission name="transmission">
+        <plugin>transmission_interface/SimpleTransmission</plugin>
+        <joint name="${prefix}joint1" role="revolute"/>
+        <joint name="${prefix}joint2" role="revolute"/>
+        <joint name="${prefix}joint3" role="revolute"/>
+        <joint name="${prefix}joint4" role="revolute"/>
+        <joint name="${prefix}joint5" role="revolute"/>
+        <joint name="${prefix}joint6" role="revolute"/>
+      </transmission>
+
+    </ros2_control>
+
+  </xacro:macro>
+</robot>

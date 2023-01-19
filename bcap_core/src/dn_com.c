@@ -41,12 +41,12 @@ static const unsigned int BAUD_RATE[_BAUD_MAX][2] =
     _BAUD_PAIR(200), _BAUD_PAIR(300), _BAUD_PAIR(600), _BAUD_PAIR(1200), _BAUD_PAIR(1800),
     _BAUD_PAIR(2400), _BAUD_PAIR(4800), _BAUD_PAIR(9600), _BAUD_PAIR(19200), _BAUD_PAIR(38400)};
 #else
-#include "dn_additional.h"
+#include "bcap_core/dn_additional.h"
 #endif
 
-#include "dn_common.h"
-#include "dn_device.h"
-#include "dn_com.h"
+#include "bcap_core/dn_common.h"
+#include "bcap_core/dn_device.h"
+#include "bcap_core/dn_com.h"
 
 #define _COM_PORT_MAX (256)
 

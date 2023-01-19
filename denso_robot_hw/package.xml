@@ -1,0 +1,28 @@
+<?xml version="1.0"?>
+<?xml-model href="http://download.ros.org/schema/package_format3.xsd" schematypens="http://www.w3.org/2001/XMLSchema"?>
+<package format="3">
+  <name>denso_robot_hw</name>
+  <version>4.0.0</version>
+  <description>The Denso Robot hardware_interface for ROS2 humble</description>
+  <maintainer email="d.chen@srd.mech.tohoku.ac.jp">Dayuan Chen</maintainer>
+  <license>MIT</license>
+  <author email="fa-support@denso-wave.com">DENSO WAVE INCORPORATED</author>
+
+
+  <buildtool_depend>ament_cmake</buildtool_depend>
+
+  <depend>bcap_core</depend>
+  <depend>bcap_service</depend>
+  <depend>denso_robot_core</depend>
+  <depend>hardware_interface</depend>
+  <depend>pluginlib</depend>
+  <depend>rclcpp</depend>
+  <depend>rclcpp_lifecycle</depend>
+
+  <test_depend>ament_lint_auto</test_depend>
+  <test_depend>ament_lint_common</test_depend>
+
+  <export>
+    <build_type>ament_cmake</build_type>
+  </export>
+</package>

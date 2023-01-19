@@ -22,12 +22,12 @@
  * THE SOFTWARE.
  */
 
-#include "denso_robot_core/denso_controller_rc9.h"
+#include "denso_robot_core/denso_controller_rc9.hpp"
 
-namespace denso_robot_core
+namespace denso2
 {
-DensoControllerRC9::DensoControllerRC9(const std::string& name, const int* mode, const ros::Duration dt)
-  : DensoController(name, mode, dt)
+DensoControllerRC9::DensoControllerRC9(const std::string& name, const int* mode, std::string addr, int port)
+  : DensoController(name, mode, addr, port)
 {
 }
 
@@ -43,11 +43,11 @@ HRESULT DensoControllerRC9::AddController()
   HRESULT hr = E_FAIL;
   int srvs, argc;
 
-  if (m_duration != ros::Duration(0.008))
-  {
-    ROS_ERROR("Invalid argument value [bcap_slave_control_cycle_msec]");
-    return E_INVALIDARG;
-  }
+  // if (duration_ != ros::Duration(0.008))
+  // {
+  //   ROS_ERROR("Invalid argument value [bcap_slave_control_cycle_msec]");
+  //   return E_INVALIDARG;
+  // }
 
   for (srvs = DensoBase::SRV_MIN; srvs <= DensoBase::SRV_MAX; srvs++)
   {
@@ -68,9 +68,9 @@ HRESULT DensoControllerRC9::AddController()
       if (argc == 0)
       {
         strTmp = "";
-        if (m_name != "")
+        if (name_ != "")
         {
-          ss << ros::this_node::getNamespace() << m_name << srvs;
+          ss << name_ << srvs;
           strTmp = ss.str();
         }
       }
@@ -84,11 +84,11 @@ HRESULT DensoControllerRC9::AddController()
       vntArgs.push_back(*vntTmp.get());
     }
 
-    hr = m_vecService[srvs]->ExecFunction(ID_CONTROLLER_CONNECT, vntArgs, vntRet);
+    hr = vecService_[srvs]->ExecFunction(ID_CONTROLLER_CONNECT, vntArgs, vntRet);
     if (FAILED(hr))
       break;
 
-    m_vecHandle.push_back(vntRet->ulVal);
+    vecHandle_.push_back(vntRet->ulVal);
   }
 
   return hr;
@@ -96,26 +96,25 @@ HRESULT DensoControllerRC9::AddController()
 
 HRESULT DensoControllerRC9::AddRobot(XMLElement* xmlElem)
 {
-  int objs;
   HRESULT hr;
 
   Name_Vec vecName;
   hr = DensoBase::GetObjectNames(ID_CONTROLLER_GETROBOTNAMES, vecName);
   if (SUCCEEDED(hr))
   {
-    for (objs = 0; objs < vecName.size(); objs++)
+    for (size_t objs = 0; objs < vecName.size(); objs++)
     {
       Handle_Vec vecHandle;
       hr = DensoBase::AddObject(ID_CONTROLLER_GETROBOT, vecName[objs], vecHandle);
       if (FAILED(hr))
         break;
 
-      DensoRobot_Ptr rob(new DensoRobotRC9(this, m_vecService, vecHandle, vecName[objs], m_mode));
+      DensoRobot_Ptr rob(new DensoRobotRC9(this, vecService_, vecHandle, vecName[objs], mode_));
       hr = rob->InitializeBCAP(xmlElem);
       if (FAILED(hr))
         break;
 
-      m_vecRobot.push_back(rob);
+      vecRobot_.push_back(rob);
     }
   }
 
@@ -130,7 +129,7 @@ HRESULT DensoControllerRC9::get_Robot(int index, DensoRobotRC9_Ptr* robot)
   }
 
   DensoBase_Vec vecBase;
-  vecBase.insert(vecBase.end(), m_vecRobot.begin(), m_vecRobot.end());
+  vecBase.insert(vecBase.end(), vecRobot_.begin(), vecRobot_.end());
 
   DensoBase_Ptr pBase;
   HRESULT hr = DensoBase::get_Object(vecBase, index, &pBase);
@@ -164,7 +163,7 @@ HRESULT DensoControllerRC9::ExecResetStoState()
     {
       case 0:
         vntTmp->vt = VT_I4;
-        vntTmp->ulVal = m_vecHandle[DensoBase::SRV_WATCH];
+        vntTmp->ulVal = vecHandle_[DensoBase::SRV_WATCH];
         break;
       case 1:
         vntTmp->vt = VT_BSTR;
@@ -175,7 +174,7 @@ HRESULT DensoControllerRC9::ExecResetStoState()
     vntArgs.push_back(*vntTmp.get());
   }
 
-  return m_vecService[DensoBase::SRV_WATCH]->ExecFunction(ID_CONTROLLER_EXECUTE, vntArgs, vntRet);
+  return vecService_[DensoBase::SRV_WATCH]->ExecFunction(ID_CONTROLLER_EXECUTE, vntArgs, vntRet);
 }
 
-}  // namespace denso_robot_core
+}  // namespace denso2

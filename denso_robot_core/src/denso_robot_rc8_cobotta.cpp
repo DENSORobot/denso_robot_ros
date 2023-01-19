@@ -22,9 +22,9 @@
  * THE SOFTWARE.
  */
 
-#include "denso_robot_core/denso_robot_rc8_cobotta.h"
+#include "denso_robot_core/denso_robot_rc8_cobotta.hpp"
 
-namespace denso_robot_core
+namespace denso2
 {
 
 /**
@@ -55,7 +55,7 @@ HRESULT DensoRobotRC8Cobotta::ExecManualResetPreparation()
     {
       case 0:
         vntTmp->vt = VT_UI4;
-        vntTmp->ulVal = m_vecHandle[DensoBase::SRV_ACT];
+        vntTmp->ulVal = vecHandle_[DensoBase::SRV_ACT];
         break;
       case 1:
         vntTmp->vt = VT_BSTR;
@@ -66,7 +66,7 @@ HRESULT DensoRobotRC8Cobotta::ExecManualResetPreparation()
     vntArgs.push_back(*vntTmp.get());
   }
 
-  return m_vecService[DensoBase::SRV_ACT]->ExecFunction(ID_ROBOT_EXECUTE, vntArgs, vntRet);
+  return vecService_[DensoBase::SRV_ACT]->ExecFunction(ID_ROBOT_EXECUTE, vntArgs, vntRet);
 }
 
 /**
@@ -97,7 +97,7 @@ HRESULT DensoRobotRC8Cobotta::ExecMotionPreparation()
     {
       case 0:
         vntTmp->vt = VT_UI4;
-        vntTmp->ulVal = m_vecHandle[DensoBase::SRV_ACT];
+        vntTmp->ulVal = vecHandle_[DensoBase::SRV_ACT];
         break;
       case 1:
         vntTmp->vt = VT_BSTR;
@@ -108,7 +108,7 @@ HRESULT DensoRobotRC8Cobotta::ExecMotionPreparation()
     vntArgs.push_back(*vntTmp.get());
   }
 
-  return m_vecService[DensoBase::SRV_ACT]->ExecFunction(ID_ROBOT_EXECUTE, vntArgs, vntRet);
+  return vecService_[DensoBase::SRV_ACT]->ExecFunction(ID_ROBOT_EXECUTE, vntArgs, vntRet);
 }
 
 /**
@@ -139,7 +139,7 @@ HRESULT DensoRobotRC8Cobotta::ExecAutoCal()
     {
       case 0:
         vntTmp->vt = VT_UI4;
-        vntTmp->ulVal = m_vecHandle[DensoBase::SRV_ACT];
+        vntTmp->ulVal = vecHandle_[DensoBase::SRV_ACT];
         break;
       case 1:
         vntTmp->vt = VT_BSTR;
@@ -150,6 +150,6 @@ HRESULT DensoRobotRC8Cobotta::ExecAutoCal()
     vntArgs.push_back(*vntTmp.get());
   }
 
-  return m_vecService[DensoBase::SRV_ACT]->ExecFunction(ID_ROBOT_EXECUTE, vntArgs, vntRet);
+  return vecService_[DensoBase::SRV_ACT]->ExecFunction(ID_ROBOT_EXECUTE, vntArgs, vntRet);
 }
-}  // namespace denso_robot_core
+}  // namespace denso2
