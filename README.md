@@ -30,7 +30,7 @@ Check out to the `ahcorde/rename/ign_to_gz` branch.
 This is because the version update of the Gazebo....
 
 ### 4. Source the Gazebo ws then export the Gazebo model environment variables
-`export GZ_SIM_RESOURCE_PATH=/home/xx/xx_ws/install/denso_description/share/`
+`export GZ_SIM_RESOURCE_PATH=$GZ_SIM_RESOURCE_PATH:/home/xx/xx_ws/install/denso_description/share/`
 
 ! Please replace the "xx" to your real path.
 
