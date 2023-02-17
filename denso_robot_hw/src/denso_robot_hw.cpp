@@ -370,7 +370,13 @@ hardware_interface::CallbackReturn denso_hw::on_deactivate(
 {
     RCLCPP_INFO(
         rclcpp::get_logger(this->get_name()), "Stopping... please wait...");
-    
+    HRESULT hr = ChangeModeWithClearError(DensoRobot::SLVMODE_NONE);
+    if (FAILED(hr))
+    {
+        printErrorDescription(hr, "Failed to change to slave mode");
+        RCLCPP_FATAL(
+            rclcpp::get_logger(this->get_name()), "Failed to change to slave mode");
+    }
     // stopping system
     RCLCPP_INFO(
         rclcpp::get_logger(this->get_name()), "System successfully stopped!");
