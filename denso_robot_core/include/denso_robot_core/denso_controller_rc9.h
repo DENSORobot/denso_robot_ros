@@ -38,6 +38,9 @@ public:
 
   HRESULT get_Robot(int index, DensoRobotRC9_Ptr* robot);
 
+  /* RC9 v1.4.x or later */
+  virtual HRESULT ExecManualReset() override;
+  /* RC9 v1.3.x or earlier */
   virtual HRESULT ExecResetStoState() override;
 
 private:

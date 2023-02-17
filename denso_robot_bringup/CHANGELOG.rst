@@ -2,6 +2,11 @@
 Changelog for package denso_robot_bringup
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+3.3.0 (2023-02-14)
+------------------
+* Add example_change_scene.py for COBOTTA PRO
+* Add parameter to specify bcap_slave_mode at startup
+
 3.2.0 (2021-06-02)
 ------------------
 

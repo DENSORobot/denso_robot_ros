@@ -21,7 +21,6 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-
 #include "denso_robot_core/denso_controller_rc9.h"
 
 namespace denso_robot_core
@@ -143,8 +142,57 @@ HRESULT DensoControllerRC9::get_Robot(int index, DensoRobotRC9_Ptr* robot)
 }
 
 /**
- * CaoController::Execute("ResetStoState")
+ * CaoController::Execute("ManualReset")
+ * Clear safety-state with RC9 v1.4.x or later.
+ * Use ExecResetStoState() for earlier versions.
+ * Do NOT call on b-CAP Slave.
+ * @return HRESULT
+ */
+HRESULT DensoControllerRC9::ExecManualReset()
+{
+  /*
+   * RC9 v1.4.x or later: ManualReset
+   * RC9 v1.3.x or earlier: ResetStoState
+   */
+  std::tuple<int, int, int> min_version = std::make_tuple(1, 4, 0);
+  std::tuple<int, int, int> current_version = get_SoftwareVersion();
+  if (current_version < min_version)
+  {
+    return ExecResetStoState();
+  }
+
+  int argc;
+  VARIANT_Vec vntArgs;
+  VARIANT_Ptr vntRet(new VARIANT());
+
+  for (argc = 0; argc < BCAP_CONTROLLER_EXECUTE_ARGS; argc++)
+  {
+    VARIANT_Ptr vntTmp(new VARIANT());
+
+    VariantInit(vntTmp.get());
+
+    switch (argc)
+    {
+      case 0:
+        vntTmp->vt = VT_I4;
+        vntTmp->ulVal = m_vecHandle[DensoBase::SRV_WATCH];
+        break;
+      case 1:
+        vntTmp->vt = VT_BSTR;
+        vntTmp->bstrVal = SysAllocString(L"ManualReset");
+        break;
+    }
+
+    vntArgs.push_back(*vntTmp.get());
+  }
+
+  return m_vecService[DensoBase::SRV_WATCH]->ExecFunction(ID_CONTROLLER_EXECUTE, vntArgs, vntRet);
+}
+
+/**
+ * [Deprecated] CaoController::Execute("ResetStoState")
  * Reset the STO(Safe Torque Off) state.
+ * Use ExecManualReset() for RC9 v1.4.x or later.
  * Do NOT call on b-CAP Slave.
  * @return HRESULT
  */

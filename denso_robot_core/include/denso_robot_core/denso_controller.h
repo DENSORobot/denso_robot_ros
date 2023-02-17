@@ -55,6 +55,7 @@ public:
 
   HRESULT AddVariable(const std::string& name);
   virtual HRESULT ExecClearError();
+  virtual HRESULT ExecManualReset() = 0;
   virtual HRESULT ExecResetStoState() = 0;
   virtual HRESULT ExecGetCurErrorCount(int& count);
   virtual HRESULT ExecGetCurErrorInfo(int error_index, HRESULT& error_code, std::string& error_message);
@@ -63,6 +64,10 @@ public:
   ros::Duration get_Duration() const
   {
     return m_duration;
+  }
+  std::tuple<int, int, int> get_SoftwareVersion() const
+  {
+    return m_software_version;
   }
 
 protected:
@@ -77,6 +82,10 @@ protected:
   DensoTask_Vec m_vecTask;
   DensoVariable_Vec m_vecVar;
   ros::Duration m_duration;
+
+private:
+  std::tuple<int, int, int> m_software_version;
+  HRESULT GetVariableVersion();
 };
 
 typedef boost::shared_ptr<DensoController> DensoController_Ptr;

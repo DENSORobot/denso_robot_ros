@@ -42,6 +42,7 @@ public:
   HRESULT get_Robot(int index, DensoRobotRC8Cobotta_Ptr* robot);
 
   virtual HRESULT ExecClearError() override;
+  virtual HRESULT ExecManualReset() override;
   virtual HRESULT ExecResetStoState() override;
 
   static bool IsCobotta(const std::string& robot_name);

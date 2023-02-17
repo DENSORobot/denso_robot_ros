@@ -147,15 +147,25 @@ HRESULT DensoControllerRC8::get_Robot(int index, DensoRobotRC8_Ptr* robot)
  * Do NOT call on b-CAP Slave.
  * @return HRESULT
  */
-HRESULT DensoControllerRC8::ExecResetStoState()
+HRESULT DensoControllerRC8::ExecManualReset()
 {
   /*
    * NOTE:
    *
    * RC8: Do nothing.
-   * RC8A: Do nothing because "ClearError" can reset the STO together.
+   * RC8A: Do nothing because "ClearError" can do that.
    */
   return 0;
+}
+
+/**
+ * [Deprecated] Reset the STO(Safe Torque Off) state.
+ * Do NOT call on b-CAP Slave.
+ * @return HRESULT
+ */
+HRESULT DensoControllerRC8::ExecResetStoState()
+{
+  return ExecManualReset();
 }
 
 }  // namespace denso_robot_core

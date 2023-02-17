@@ -52,6 +52,7 @@ DensoRobotHW::DensoRobotHW()
   m_robJoints = 0;
   m_sendfmt = DensoRobot::SENDFMT_MINIIO | DensoRobot::SENDFMT_HANDIO;
   m_recvfmt = DensoRobot::RECVFMT_POSE_PJ | DensoRobot::RECVFMT_MINIIO | DensoRobot::RECVFMT_HANDIO;
+  m_resetRosControllerNeeded = false;
 }
 
 DensoRobotHW::~DensoRobotHW()
@@ -110,6 +111,13 @@ HRESULT DensoRobotHW::Initialize()
     m_recvfmt = format;
   }
 
+  int bcapSlaveMode = DensoRobot::SLVMODE_SYNC_WAIT | DensoRobot::SLVMODE_POSE_J;
+  if (nh.getParam("bcap_slave_mode", bcapSlaveMode))
+  {
+    ROS_INFO("Param 'bcap_slave_mode' was not set. Using default value: 0x%x",
+             bcapSlaveMode);
+  }
+
   HRESULT hr = m_eng->Initialize();
   if (FAILED(hr))
   {
@@ -118,6 +126,12 @@ HRESULT DensoRobotHW::Initialize()
   }
 
   m_ctrl = m_eng->get_Controller();
+
+  std::tuple<int, int, int> version = m_ctrl->get_SoftwareVersion();
+  ROS_INFO("DENSO Robot Controller Software Version: %d.%d.%d",
+           std::get<0>(version),
+           std::get<1>(version),
+           std::get<2>(version));
 
   DensoRobot_Ptr pRob;
   hr = m_ctrl->get_Robot(DensoBase::SRV_ACT, &pRob);
@@ -158,10 +172,10 @@ HRESULT DensoRobotHW::Initialize()
     return hr;
   }
 
-  hr = m_ctrl->ExecResetStoState();
+  hr = m_ctrl->ExecManualReset();
   if (FAILED(hr))
   {
-    printErrorDescription(hr, "Failed to reset STO");
+    printErrorDescription(hr, "Failed to clear safety-state");
     return hr;
   }
 
@@ -237,7 +251,7 @@ HRESULT DensoRobotHW::Initialize()
   m_subChangeMode = nh.subscribe<Int32>("ChangeMode", 1, &DensoRobotHW::Callback_ChangeMode, this);
   m_pubCurMode = nh.advertise<Int32>("CurMode", 1);
 
-  hr = ChangeModeWithClearError(DensoRobot::SLVMODE_SYNC_WAIT | DensoRobot::SLVMODE_POSE_J);
+  hr = ChangeModeWithClearError(bcapSlaveMode);
   if (FAILED(hr))
   {
     printErrorDescription(hr, "Failed to change to slave mode");
@@ -249,6 +263,10 @@ HRESULT DensoRobotHW::Initialize()
 
 HRESULT DensoRobotHW::ChangeModeWithClearError(int mode)
 {
+  if (mode != DensoRobot::SLVMODE_NONE)
+  {
+    setResetRosControllerNeeded(true);
+  }
   HRESULT hr = m_eng->ChangeMode(mode, mode == DensoRobot::SLVMODE_NONE);
   if (FAILED(hr))
   {
@@ -309,6 +327,9 @@ HRESULT DensoRobotHW::ChangeModeWithClearError(int mode)
       m_pubRecvUserIO = nh.advertise<UserIO>("Read_RecvUserIO", 1);
     }
   }
+
+  ros::NodeHandle nh;
+  nh.setParam("bcap_slave_mode", msg.data);
 
   return hr;
 }
@@ -389,84 +410,90 @@ void DensoRobotHW::write(ros::Time time, ros::Duration period)
 {
   boost::mutex::scoped_lock lockMode(m_mtxMode);
 
-  if (m_eng->get_Mode() != DensoRobot::SLVMODE_NONE)
+  if (m_eng->get_Mode() == DensoRobot::SLVMODE_NONE)
   {
-    std::vector<double> pose;
-    pose.resize(JOINT_MAX);
-    int bits = 0x0000;
-    for (int i = 0; i < m_robJoints; i++)
+    return;
+  }
+  if (isResetRosControllerNeeded())
+  {
+    return;
+  }
+
+  std::vector<double> pose;
+  pose.resize(JOINT_MAX);
+  int bits = 0x0000;
+  for (int i = 0; i < m_robJoints; i++)
+  {
+    switch (m_type[i])
     {
-      switch (m_type[i])
-      {
-        case 0:  // prismatic
-          pose[i] = M2MM(m_cmd[i]);
-          break;
-        case 1:  // revolute
-          pose[i] = RAD2DEG(m_cmd[i]);
-          break;
-        case -1:  // fixed
-        default:
-          pose[i] = 0.0;
-          break;
-      }
-      bits |= (1 << i);
+      case 0:  // prismatic
+        pose[i] = M2MM(m_cmd[i]);
+        break;
+      case 1:  // revolute
+        pose[i] = RAD2DEG(m_cmd[i]);
+        break;
+      case -1:  // fixed
+      default:
+        pose[i] = 0.0;
+        break;
     }
-    pose.push_back(0x400000 | bits);
-    HRESULT hr = m_rob->ExecSlaveMove(pose, m_joint);
+    bits |= (1 << i);
+  }
+  pose.push_back(0x400000 | bits);
+  HRESULT hr = m_rob->ExecSlaveMove(pose, m_joint);
+  if (SUCCEEDED(hr))
+  {
+    if (m_recvfmt & DensoRobot::RECVFMT_HANDIO)
+    {
+      UInt32 msg;
+      msg.data = m_rob->get_HandIO();
+      m_pubHandIO.publish(msg);
+    }
+    if (m_recvfmt & DensoRobot::RECVFMT_CURRENT)
+    {
+      Float64MultiArray msg;
+      m_rob->get_Current(msg.data);
+      m_pubCurrent.publish(msg);
+    }
+    if (m_recvfmt & DensoRobot::RECVFMT_MINIIO)
+    {
+      UInt32 msg;
+      msg.data = m_rob->get_MiniIO();
+      m_pubMiniIO.publish(msg);
+    }
+    if (m_recvfmt & DensoRobot::RECVFMT_USERIO)
+    {
+      UserIO msg;
+      m_rob->get_RecvUserIO(msg);
+      m_pubRecvUserIO.publish(msg);
+    }
+  }
+  else if (FAILED(hr) && (hr != DensoRobot::E_BUF_FULL))
+  {
+    int error_count = 0;
+
+    printErrorDescription(hr, "Failed to write");
+    if (!hasError())
+    {
+      return;
+    }
+    ROS_ERROR("Automatically change to normal mode.");
+    ChangeModeWithClearError(DensoRobot::SLVMODE_NONE);
+
+    hr = m_ctrl->ExecGetCurErrorCount(error_count);
     if (SUCCEEDED(hr))
     {
-      if (m_recvfmt & DensoRobot::RECVFMT_HANDIO)
+      for (int i = error_count - 1; 0 <= i; i--)
       {
-        UInt32 msg;
-        msg.data = m_rob->get_HandIO();
-        m_pubHandIO.publish(msg);
-      }
-      if (m_recvfmt & DensoRobot::RECVFMT_CURRENT)
-      {
-        Float64MultiArray msg;
-        m_rob->get_Current(msg.data);
-        m_pubCurrent.publish(msg);
-      }
-      if (m_recvfmt & DensoRobot::RECVFMT_MINIIO)
-      {
-        UInt32 msg;
-        msg.data = m_rob->get_MiniIO();
-        m_pubMiniIO.publish(msg);
-      }
-      if (m_recvfmt & DensoRobot::RECVFMT_USERIO)
-      {
-        UserIO msg;
-        m_rob->get_RecvUserIO(msg);
-        m_pubRecvUserIO.publish(msg);
-      }
-    }
-    else if (FAILED(hr) && (hr != DensoRobot::E_BUF_FULL))
-    {
-      int error_count = 0;
+        HRESULT error_code;
+        std::string error_message;
 
-      printErrorDescription(hr, "Failed to write");
-      if (!hasError())
-      {
-        return;
-      }
-      ROS_ERROR("Automatically change to normal mode.");
-      ChangeModeWithClearError(DensoRobot::SLVMODE_NONE);
-
-      hr = m_ctrl->ExecGetCurErrorCount(error_count);
-      if (SUCCEEDED(hr))
-      {
-        for (int i = error_count - 1; 0 <= i; i--)
+        hr = m_ctrl->ExecGetCurErrorInfo(i, error_code, error_message);
+        if (FAILED(hr))
         {
-          HRESULT error_code;
-          std::string error_message;
-
-          hr = m_ctrl->ExecGetCurErrorInfo(i, error_code, error_message);
-          if (FAILED(hr))
-          {
-            return;
-          }
-          ROS_ERROR("  [%d] %s (%X)", i + 1, error_message.c_str(), error_code);
+          return;
         }
+        ROS_ERROR("  [%d] %s (%X)", i + 1, error_message.c_str(), error_code);
       }
     }
   }

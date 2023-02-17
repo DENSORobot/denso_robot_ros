@@ -2,6 +2,10 @@
 Changelog for package denso_robot_gazebo
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+3.3.0 (2023-02-14)
+------------------
+* Add denso_robot_descriptions and robot_state_publisher to package.xml ([#43](https://github.com/DENSORobot/denso_robot_ros/pull/43))
+
 3.2.0 (2021-06-02)
 ------------------
 

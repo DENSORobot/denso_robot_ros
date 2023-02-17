@@ -2,6 +2,10 @@
 Changelog for package denso_robot_core_test
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+3.3.0 (2023-02-14)
+------------------
+* Fix typos of denso_robot_core_test.cpp ([#56](https://github.com/DENSORobot/denso_robot_ros/pull/56))
+
 3.2.0 (2021-06-02)
 ------------------
 

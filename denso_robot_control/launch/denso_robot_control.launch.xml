@@ -6,4 +6,8 @@
   <!-- Recieve format -->
   <arg name="recv_format" default="292" />
   <param name="recv_format" value="$(arg recv_format)" />
+
+  <!-- b-CAP Slave Mode [default: 0x202] -->
+  <arg name="bcap_slave_mode" default="514" />
+  <param name="bcap_slave_mode" value="$(arg bcap_slave_mode)" />
 </launch>

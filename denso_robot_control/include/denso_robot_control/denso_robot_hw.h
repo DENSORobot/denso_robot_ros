@@ -69,6 +69,15 @@ public:
     return m_ctrl->get_Duration();
   }
 
+  bool isResetRosControllerNeeded() const
+  {
+    return m_resetRosControllerNeeded;
+  }
+  void setResetRosControllerNeeded(bool reset_ros_controller_needed)
+  {
+    m_resetRosControllerNeeded = reset_ros_controller_needed;
+  }
+
   void read(ros::Time, ros::Duration);
   void write(ros::Time, ros::Duration);
 
@@ -107,6 +116,7 @@ private:
   int m_robJoints;
   int m_sendfmt;
   int m_recvfmt;
+  bool m_resetRosControllerNeeded;
 
   ros::Subscriber m_subChangeMode;
   ros::Subscriber m_subMiniIO;

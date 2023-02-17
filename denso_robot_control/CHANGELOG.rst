@@ -2,6 +2,13 @@
 Changelog for package denso_robot_control
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+3.3.0 (2023-02-14)
+------------------
+* Add supporting for COBOTTA PRO
+* Change "ResetStoState" to "ManualReset" in the initialization process
+* Modify to use reset_controllers when b-CAP Slave is enabled
+* Add parameter to specify bcap_slave_mode at startup
+
 3.2.0 (2021-06-02)
 ------------------
 * Add "ResetStoState" to initialization

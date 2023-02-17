@@ -93,6 +93,10 @@ HRESULT DensoController::InitializeBCAP(const std::string& filename)
     return E_FAIL;
 
   hr = AddTask(xmlTsk);
+  if (FAILED(hr))
+    return hr;
+
+  hr = GetVariableVersion();
 
   return hr;
 }
@@ -480,6 +484,44 @@ HRESULT DensoController::ExecGetErrorDescription(HRESULT error_code, std::string
     return hr;
   }
   error_description = ConvertBSTRToString(vntRet->bstrVal);
+
+  return hr;
+}
+
+/**
+ * CaoController::AddVariable("@VERSION")
+ * CaoController::get_Variable("@VERSION")
+ * @return HRESULT
+ */
+HRESULT DensoController::GetVariableVersion()
+{
+  HRESULT hr;
+  DensoVariable_Ptr pVar;
+  VARIANT_Ptr vntVal(new VARIANT());
+
+  hr = AddVariable("@VERSION");
+  if (FAILED(hr))
+    return hr;
+  hr = get_Variable("@VERSION", &pVar);
+  if (FAILED(hr))
+    return hr;
+
+  hr = pVar->ExecGetValue(vntVal);
+  if (FAILED(hr))
+    return hr;
+
+  int major;
+  int minor;
+  int revision;
+  std::string version_number = DensoBase::ConvertBSTRToString(vntVal->bstrVal);
+  std::istringstream ss(version_number);
+
+  ss >> major;
+  ss.get();
+  ss >> minor;
+  ss.get();
+  ss >> revision;
+  m_software_version = std::make_tuple(major, minor, revision);
 
   return hr;
 }

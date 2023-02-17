@@ -14,6 +14,9 @@
 
   <arg name="bcap_slave_control_cycle_msec" default="8" />
 
+  <!-- b-CAP Slave Mode [default: 0x202] -->
+  <arg name="bcap_slave_mode" default="514" />
+
   <!-- load the robot_description parameter before launching ROS-I nodes -->
   <include file="$(find denso_robot_moveit_config)/launch/planning_context.launch" >
     <arg name="load_robot_description" value="true" />
@@ -42,6 +45,7 @@
       <arg name="send_format" value="$(arg send_format)" />
       <arg name="recv_format" value="$(arg recv_format)" />
       <arg name="bcap_slave_control_cycle_msec" value="$(arg bcap_slave_control_cycle_msec)" />
+      <arg name="bcap_slave_mode" default="$(arg bcap_slave_mode)" />
     </include>
   </group>
 

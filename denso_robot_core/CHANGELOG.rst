@@ -2,6 +2,11 @@
 Changelog for package denso_robot_core
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+3.3.0 (2023-02-14)
+------------------
+* Add supporting for COBOTTA PRO
+* Add "ManualReset" to clear safety-state (previous command was "ResetStoState")
+
 3.2.0 (2021-06-02)
 ------------------
 * Add "ResetStoState" to clear the STO state for RC9 and COBOTTA

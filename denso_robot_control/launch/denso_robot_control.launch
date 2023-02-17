@@ -17,6 +17,9 @@
   <!-- b-CAP Slave motion control cycle [millisecond] -->
   <arg name="bcap_slave_control_cycle_msec" default="8" />
 
+  <!-- b-CAP Slave Mode [default: 0x202] -->
+  <arg name="bcap_slave_mode" default="514" />
+
   <include ns="/$(arg robot_name)" file="$(find bcap_service)/launch/bcap_service.launch.xml">
     <arg name="ip_address" value="$(arg ip_address)" />
   </include>
@@ -28,6 +31,7 @@
   <include ns="/$(arg robot_name)" file="$(find denso_robot_control)/launch/denso_robot_control.launch.xml">
     <arg name="send_format" value="$(arg send_format)" />
     <arg name="recv_format" value="$(arg recv_format)" />
+    <arg name="bcap_slave_mode" value="$(arg bcap_slave_mode)" />
   </include>
 
   <!-- Load the URDF, SRDF and other .yaml configuration files on the param server -->

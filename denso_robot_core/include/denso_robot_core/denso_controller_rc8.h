@@ -38,6 +38,7 @@ public:
 
   HRESULT get_Robot(int index, DensoRobotRC8_Ptr* robot);
 
+  virtual HRESULT ExecManualReset() override;
   virtual HRESULT ExecResetStoState() override;
 
 private:

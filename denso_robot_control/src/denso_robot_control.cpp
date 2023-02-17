@@ -48,7 +48,16 @@ int main(int argc, char* argv[])
 
       drobo.read(now, dt);
 
-      cm.update(now, dt);
+      if (drobo.isResetRosControllerNeeded())
+      {
+        cm.update(now, dt, true);
+        drobo.setResetRosControllerNeeded(false);
+      }
+      else
+      {
+        cm.update(now, dt, false);
+      }
+
 
       drobo.write(now, dt);
 
