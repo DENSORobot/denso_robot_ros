@@ -2,39 +2,36 @@ Please refer to https://wiki.ros.org/denso_robot_ros.
 
 ## Setup Environment
 
-This branch is validated on the ROS humble version.
-
-### Dependencies
-`sudo apt install ros-humble-xacro`
-
-
-## Real Robot
-`ros2 launch denso_robot_bringup denso_robot_bringup.launch.py robot_ip:=192.168.0.1 robot_port:=5007`
-
-## Simulation
-
-If you want to use gazebo. You must install gazebo by manully source build method. 
 ### 1. Install Gazebo
-Following as [Gazebo Official Install](https://gazebosim.org/docs/garden/install_ubuntu_src)
+Following as [Gazebo Official Install](https://gazebosim.org/docs/garden/install_ubuntu)
 
-### 2. Install the Gazebo Ros2 Packages
-Following as [Gazebo Ros2 ros package](https://github.com/gazebosim/ros_gz/tree/ros2#from-source)
+### 2. Install the Gazebo Ros2 Packages by binary
+The official Gazebo ROS packages not work now. So please follow this temporary packge.
 
-Note: You should config your environment variable as `export GZ_VERSION=garden` before the colcon.
+Following as [Gazebo Ros2 temporary package](https://github.com/leledeyuan00/gazebo_ros)
 
-### 3. Install Gazebo Ros2 Control Plugin
-Clone the [gz_ros2_control package](https://github.com/ros-controls/gz_ros2_control)
+### 3. Install the Moveit by binary
 
-Check out to the `ahcorde/rename/ign_to_gz` branch.
+Following as [Moveit2 Humble Official package](https://moveit.ros.org/install-moveit2/binary/)
 
-This is because the version update of the Gazebo....
+### 4. Clone and compile this package
 
-### 4. Source the Gazebo ws then export the Gazebo model environment variables
-`export GZ_SIM_RESOURCE_PATH=$GZ_SIM_RESOURCE_PATH:/home/xx/xx_ws/install/denso_description/share/`
+`mkdir -p ~/denso_ws/src && cd ~/denso_ws/src`
+
+`git clone https://github.com/smartrobotsdesignlab/denso_robot_ros2.git`
+
+`cd ~/denso_ws`
+
+`rosdep install --from-paths src --ignore-src -r -y`
+
+`colcon build`
+
+### 5. Source the Gazebo ws then export the Gazebo model environment variables
+`export GZ_SIM_RESOURCE_PATH=$GZ_SIM_RESOURCE_PATH:/home/xx/denso_ws/install/denso_description/share/`
 
 ! Please replace the "xx" to your real path.
 
-### 5. Launch the Gazebo Robot & Enjoy
+### 6. Launch the Gazebo Robot & Enjoy
 
 ![Gazebo](./docs/gazebo.png)
 
@@ -52,6 +49,9 @@ You can control the robot by publish the command to `/forward_position_controlle
 For example:
 
 `ros2 topic pub --once /forward_position_controller/commands std_msgs/msg/Float64MultiArray "{layout: {}, data: [0,0,1.574,0,0,0]}"`
+
+## Real Robot
+`ros2 launch denso_robot_bringup denso_robot_bringup.launch.py robot_ip:=192.168.0.1 robot_port:=5007`
 
 ## Update Log
 
