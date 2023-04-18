@@ -27,7 +27,7 @@ Following as [Moveit2 Humble Official package](https://moveit.ros.org/install-mo
 `colcon build`
 
 ### 5. Source the Gazebo ws then export the Gazebo model environment variables
-`export GZ_SIM_RESOURCE_PATH=$GZ_SIM_RESOURCE_PATH:/home/xx/denso_ws/install/denso_description/share/`
+`export GZ_SIM_RESOURCE_PATH=$GZ_SIM_RESOURCE_PATH:/home/xx/denso_ws/install/denso_robot_description/share/`
 
 ! Please replace the "xx" to your real path.
 
