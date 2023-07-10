@@ -3,7 +3,12 @@
 
   <xacro:include filename="$(find denso_robot_description)/urdf/common.xacro" />
 
-  <xacro:macro name="denso_robot" params="prefix parent *origin">
+  <xacro:macro name="denso_robot" params="
+    prefix 
+    parent 
+    *origin 
+    initial_positions:=${dict(joint1=0.0,joint2=0.0,joint3=1.57,joint4=0.0,joint5=0.0,joint6=0.0)}"
+    >
     <!-- LINKS -->
     <!-- base link -->
     <link name="${prefix}base_link">

@@ -10,7 +10,8 @@
     send_format 
     recv_format 
     controller_type:=^|8 
-    config_file ">
+    config_file 
+    initial_positions:=${dict(joint1=0.0,joint2=0.0,joint3=1.57,joint4=0.0,joint5=0.0,joint6=0.0)}">
     <ros2_control name="${name}" type="system">
       <hardware>
         <xacro:if value="${sim_gazebo_classic}">
@@ -41,8 +42,8 @@
         </command_interface>
         <state_interface name="position">
           <!-- initial position for the FakeSystem and simulation -->
-          <param name="initial_value">0.0</param>
-        </state_interface>/>
+          <param name="initial_value">${initial_positions['joint1']}</param>
+        </state_interface>
         <state_interface name="velocity"/>
         <state_interface name="effort"/>
       </joint>
@@ -53,8 +54,8 @@
         </command_interface>
         <state_interface name="position">
           <!-- initial position for the FakeSystem and simulation -->
-          <param name="initial_value">0.0</param>
-        </state_interface>/>
+          <param name="initial_value">${initial_positions['joint2']}</param>
+        </state_interface>
         <state_interface name="velocity"/>
         <state_interface name="effort"/>
       </joint>
@@ -65,8 +66,8 @@
         </command_interface>
         <state_interface name="position">
           <!-- initial position for the FakeSystem and simulation -->
-          <param name="initial_value">1.5708</param>
-        </state_interface>/>
+          <param name="initial_value">${initial_positions['joint3']}</param>
+        </state_interface>
         <state_interface name="velocity"/>
         <state_interface name="effort"/>
       </joint>
@@ -77,8 +78,8 @@
         </command_interface>
         <state_interface name="position">
           <!-- initial position for the FakeSystem and simulation -->
-          <param name="initial_value">0.0</param>
-        </state_interface>/>
+          <param name="initial_value">${initial_positions['joint4']}</param>
+        </state_interface>
         <state_interface name="velocity"/>
         <state_interface name="effort"/>
       </joint>
@@ -89,8 +90,8 @@
         </command_interface>
         <state_interface name="position">
           <!-- initial position for the FakeSystem and simulation -->
-          <param name="initial_value">0.0</param>
-        </state_interface>/>
+          <param name="initial_value">${initial_positions['joint5']}</param>
+        </state_interface>
         <state_interface name="velocity"/>
         <state_interface name="effort"/>
       </joint>
@@ -101,8 +102,8 @@
         </command_interface>
         <state_interface name="position">
           <!-- initial position for the FakeSystem and simulation -->
-          <param name="initial_value">0.0</param>
-        </state_interface>/>
+          <param name="initial_value">${initial_positions['joint6']}</param>
+        </state_interface>
         <state_interface name="velocity"/>
         <state_interface name="effort"/>
       </joint>

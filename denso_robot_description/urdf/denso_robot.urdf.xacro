@@ -22,6 +22,12 @@
   <!-- Import ROS2 Control -->
   <xacro:include filename="$(find denso_robot_description)/urdf/denso_robot/denso_robot_macro.ros2_control.xacro"/>
 
+  <!-- initial position for simulations (Fake Hardware, Gazebo, Ignition) -->
+  <xacro:arg name="initial_positions_file" default="$(find denso_robot_description)/config/initial_positions.yaml"/>
+
+  <!-- convert to property to use substitution in function -->
+  <xacro:property name="initial_positions_file" default="$(arg initial_positions_file)"/>
+
   <!-- create link fixed to the "world" -->
   <link name="world" />
 
@@ -40,7 +46,8 @@
     recv_format="$(arg recv_format)" 
     config_file="$(arg config_file)"
     use_fake_hardware="$(arg use_fake_hardware)"
-    fake_sensor_commands="$(arg fake_sensor_commands)"/>
+    fake_sensor_commands="$(arg fake_sensor_commands)"
+    initial_positions="${xacro.load_yaml(initial_positions_file)}"/>
 
   <xacro:if value="$(arg sim_gazebo)">
     <gazebo>
