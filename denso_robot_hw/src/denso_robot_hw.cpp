@@ -480,17 +480,17 @@ hardware_interface::return_type denso_hw::write(
             }
         }
     }
-    // else{
-    //     HRESULT hr = ChangeModeWithClearError(DensoRobot::SLVMODE_SYNC_WAIT | DensoRobot::SLVMODE_POSE_J);
-    //     if (FAILED(hr))
-    //     {
-    //         printErrorDescription(hr, "Failed to change to slave mode");
-    //         RCLCPP_FATAL(
-    //             rclcpp::get_logger(this->get_name()), "Failed to change to slave mode");
-    //         // return hardware_interface::CallbackReturn::ERROR;
-    //     }
-    //     RCLCPP_INFO(rclcpp::get_logger(this->get_name()), "denso_mode is SLVMODE_NONE");
-    // }
+    else{
+        HRESULT hr = ChangeModeWithClearError(DensoRobot::SLVMODE_SYNC_WAIT | DensoRobot::SLVMODE_POSE_J);
+        if (FAILED(hr))
+        {
+            printErrorDescription(hr, "Failed to change to slave mode");
+            RCLCPP_FATAL(
+                rclcpp::get_logger(this->get_name()), "Failed to change to slave mode");
+            // return hardware_interface::CallbackReturn::ERROR;
+        }
+        RCLCPP_WARN(rclcpp::get_logger(this->get_name()), "Denso has some communication error. But now it come back to SLVMODE_NONE");
+    }
     
     return hardware_interface::return_type::OK;
 }
