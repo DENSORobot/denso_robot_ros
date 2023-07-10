@@ -467,17 +467,15 @@ hardware_interface::return_type denso_hw::write(
         else if (FAILED(hr) && (hr != DensoRobot::E_BUF_FULL))
         {
             printErrorDescription(hr, "Failed to write");
-            if (hasError())
+            HRESULT hr = ChangeModeWithClearError(DensoRobot::SLVMODE_SYNC_WAIT | DensoRobot::SLVMODE_POSE_J);
+            if (FAILED(hr))
             {
-                HRESULT hr = ChangeModeWithClearError(DensoRobot::SLVMODE_NONE);
-                if (FAILED(hr))
-                {
-                    printErrorDescription(hr, "Failed to change to slave mode");
-                    RCLCPP_FATAL(
-                        rclcpp::get_logger(this->get_name()), "Failed to change to slave mode");
-                }
-                return hardware_interface::return_type::ERROR;
+                printErrorDescription(hr, "Failed to change to slave mode");
+                RCLCPP_FATAL(
+                    rclcpp::get_logger(this->get_name()), "Failed to change to slave mode");
+                // return hardware_interface::CallbackReturn::ERROR;
             }
+            RCLCPP_WARN(rclcpp::get_logger(this->get_name()), "Denso has some communication error. But now it come back to SLVMODE_NONE");
         }
     }
     else{
