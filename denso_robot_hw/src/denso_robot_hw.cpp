@@ -347,7 +347,7 @@ hardware_interface::CallbackReturn denso_hw::on_activate(
     denso_robot_->set_RecvFormat(recvfmt_);
 
     // TODO: When the timeout occur, please comment follow code and recomplie! I don't know why and how to automatically reset the robot.
-    hr = ChangeModeWithClearError(DensoRobot::SLVMODE_SYNC_WAIT | DensoRobot::SLVMODE_POSE_J);
+    hr = ChangeModeWithClearError(DensoRobot::SLVMODE_SYNC_WAIT | DensoRobot::SLVMODE_POSE_J2);
     if (FAILED(hr))
     {
         printErrorDescription(hr, "Failed to change to slave mode");
@@ -481,7 +481,7 @@ hardware_interface::return_type denso_hw::write(
         }
     }
     // else{
-    //     HRESULT hr = ChangeModeWithClearError(DensoRobot::SLVMODE_SYNC_WAIT | DensoRobot::SLVMODE_POSE_J);
+    //     HRESULT hr = ChangeModeWithClearError(DensoRobot::SLVMODE_SYNC_WAIT | DensoRobot::SLVMODE_POSE_J2);
     //     if (FAILED(hr))
     //     {
     //         printErrorDescription(hr, "Failed to change to slave mode");
