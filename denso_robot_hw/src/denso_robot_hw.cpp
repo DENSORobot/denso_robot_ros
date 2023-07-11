@@ -347,7 +347,7 @@ hardware_interface::CallbackReturn denso_hw::on_activate(
     denso_robot_->set_RecvFormat(recvfmt_);
 
     // TODO: When the timeout occur, please comment follow code and recomplie! I don't know why and how to automatically reset the robot.
-    hr = ChangeModeWithClearError(DensoRobot::SLVMODE_SYNC_WAIT | DensoRobot::SLVMODE_POSE_J2);
+    hr = ChangeModeWithClearError(DensoRobot::SLVMODE_SYNC_WAIT | DensoRobot::SLVMODE_POSE_J1);
     if (FAILED(hr))
     {
         printErrorDescription(hr, "Failed to change to slave mode");
@@ -417,7 +417,6 @@ hardware_interface::return_type denso_hw::read(
             hw_positions_[i] = 0.0;
             break;
         }
-        hw_commands_positions_[i] = hw_positions_[i];
     }
     return hardware_interface::return_type::OK;
 }
@@ -456,7 +455,7 @@ hardware_interface::return_type denso_hw::write(
         bits |= (1 << i);
         }
         pose.push_back(0x400000 | bits);
-        HRESULT hr = denso_robot_->ExecSlaveMove(pose, hw_joints_); // Why it need joints?  TODO
+        HRESULT hr = denso_robot_->ExecSlaveMove(pose, hw_joints_); 
         if (SUCCEEDED(hr))
         {
             if (recvfmt_ & DensoRobot::RECVFMT_HANDIO)
@@ -480,17 +479,6 @@ hardware_interface::return_type denso_hw::write(
             }
         }
     }
-    // else{
-    //     HRESULT hr = ChangeModeWithClearError(DensoRobot::SLVMODE_SYNC_WAIT | DensoRobot::SLVMODE_POSE_J2);
-    //     if (FAILED(hr))
-    //     {
-    //         printErrorDescription(hr, "Failed to change to slave mode");
-    //         RCLCPP_FATAL(
-    //             rclcpp::get_logger(this->get_name()), "Failed to change to slave mode");
-    //         // return hardware_interface::CallbackReturn::ERROR;
-    //     }
-    //     RCLCPP_WARN(rclcpp::get_logger(this->get_name()), "Denso has some communication error. But now it come back to SLVMODE_NONE");
-    // }
     
     return hardware_interface::return_type::OK;
 }

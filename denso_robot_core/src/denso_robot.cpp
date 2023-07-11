@@ -1030,6 +1030,9 @@ HRESULT DensoRobot::CreateSendParameter(const std::vector<double>& pose, VARIANT
     case SLVMODE_POSE_T:
       joints = NUTRANS_;
       break;
+    case SLVMODE_POSE_J1:
+      joints = NUJOINT_;
+      break;
     case SLVMODE_POSE_J2:
       joints = NUJOINT_;
       break;
