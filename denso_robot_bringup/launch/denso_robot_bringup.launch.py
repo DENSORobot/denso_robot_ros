@@ -32,6 +32,14 @@ def generate_launch_description():
     declared_arguments = []
     declared_arguments.append(
         DeclareLaunchArgument(
+            "namespace",
+            default_value="/",
+            description="Namespace of controller manager and controllers. This is useful for \
+        multi-robot scenarios.",
+        )
+    )
+    declared_arguments.append(
+        DeclareLaunchArgument(
             "runtime_config_package",
             default_value="denso_robot_bringup",
             description='Package with the controller\'s configuration in "config" folder. \
@@ -93,6 +101,14 @@ def generate_launch_description():
     )
     declared_arguments.append(
         DeclareLaunchArgument(
+            "controller_manager_name",
+            default_value="/controller_manager",
+            description="Full name of the controller manager. This values should be set if \
+        controller manager is used under a namespace.",
+        )
+    )
+    declared_arguments.append(
+        DeclareLaunchArgument(
             "robot_controller",
             default_value="trajectory_controller",
             description="Robot controller to start.",
@@ -120,6 +136,7 @@ def generate_launch_description():
         )
     )
     # Initialize Arguments
+    namespace = LaunchConfiguration("namespace")
     runtime_config_package = LaunchConfiguration("runtime_config_package")
     controllers_file = LaunchConfiguration("controllers_file")
     description_package = LaunchConfiguration("description_package")
@@ -130,6 +147,7 @@ def generate_launch_description():
     robot_ip = LaunchConfiguration("robot_ip")
     robot_port = LaunchConfiguration("robot_port")
     sim_gazebo = LaunchConfiguration("sim_gazebo")
+    controller_manager_name = LaunchConfiguration("controller_manager_name")
     robot_controller = LaunchConfiguration("robot_controller")
     start_rviz = LaunchConfiguration("start_rviz")
 
@@ -178,6 +196,7 @@ def generate_launch_description():
         package="controller_manager",
         executable="ros2_control_node",
         parameters=[robot_description, robot_controllers],
+        namespace=namespace,
         prefix=['stdbuf -o L'],
         output="both",
         condition=IfCondition(PythonExpression(["'", sim_gazebo, "' == 'false'"])),
@@ -186,12 +205,14 @@ def generate_launch_description():
     robot_state_pub_node = Node(
         package="robot_state_publisher",
         executable="robot_state_publisher",
+        namespace=namespace,
         output="both",
         parameters=[robot_description],
     )
     rviz_node = Node(
         package="rviz2",
         executable="rviz2",
+        namespace=namespace,
         name="rviz2",
         output="log",
         arguments=["-d", rviz_config_file],
@@ -200,14 +221,16 @@ def generate_launch_description():
 
     joint_state_broadcaster_spawner = Node(
         package="controller_manager",
+        namespace=namespace,
         executable="spawner",
-        arguments=["joint_state_broadcaster", "--controller-manager", "/controller_manager"],
+        arguments=["joint_state_broadcaster", "--controller-manager", controller_manager_name],
     )
 
     robot_controller_spawner = Node(
         package="controller_manager",
         executable="spawner",
-        arguments=[robot_controller, "-c", "/controller_manager"],
+        namespace=namespace,
+        arguments=[robot_controller, "-c", controller_manager_name],
     )
 
     # Gazebo
