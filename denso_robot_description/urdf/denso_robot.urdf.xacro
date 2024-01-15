@@ -5,7 +5,7 @@
   <xacro:arg name="prefix" default="" />
   <!-- Simulation parameters -->
   <xacro:arg name="use_fake_hardware" default="false" />
-  <xacro:arg name="fake_sensor_commands" default="false" />
+  <xacro:arg name="mock_sensor_commands" default="false" />
   <xacro:arg name="sim_gazebo_classic" default="false" />
   <xacro:arg name="sim_gazebo" default="true" />
 
@@ -46,7 +46,7 @@
     recv_format="$(arg recv_format)" 
     config_file="$(arg config_file)"
     use_fake_hardware="$(arg use_fake_hardware)"
-    fake_sensor_commands="$(arg fake_sensor_commands)"
+    mock_sensor_commands="$(arg mock_sensor_commands)"
     initial_positions="${xacro.load_yaml(initial_positions_file)}"/>
 
   <xacro:if value="$(arg sim_gazebo)">
