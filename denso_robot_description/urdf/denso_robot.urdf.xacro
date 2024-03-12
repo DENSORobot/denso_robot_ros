@@ -52,7 +52,7 @@
   <xacro:if value="$(arg sim_gazebo)">
     <gazebo>
       <!-- Joint state publisher -->
-      <plugin filename="gz_ros2_control-system" name="gz_ros2_control::GazeboSimROS2ControlPlugin">
+      <plugin filename="ign_ros2_control-system" name="ign_ros2_control::IgnitionROS2ControlPlugin">
         <parameters>$(find denso_robot_bringup)/config/denso_robot_gazebo_controllers.yaml</parameters>
       </plugin>
     </gazebo>

@@ -3,12 +3,44 @@ Please refer to https://wiki.ros.org/denso_robot_ros.
 ## Setup Environment
 
 ### 1. Install Gazebo
-Following as [Gazebo Official Install](https://gazebosim.org/docs/garden/install_ubuntu)
+(Update 2024-3-12: Using fortress instead of garden)
+
+Following as [Gazebo Official Install](https://gazebosim.org/docs/fortress/install_ubuntu)
 
 ### 2. Install the Gazebo Ros2 Packages by binary
-The official Gazebo ROS packages not work now. So please follow this temporary packge.
+(Update 2024-3-12: Using official Gazebo packages)
+<!-- The official Gazebo ROS packages not work now. So please follow this temporary packge.
 
-Following as [Gazebo Ros2 temporary package](https://github.com/leledeyuan00/gazebo_ros)
+Following as [Gazebo Ros2 temporary package](https://github.com/leledeyuan00/gazebo_ros) -->
+
+`mkdir ~/gazebo_ws/src && cd ~/gazebo_ws/src`
+
+Clone `gz_ros2_control` and `ros_gz`
+
+`git clone https://github.com/ros-controls/gz_ros2_control.git`
+
+`git clone https://github.com/gazebosim/ros_gz.git`
+
+`cd gz_ros2_control`
+
+`git checkout humble`
+
+`cd ../ros_gz`
+
+`git checkout humble`
+
+`cd ~/gazebo_ws`
+
+`export IGNITION_VERSION=fortress`
+
+`export GZ_VERSION=fortress`
+
+`rosdep install --from-paths src --ignore-src -y -r`
+
+`colcon build`
+
+`echo "source ~/gazebo_ws/install/setup.bash" >> ~/.bashrc`
+
 
 ### 3. Install the Moveit by binary
 
@@ -26,12 +58,10 @@ Following as [Moveit2 Humble Official package](https://moveit.ros.org/install-mo
 
 `colcon build`
 
-### 5. Source the Gazebo ws then export the Gazebo model environment variables
-`export GZ_SIM_RESOURCE_PATH=$GZ_SIM_RESOURCE_PATH:/home/xx/denso_ws/install/denso_robot_description/share/`
+<!-- ### 5. Source the Gazebo ws then export the Gazebo model environment variables
+`export GZ_SIM_RESOURCE_PATH=$GZ_SIM_RESOURCE_PATH:/home/xx/denso_ws/install/denso_robot_description/share/` -->
 
-! Please replace the "xx" to your real path.
-
-### 6. Launch the Gazebo Robot & Enjoy
+### 5. Launch the Gazebo Robot & Enjoy
 
 ![Gazebo](./docs/gazebo.png)
 
