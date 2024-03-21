@@ -13,7 +13,7 @@ Following as [Gazebo Official Install](https://gazebosim.org/docs/fortress/insta
 
 Following as [Gazebo Ros2 temporary package](https://github.com/leledeyuan00/gazebo_ros) -->
 
-`mkdir ~/gazebo_ws/src && cd ~/gazebo_ws/src`
+`mkdir -p ~/gazebo_ws/src && cd ~/gazebo_ws/src`
 
 Clone `gz_ros2_control` and `ros_gz`
 
