@@ -1,0 +1,53 @@
+<launch>
+  <!-- Override robot_name argument -->
+  <arg name="left_ip" default="10.240.48.66" />
+  <arg name="right_ip" default="10.240.48.96" />
+  <arg name="send_format" default="288" />
+  <arg name="recv_format" default="292" />
+  <arg name="bcap_slave_control_cycle_msec" default="8" />
+  <arg name="bcap_slave_mode" default="514" />
+
+    <param name="robot_description" command="$(find xacro)/xacro '$(find dual_vs068)/urdf/dual_vs068.urdf.xacro'" />
+
+    <param name="robot_name" value="vs068l"/>
+    <include file="$(find denso_robot_control)/launch/denso_robot_control_modify.launch">
+      <arg name="robot_name" value="vs068l" />
+      <arg name="ip_address" value="$(arg left_ip)" />
+      <arg name="send_format" value="$(arg send_format)" />
+      <arg name="recv_format" value="$(arg recv_format)" />
+      <arg name="bcap_slave_control_cycle_msec" value="$(arg bcap_slave_control_cycle_msec)" />
+      <arg name="bcap_slave_mode" value="$(arg bcap_slave_mode)" />
+    </include>
+    
+    <node name="controller_spawner_l" pkg="controller_manager" type="spawner" respawn="false" output="screen"
+   ns="vs068l" args="joint_state_controller arm_controller" />
+
+    <node name="robot_state_publisher_left" pkg="robot_state_publisher"
+          type="robot_state_publisher" respawn="false" output="screen">
+      <remap from="/joint_states" to="/vs068l/joint_states" />
+    </node>
+
+    <param name="robot_name" value="vs068r"/>
+    <include file="$(find denso_robot_control)/launch/denso_robot_control_modify.launch">
+      <arg name="robot_name" value="vs068r" />
+      <arg name="ip_address" value="$(arg right_ip)" />
+      <arg name="send_format" value="$(arg send_format)" />
+      <arg name="recv_format" value="$(arg recv_format)" />
+      <arg name="bcap_slave_control_cycle_msec" value="$(arg bcap_slave_control_cycle_msec)" />
+      <arg name="bcap_slave_mode" value="$(arg bcap_slave_mode)" />
+    </include>
+    
+
+    <node name="controller_spawner_r" pkg="controller_manager" type="spawner" respawn="false" output="screen"
+   ns="vs068r" args="joint_state_controller arm_controller" />
+
+    <node name="robot_state_publisher_right" pkg="robot_state_publisher"
+          type="robot_state_publisher" respawn="false" output="screen">
+      <remap from="/joint_states" to="/vs068r/joint_states" />
+    </node>
+
+<node name="joint_states_merger_node" pkg="dual_vs068" type="merge_joint_states.py" output="screen"/>
+
+
+
+</launch>

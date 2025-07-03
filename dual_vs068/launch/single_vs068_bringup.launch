@@ -1,0 +1,13 @@
+<launch>
+  <arg name="robot_name" />
+  <arg name="ip_address" />
+  <arg name="ns" default="" />
+
+  <group ns="$(arg ns)">
+    <include file="$(find denso_robot_bringup)/launch/denso_robot_bringup.launch">
+      <arg name="robot_name" value="$(arg robot_name)"/>
+      <arg name="ip_address" value="$(arg ip_address)"/>
+      <arg name="sim" value="false"/>
+    </include>
+  </group>
+</launch>

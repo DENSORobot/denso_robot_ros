@@ -1,0 +1,4 @@
+<launch>
+  <param name="robot_description"
+         command="$(find xacro)/xacro '$(find dual_vs068)/urdf/dual_vs068.urdf.xacro'" />
+</launch>

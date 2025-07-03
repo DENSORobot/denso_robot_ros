@@ -1,0 +1,19 @@
+<launch>
+  <!-- Load joint limits, kinematics, planning pipeline, etc -->
+  <include file="$(find dual_vs068_moveit_config)/launch/planning_context.launch">
+    <arg name="load_robot_description" value="false"/> 
+  </include>
+
+  <!-- Load controllers.yaml and joint limits -->
+  <rosparam file="$(find dual_vs068_moveit_config)/config/ros_controllers.yaml" command="load" />
+
+  <!-- Start MoveIt move_group node -->
+  <include file="$(find dual_vs068_moveit_config)/launch/move_group.launch"/>
+
+
+  <!-- RViz with MoveIt config -->
+  <include file="$(find dual_vs068_moveit_config)/launch/moveit_rviz.launch">
+    <!-- <arg name="config" value="true"/> -->
+  </include>
+  
+</launch>

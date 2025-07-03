@@ -1,0 +1,11 @@
+moveit_setup_assistant_config:
+  URDF:
+    package: dual_vs068
+    relative_path: urdf/dual_vs068.urdf.xacro
+    xacro_args: ""
+  SRDF:
+    relative_path: config/dual_vs068.srdf
+  CONFIG:
+    author_name: gnq
+    author_email: guningquan@outlook.com
+    generated_timestamp: 1751245602

@@ -73,11 +73,28 @@ HRESULT DensoRobotHW::Initialize()
     ROS_WARN("Failed to get robot_joints parameter.");
   }
 
+
+  std::string joint_prefix;  // gnq
+  std::string prefix_param;
+  if (!nh.getParam("robot_prefix", prefix_param))
+  {
+    ROS_WARN("No 'robot_prefix' param found, use default 'joint_'");
+    joint_prefix = "joint_";
+  }
+  else
+  {
+    joint_prefix = prefix_param + "_joint_";
+    ROS_WARN_STREAM("Using joint prefix: " << joint_prefix);
+  }
+
+
+
   for (int i = 0; i < m_robJoints; i++)
   {
     std::stringstream ss;
-    ss << "joint_" << i + 1;
-
+    // ss << "joint_" << i + 1;
+    // ss << "vs068l_joint_" << i + 1;  // modify gnq
+    ss << joint_prefix << i + 1; // modify gnq
     if (!nh.getParam(ss.str(), m_type[i]))
     {
       ROS_WARN("Failed to get joint_%d parameter.", i + 1);

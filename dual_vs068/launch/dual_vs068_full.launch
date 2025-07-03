@@ -1,0 +1,7 @@
+<launch>
+  <!-- Step 1: Bringup both arms -->
+  <include file="$(find dual_vs068)/launch/dual_vs068_bringup.launch" />
+
+  <!-- Step 2: Start MoveIt -->
+  <include file="$(find dual_vs068_moveit_config)/launch/dual_vs068_moveit.launch" />
+</launch>

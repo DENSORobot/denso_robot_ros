@@ -1,0 +1,7 @@
+controller_manager_ns: controller_manager
+controller_list:
+  - name: vs068r/arm_controller
+    action_ns: follow_joint_trajectory
+    type: FollowJointTrajectory
+    default: true
+    joints: [vs068r_joint_1, vs068r_joint_2, vs068r_joint_3, vs068r_joint_4, vs068r_joint_5, vs068r_joint_6]

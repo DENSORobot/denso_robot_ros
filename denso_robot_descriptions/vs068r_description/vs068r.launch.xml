@@ -1,0 +1,14 @@
+<launch>
+	<param name="controller_type" value="8"/>
+	<param name="robot_name" value="VS068A4-AV6-NNN-NNN A"/>
+		<!-- gnq -->
+	<param name="robot_prefix" value="vs068r"/>  
+	<param name="robot_joints" value="6"/>
+	<param name="vs068r_joint_1" value="1"/>
+	<param name="vs068r_joint_2" value="1"/>
+	<param name="vs068r_joint_3" value="1"/>
+	<param name="vs068r_joint_4" value="1"/>
+	<param name="vs068r_joint_5" value="1"/>
+	<param name="vs068r_joint_6" value="1"/>
+	<param name="arm_group" value="0"/>
+</launch>

@@ -1,0 +1,24 @@
+controller_list:
+  - name: fake_left_controller
+    type: $(arg fake_execution_type)
+    joints:
+      - vs068l_joint_1
+      - vs068l_joint_2
+      - vs068l_joint_3
+      - vs068l_joint_4
+      - vs068l_joint_5
+      - vs068l_joint_6
+  - name: fake_right_controller
+    type: $(arg fake_execution_type)
+    joints:
+      - vs068r_joint_1
+      - vs068r_joint_2
+      - vs068r_joint_3
+      - vs068r_joint_4
+      - vs068r_joint_5
+      - vs068r_joint_6
+initial:  # Define initial robot poses.
+  - group: left
+    pose: home_left
+  - group: right
+    pose: home_right

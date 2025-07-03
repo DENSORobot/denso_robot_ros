@@ -1,0 +1,13 @@
+<launch>
+  <!-- 加载模型 -->
+  <include file="$(find dual_vs068)/launch/load_dual_description.launch" />
+
+  <!-- GUI关节控制器 -->
+  <node name="joint_state_publisher_gui" pkg="joint_state_publisher_gui" type="joint_state_publisher_gui" />
+
+  <!-- TF状态发布器 -->
+  <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" />
+
+  <!-- RViz -->
+  <node name="rviz" pkg="rviz" type="rviz" args="-d $(find dual_vs068)/config/view_robot.rviz" required="true" />
+</launch>

@@ -1,0 +1,13 @@
+controller_joint_names:
+  - vs068l_joint_1
+  - vs068l_joint_2
+  - vs068l_joint_3
+  - vs068l_joint_4
+  - vs068l_joint_5
+  - vs068l_joint_6
+  - vs068r_joint_1
+  - vs068r_joint_2
+  - vs068r_joint_3
+  - vs068r_joint_4
+  - vs068r_joint_5
+  - vs068r_joint_6

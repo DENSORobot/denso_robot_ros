@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+<robot name="dual_vs068" xmlns:xacro="http://ros.org/wiki/xacro">
+
+  <!-- Include Left Arm -->
+  <xacro:include filename="$(find denso_robot_descriptions)/vs068l_description/vs068l.urdf"/>
+
+  <!-- Include Right Arm -->
+  <xacro:include filename="$(find denso_robot_descriptions)/vs068r_description/vs068r.urdf"/>
+
+
+  <link name="world"/>
+  <!--Define the robot poses in the world-->
+  <joint name="world_to_left" type="fixed">
+    <parent link="world" />
+    <child link = "vs068l_world" />
+    <origin xyz="0 -0.45 0" rpy="0 0 0" />
+  </joint>
+  <joint name="world_to_right" type="fixed">
+    <parent link="world" />
+    <child link = "vs068r_world" />
+    <origin xyz="0 0.45 0" rpy="0 0 0" />
+  </joint>
+
+</robot>

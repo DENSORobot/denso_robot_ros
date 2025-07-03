@@ -1,0 +1,18 @@
+<launch>
+  <arg name="ip_address" default="10.240.48.96"/>
+  <arg name="sim" default="false"/>
+
+  <include file="$(find denso_robot_bringup)/launch/denso_robot_bringup.launch">
+    <arg name="robot_name" value="vs068r"/>
+    <arg name="ip_address" value="$(arg ip_address)"/>
+    <arg name="sim" value="$(arg sim)"/>
+    <arg name="send_format" value="288"/>
+    <arg name="recv_format" value="292"/>
+  </include>
+
+  <rosparam file="$(find dual_vs068)/etc/vs068r_controllers.yaml" command="load"/>
+
+  <node name="controller_spawner_r" pkg="controller_manager" type="spawner"
+        args="vs068r/joint_state_controller vs068r/arm_controller" />
+</launch>
+

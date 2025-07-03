@@ -1,0 +1,35 @@
+<launch>
+  <arg name="sim"      default="false"/>
+  <arg name="ip_left"  default="10.240.48.66"/>
+  <arg name="ip_right" default="10.240.48.96"/>
+  <arg name="send_format" default="288"/>
+  <arg name="recv_format" default="292"/>
+  <arg name="bcap_slave_control_cycle_msec" default="8"/>
+
+  <!-- 左臂 -->
+  <include file="$(find denso_robot_bringup)/launch/vs068l_bringup.launch">
+    <arg name="sim"                           value="$(arg sim)"/>
+    <arg name="ip_address"                    value="$(arg ip_left)"/>
+    <arg name="send_format"                   value="$(arg send_format)"/>
+    <arg name="recv_format"                   value="$(arg recv_format)"/>
+    <arg name="bcap_slave_control_cycle_msec" value="$(arg bcap_slave_control_cycle_msec)"/>
+  </include>
+
+    <!-- 右臂：所有节点都在 /vs068r 命名空间下 -->
+  <group ns="vs068r">
+    <!-- 包含 vs068r 的 bringup -->
+    <include file="$(find denso_robot_bringup)/launch/vs068r_bringup.launch">
+      <arg name="sim"                           value="$(arg sim)"/>
+      <arg name="ip_address"                    value="$(arg ip_right)"/>
+      <arg name="send_format"                   value="$(arg send_format)"/>
+      <arg name="recv_format"                   value="$(arg recv_format)"/>
+      <arg name="bcap_slave_control_cycle_msec" value="$(arg bcap_slave_control_cycle_msec)"/>
+    </include>
+
+    <!-- 给右臂打一个 static TF 偏移 -->
+    <node pkg="tf2_ros" type="static_transform_publisher" name="static_tf_publisher"
+          args="0.91 0 0 0 0 0 world vs068r_base_link"/>
+  </group>
+
+        
+</launch>
